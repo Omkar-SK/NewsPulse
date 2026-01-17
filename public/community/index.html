@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewsPulse Community - Share & Discuss News</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">📊 NewsPulse</a>
+            <div class="nav-links" id="nav-links">
+                <a href="../index.html" class="nav-link">For You</a>
+                <a href="../index.html" class="nav-link">Trending</a>
+                <a href="../index.html" class="nav-link">Analysis</a>
+                <a href="#" class="nav-link active">Community</a>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="mode-switch">
+                <span id="mode-label">Light Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="mode-toggle">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <main class="community-container">
+        <div class="community-header">
+            <h1>📰 Community News</h1>
+            <p>Share news articles and discuss with the community</p>
+        </div>
+
+        <div class="add-post-section">
+            <h2>Share a News Article</h2>
+            <div class="add-post-form">
+                <input type="url" id="news-url-input" placeholder="Enter news article URL..." required>
+                <button id="add-post-btn" class="btn-primary">
+                    <i class="fas fa-plus"></i> Add Post
+                </button>
+            </div>
+            <div id="url-error" class="error-message"></div>
+        </div>
+
+        <div class="posts-container" id="posts-container">
+            <!-- Posts will be dynamically added here -->
+        </div>
+    </main>
+
+    <!-- Comments Modal -->
+    <div id="comments-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Comments</h2>
+                <span class="close-modal" id="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="add-comment-section">
+                    <textarea id="comment-input" placeholder="Write a comment..." rows="3"></textarea>
+                    <button id="add-comment-btn" class="btn-primary">
+                        <i class="fas fa-comment"></i> Add Comment
+                    </button>
+                </div>
+                <div class="comments-list" id="comments-list">
+                    <!-- Comments will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
