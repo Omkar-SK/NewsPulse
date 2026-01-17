@@ -1,4 +1,4 @@
-# 📊 NewsPulse: AI-Powered News Credibility Platform
+#  NewsPulse: AI-Powered News Credibility Platform
 
 NewsPulse is a modern, full-stack web application designed to combat misinformation and improve media literacy. It leverages cutting-edge AI to analyze news articles for credibility, bias, and sentiment, while providing a community-driven space for transparent news verification.
 
