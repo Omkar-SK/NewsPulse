@@ -34,13 +34,52 @@ const ArticleSchema = new mongoose.Schema({
     index: true
   },
   aiSummary: {
-  type: String,
-  default: null
-},
-aiSummaryGeneratedAt: {
-  type: Date,
-  default: null
-}
+    type: String,
+    default: null
+  },
+  aiSummaryGeneratedAt: {
+    type: Date,
+    default: null
+  },
+  // Credibility features
+  credibilityScore: {
+    type: Number,
+    default: null,
+    min: 0,
+    max: 100
+  },
+  verificationStatus: {
+    type: String,
+    enum: ['unverified', 'verified', 'disputed', 'false'],
+    default: 'unverified'
+  },
+  factCheckResults: [{
+    source: String,
+    url: String,
+    rating: String,
+    checkedAt: Date
+  }],
+  submittedBy: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    default: null
+  },
+  approvalStatus: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'approved'
+  },
+  reviewedBy: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    default: null
+  },
+  reviewedAt: Date,
+  sourceMetadata: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Source',
+    default: null
+  }
 }, {
   timestamps: true
 });

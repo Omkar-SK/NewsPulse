@@ -15,6 +15,10 @@ const newsRoutes = require('./routes/news');
 const recommendationRoutes = require('./routes/recommendations');
 const newsletterRoutes = require('./routes/newsletter'); // NEW
 const aiRoutes = require('./routes/ai');
+const credibilityRoutes = require('./routes/credibility');
+const reviewRoutes = require('./routes/reviews');
+const adminRoutes = require('./routes/admin');
+const mediaLiteracyRoutes = require('./routes/mediaLiteracy');
 
 // Import newsletter scheduler
 const { initializeNewsletterScheduler } = require('./utils/newsletterScheduler'); // NEW
@@ -26,7 +30,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/api/ai', aiRoutes);
 
 // Serve static files (your HTML, CSS, JS)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -59,7 +62,12 @@ app.use('/api/bookmarks', bookmarkRoutes);
 app.use('/api/reactions', reactionRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/recommendations', recommendationRoutes);
-app.use('/api/newsletter', newsletterRoutes); // NEW
+app.use('/api/newsletter', newsletterRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/credibility', credibilityRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/media-literacy', mediaLiteracyRoutes);
 
 // Serve index.html for root route
 app.get('/', (req, res) => {
