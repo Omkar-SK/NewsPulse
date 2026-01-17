@@ -9,6 +9,13 @@ const CREDIBILITY_CONFIG = {
     INITIAL_MAX: 95   // Maximum initial credibility score
 };
 
+// Constants for UI and display
+const UI_CONFIG = {
+    MIN_TITLE_LENGTH: 3,
+    MAX_URL_DISPLAY_LENGTH: 60,
+    URL_TRUNCATE_LENGTH: 57
+};
+
 class CommunityApp {
     constructor() {
         this.posts = [];
@@ -158,7 +165,7 @@ class CommunityApp {
                 .join(' ');
             
             // If title is too short or just numbers, use hostname
-            if (title.length < 3 || /^\d+$/.test(title)) {
+            if (title.length < UI_CONFIG.MIN_TITLE_LENGTH || /^\d+$/.test(title)) {
                 title = `News from ${urlObj.hostname.replace('www.', '')}`;
             }
 
@@ -340,8 +347,8 @@ class CommunityApp {
     }
 
     truncateUrl(url) {
-        if (url.length > 60) {
-            return url.substring(0, 57) + '...';
+        if (url.length > UI_CONFIG.MAX_URL_DISPLAY_LENGTH) {
+            return url.substring(0, UI_CONFIG.URL_TRUNCATE_LENGTH) + '...';
         }
         return url;
     }
