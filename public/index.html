@@ -6170,8 +6170,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         credibilityHtml = `
                             <span class="credibility-badge ${credClass}">
-                                ${credLabel} ${score}
-                                <span class="verification-icon" title="${status}">${statusIcon}</span>
+                                ${credLabel} ${parseInt(score, 10)}
+                                <span class="verification-icon" title="${escapeHtml(status)}">${statusIcon}</span>
                             </span>
                         `;
                     }
@@ -6205,8 +6205,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             <button class="btn btn-primary read-more" data-url="${article.url}">Read More</button>
                             <button class="btn btn-similar find-similar" data-uri="${article.uri}">Similar</button>
                             ${authToken ? `
-                            <button class="btn-review write-review" data-article-id="${article.id}" data-article-title="${article.title.replace(/"/g, '&quot;')}">Write Review</button>
-                            <button class="btn-review view-reviews" data-article-id="${article.id}" data-article-title="${article.title.replace(/"/g, '&quot;')}">View Reviews</button>
+                            <button class="btn-review write-review" data-article-id="${article.id}" data-article-title="${escapeHtml(article.title)}">Write Review</button>
+                            <button class="btn-review view-reviews" data-article-id="${article.id}" data-article-title="${escapeHtml(article.title)}">View Reviews</button>
                             ` : ''}
                         </div>
                         ${authToken ? `
@@ -7436,17 +7436,17 @@ async function loadReviews(articleId, articleTitle) {
                     </div>
                     <p style="margin: 10px 0; color: var(--gray);">${escapeHtml(review.comment)}</p>
                     <div class="review-ratings">
-                        <span>Credibility: ${parseInt(review.credibilityScore)}/100</span>
-                        <span>Accuracy: ${parseInt(review.accuracyRating)}/5</span>
-                        <span>Sourcing: ${parseInt(review.sourcingRating)}/5</span>
-                        <span>Bias: ${parseInt(review.biasRating)}/5</span>
+                        <span>Credibility: ${parseInt(review.credibilityScore, 10)}/100</span>
+                        <span>Accuracy: ${parseInt(review.accuracyRating, 10)}/5</span>
+                        <span>Sourcing: ${parseInt(review.sourcingRating, 10)}/5</span>
+                        <span>Bias: ${parseInt(review.biasRating, 10)}/5</span>
                     </div>
                     <div class="review-vote-buttons">
                         <button class="vote-btn vote-helpful" data-review-id="${escapeHtml(review._id)}">
-                            👍 Helpful (${parseInt(review.helpfulCount) || 0})
+                            👍 Helpful (${parseInt(review.helpfulCount, 10) || 0})
                         </button>
                         <button class="vote-btn vote-not-helpful" data-review-id="${escapeHtml(review._id)}">
-                            👎 Not Helpful (${parseInt(review.notHelpfulCount) || 0})
+                            👎 Not Helpful (${parseInt(review.notHelpfulCount, 10) || 0})
                         </button>
                     </div>
                 </div>
@@ -7566,7 +7566,6 @@ async function loadMediaLiteracy() {
         
         if (data.success && data.articles) {
             content.innerHTML = data.articles.map(article => {
-                const safeSlug = encodeURIComponent(article.slug || '');
                 return `
                 <div class="news-card" style="cursor: pointer;" data-slug="${escapeHtml(article.slug)}">
                     <div class="news-content">
@@ -7586,7 +7585,7 @@ async function loadMediaLiteracy() {
                 card.addEventListener('click', function() {
                     const slug = this.dataset.slug;
                     if (slug) {
-                        window.open(`${API_BASE_URL}/media-literacy/${encodeURIComponent(slug)}`, '_blank');
+                        window.open(`${API_BASE_URL}/media-literacy/${encodeURIComponent(slug)}`, '_blank', 'noopener,noreferrer');
                     }
                 });
             });
