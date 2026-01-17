@@ -1236,11 +1236,11 @@ async function createNewsCard(article) {
                 <span class="time">${article.time}</span>
             </div>
             <div class="news-actions">
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <div class="action-group">
                     <button class="btn btn-primary read-more" data-url="${article.url}">Read More</button>
                     <button class="btn btn-similar find-similar" data-uri="${article.uri}">Similar</button>
                 </div>
-                <div style="display: flex; gap: 8px; align-items: center;">
+                <div class="action-group">
                     ${authToken ? `
                     <div class="reactions">
                         <button class="reaction-btn like ${userReaction === 'like' ? 'active' : ''}" data-article-id="${article.id}" data-type="like" title="Like">
@@ -1254,7 +1254,8 @@ async function createNewsCard(article) {
                         </button>
                     </div>
                     <button class="btn-share" data-article-id="${article.id}" title="Share to Community">
-                        <i class="fas fa-share-alt"></i>
+                        <i class="fas fa-rocket"></i>
+                        <span>Boost & Share</span>
                     </button>
                     ` : `
                     <div class="reactions">
