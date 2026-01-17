@@ -52,12 +52,12 @@ Content: ${article.body || article.summary || ''}
 
 ${articleContent}
 
-Provide a JSON response with the following structure:
+Provide a JSON response with the following structure (ensure all strings are properly escaped):
 {
   "score": <number 0-100, where 100 is highly credible>,
   "confidence": <number 0-100 indicating analysis confidence>,
-  "reasoning": "<brief explanation of the credibility assessment>",
-  "redFlags": ["<list of any red flags or concerns found>"]
+  "reasoning": "<brief explanation, keep under 200 characters>",
+  "redFlags": ["<flag 1>", "<flag 2>"]
 }
 
 Consider these factors:
@@ -70,7 +70,7 @@ Consider these factors:
 - Date relevance
 - Bias indicators
 
-Return ONLY valid JSON, no additional text.`;
+CRITICAL: Return ONLY valid JSON with properly escaped strings. Do not include markdown formatting or extra text.`;
 
     const apiUrl = `${GEMINI_API_URL}?key=${GEMINI_API_KEY}`;
 
@@ -81,7 +81,7 @@ Return ONLY valid JSON, no additional text.`;
         contents: [{ parts: [{ text: prompt }] }],
         systemInstruction: {
           parts: [{
-            text: "You are a professional fact-checker and credibility analyst. Analyze news articles objectively and provide structured JSON output with credibility scores and reasoning."
+            text: "You are a professional fact-checker and credibility analyst. Analyze news articles objectively and provide structured JSON output with credibility scores and reasoning. Always return valid JSON with properly escaped strings. Never include markdown code blocks or additional text outside the JSON structure."
           }]
         },
         generationConfig: { 
@@ -105,14 +105,43 @@ Return ONLY valid JSON, no additional text.`;
     }
 
     const analysisText = data.candidates[0]?.content?.parts?.[0]?.text?.trim();
-    const analysis = JSON.parse(analysisText);
+    
+    // Try to parse JSON with error handling
+    let analysis;
+    try {
+      // Remove markdown code blocks if present
+      let cleanedText = analysisText;
+      if (cleanedText.includes('```json')) {
+        cleanedText = cleanedText.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+      }
+      if (cleanedText.includes('```')) {
+        cleanedText = cleanedText.replace(/```\n?/g, '');
+      }
+      
+      analysis = JSON.parse(cleanedText);
+    } catch (parseError) {
+      console.error('JSON Parse Error:', parseError);
+      console.error('Raw response:', analysisText);
+      
+      // Fallback: Try to extract values with regex
+      const scoreMatch = analysisText.match(/"score"\s*:\s*(\d+)/);
+      const confidenceMatch = analysisText.match(/"confidence"\s*:\s*(\d+)/);
+      const reasoningMatch = analysisText.match(/"reasoning"\s*:\s*"([^"]+)"/);
+      
+      analysis = {
+        score: scoreMatch ? parseInt(scoreMatch[1]) : 50,
+        confidence: confidenceMatch ? parseInt(confidenceMatch[1]) : 70,
+        reasoning: reasoningMatch ? reasoningMatch[1] : 'Unable to parse detailed analysis. Please try again.',
+        redFlags: []
+      };
+    }
 
     // Store analysis in article
     article.aiCredibilityAnalysis = {
-      score: Math.min(100, Math.max(0, analysis.score)),
-      confidence: Math.min(100, Math.max(0, analysis.confidence || 80)),
-      reasoning: analysis.reasoning,
-      redFlags: analysis.redFlags || [],
+      score: Math.min(100, Math.max(0, analysis.score || 50)),
+      confidence: Math.min(100, Math.max(0, analysis.confidence || 70)),
+      reasoning: analysis.reasoning || 'Analysis completed',
+      redFlags: Array.isArray(analysis.redFlags) ? analysis.redFlags : [],
       analyzedAt: new Date(),
       userRatings: article.aiCredibilityAnalysis?.userRatings || { helpful: 0, notHelpful: 0 }
     };
