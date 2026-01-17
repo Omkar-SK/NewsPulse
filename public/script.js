@@ -34,7 +34,7 @@ const translations = {
         searchPlaceholder: 'Search headlines...',
         lightMode: 'Light Mode',
         darkMode: 'Dark Mode',
-        
+
         // Auth Modal
         welcomeBack: 'Welcome Back!',
         loginSubtitle: 'Login to access your personalized news feed',
@@ -47,7 +47,7 @@ const translations = {
         alreadyHaveAccount: 'Already have an account?',
         createAccount: 'Create Account',
         joinNewsPulse: 'Join NewsPulse to stay updated',
-        
+
         // Daily Mix
         dailyMix: '✨ Your Daily Mix',
         dailyMixSubtitle: 'Personalized news recommendations',
@@ -58,7 +58,7 @@ const translations = {
         startBuildingMix: 'Start Building Your Mix',
         likeArticlesForRecs: 'Like articles to get personalized recommendations',
         exploreNews: 'Explore News',
-        
+
         // Categories
         filterByCategory: 'Filter by Category',
         all: 'All',
@@ -69,7 +69,7 @@ const translations = {
         entertainment: 'Entertainment',
         health: 'Health',
         science: 'Science',
-        
+
         // News Section
         trendingNews: 'Trending News',
         latestNews: 'Latest News',
@@ -78,7 +78,7 @@ const translations = {
         readFullStory: 'Read Full Story',
         cached: '📦 Cached',
         fresh: '🆕 Fresh',
-        
+
         // Sidebar
         trendingTopics: 'TRENDING TOPICS',
         filters: 'FILTERS',
@@ -88,7 +88,7 @@ const translations = {
         newsletter: '📬 NEWSLETTER',
         loginToViewBookmarks: 'Login to view bookmarks',
         noBookmarks: 'No bookmarked articles yet',
-        
+
         // Newsletter
         getDailyHeadlines: 'Get daily top headlines delivered to your inbox every morning! 📬',
         subscribeNow: 'Subscribe Now',
@@ -100,7 +100,7 @@ const translations = {
         unsubscribe: 'Unsubscribe',
         daily: 'daily',
         weekly: 'weekly',
-        
+
         // Pages
         mostPopularStories: 'Most Popular Stories',
         sentimentTrends: 'SENTIMENT TRENDS',
@@ -114,11 +114,11 @@ const translations = {
         newsSourceDistribution: 'News Source Distribution',
         topKeywords: 'Top Keywords',
         keyInsights: 'KEY INSIGHTS',
-        
+
         // Similar Articles
         similarArticles: 'Similar Articles',
         noSimilarArticles: 'No similar articles found',
-        
+
         // Sentiment & Time
         positive: 'Positive',
         negative: 'Negative',
@@ -127,11 +127,11 @@ const translations = {
         minutesAgo: 'minutes ago',
         hoursAgo: 'hours ago',
         daysAgo: 'days ago',
-        
+
         // Messages
         noArticlesFound: 'No articles found',
         analyzingData: 'Analyzing data...',
-        
+
         // Footer
         aboutNewsPulse: 'About NewsPulse',
         aboutDescription: 'Bringing you trending headlines with AI-powered sentiment analysis and insights.',
@@ -139,7 +139,7 @@ const translations = {
         followUs: 'Follow Us',
         footerCopyright: '© 2025 NewsPulse. All rights reserved. Powered by NewsAPI.ai'
     },
-    
+
     hi: {
         logo: '📊 न्यूज़पल्स',
         forYou: 'आपके लिए',
@@ -243,23 +243,23 @@ function t(key) {
 // Update ALL UI with translations
 function updateUILanguage() {
     console.log('🌍 Updating UI language to:', currentLanguage);
-    
+
     const logo = document.querySelector('.logo');
     if (logo) logo.textContent = t('logo');
-    
+
     document.querySelectorAll('.nav-link').forEach(link => {
         const page = link.dataset.page;
         if (page === 'for-you') link.textContent = t('forYou');
         if (page === 'trending') link.textContent = t('trending');
         if (page === 'analysis') link.textContent = t('analysis');
     });
-    
+
     const loginBtn = document.getElementById('show-auth-btn');
     if (loginBtn) loginBtn.textContent = t('login');
-    
+
     const searchInput = document.getElementById('search-input');
     if (searchInput) searchInput.placeholder = t('searchPlaceholder');
-    
+
     const modeLabel = document.getElementById('mode-label');
     if (modeLabel) {
         const isDark = document.getElementById('mode-toggle').checked;
@@ -270,11 +270,11 @@ function updateUILanguage() {
 function setupLanguageSelector() {
     const langSelect = document.getElementById('lang-select');
     if (!langSelect) return;
-    
-    langSelect.addEventListener('change', function() {
+
+    langSelect.addEventListener('change', function () {
         const newLang = this.value;
         console.log('🌍 Language changed to:', newLang);
-        
+
         currentLanguage = newLang;
         localStorage.setItem('preferredLanguage', newLang);
         updateUILanguage();
@@ -282,7 +282,7 @@ function setupLanguageSelector() {
 }
 
 // Initialize the application
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     checkAuthStatus();
     setupEventListeners();
     initializeCharts();
@@ -318,7 +318,7 @@ function updateUIForLoggedInUser() {
 
     const userAvatar = document.getElementById('user-avatar');
     const userNameText = document.getElementById('user-name-text');
-    
+
     userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
     userNameText.textContent = currentUser.name;
 }
@@ -335,7 +335,7 @@ function updateUIForLoggedOutUser() {
 
 async function handleSignup(e) {
     e.preventDefault();
-    
+
     const name = document.getElementById('signup-name').value;
     const email = document.getElementById('signup-email').value;
     const password = document.getElementById('signup-password').value;
@@ -368,7 +368,7 @@ async function handleSignup(e) {
 
         document.getElementById('auth-overlay').classList.remove('active');
         updateUIForLoggedInUser();
-        
+
         await loadUserBookmarks();
         await loadNewsFromAPI();
         await loadDailyMix();
@@ -384,7 +384,7 @@ async function handleSignup(e) {
 
 async function handleLogin(e) {
     e.preventDefault();
-    
+
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
     const errorDiv = document.getElementById('login-error');
@@ -416,7 +416,7 @@ async function handleLogin(e) {
 
         document.getElementById('auth-overlay').classList.remove('active');
         updateUIForLoggedInUser();
-        
+
         await loadUserBookmarks();
         await loadNewsFromAPI();
         await loadDailyMix();
@@ -459,7 +459,7 @@ async function loadDailyMix() {
 
     try {
         console.log('🎯 Fetching Daily Mix recommendations...');
-        
+
         const response = await fetch(`${API_BASE_URL}/recommendations?limit=15`, {
             headers: {
                 'Authorization': `Bearer ${authToken}`
@@ -486,57 +486,57 @@ async function loadDailyMix() {
 
 function displayDailyMix(recommendations) {
     const contentDiv = document.getElementById('daily-mix-content');
-    
+
     const carouselWrapper = document.createElement('div');
     carouselWrapper.className = 'daily-mix-carousel-wrapper';
-    
+
     const carouselContainer = document.createElement('div');
     carouselContainer.className = 'daily-mix-carousel-container';
-    
+
     const carousel = document.createElement('div');
     carousel.className = 'daily-mix-carousel';
     carousel.id = 'daily-mix-carousel';
-    
+
     recommendations.forEach((article, index) => {
         const card = createDailyMixCard(article, index);
         carousel.appendChild(card);
     });
-    
+
     carouselContainer.appendChild(carousel);
     carouselWrapper.appendChild(carouselContainer);
-    
+
     const leftBtn = document.createElement('div');
     leftBtn.className = 'daily-mix-scroll-btn daily-mix-scroll-left';
     leftBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
     leftBtn.onclick = () => scrollDailyMix('left');
-    
+
     const rightBtn = document.createElement('div');
     rightBtn.className = 'daily-mix-scroll-btn daily-mix-scroll-right';
     rightBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
     rightBtn.onclick = () => scrollDailyMix('right');
-    
+
     carouselWrapper.appendChild(leftBtn);
     carouselWrapper.appendChild(rightBtn);
-    
+
     contentDiv.appendChild(carouselWrapper);
-    
+
     setTimeout(() => {
         updateDailyMixScrollButtons();
     }, 100);
-    
+
     carousel.addEventListener('scroll', updateDailyMixScrollButtons);
 }
 
 function createDailyMixCard(article, index) {
     const card = document.createElement('div');
     card.className = 'daily-mix-card';
-    
+
     const sentiment = getSentimentLabel(article.sentiment);
     const sentimentEmoji = sentiment === 'Positive' ? '😊' : sentiment === 'Negative' ? '😟' : '😐';
-    
+
     const truncatedTitle = truncateText(article.title, 80);
     const truncatedSummary = truncateText(article.summary, 120);
-    
+
     card.innerHTML = `
         <div class="daily-mix-card-image">
             <img src="${article.image || 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800'}" 
@@ -555,24 +555,24 @@ function createDailyMixCard(article, index) {
             </div>
         </div>
     `;
-    
+
     card.onclick = () => window.open(article.url, '_blank');
-    
+
     return card;
 }
 
 function scrollDailyMix(direction) {
     const carousel = document.getElementById('daily-mix-carousel');
     if (!carousel) return;
-    
+
     const scrollAmount = 320;
-    
+
     if (direction === 'left') {
         carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
     } else {
         carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
-    
+
     setTimeout(updateDailyMixScrollButtons, 300);
 }
 
@@ -580,12 +580,12 @@ function updateDailyMixScrollButtons() {
     const carousel = document.getElementById('daily-mix-carousel');
     const leftBtn = document.querySelector('.daily-mix-scroll-left');
     const rightBtn = document.querySelector('.daily-mix-scroll-right');
-    
+
     if (!carousel || !leftBtn || !rightBtn) return;
-    
+
     const isAtStart = carousel.scrollLeft <= 10;
     const isAtEnd = carousel.scrollLeft >= (carousel.scrollWidth - carousel.clientWidth - 10);
-    
+
     leftBtn.classList.toggle('disabled', isAtStart);
     rightBtn.classList.toggle('disabled', isAtEnd);
 }
@@ -649,7 +649,7 @@ async function loadUserBookmarks() {
 
 async function loadNewsletterStatus() {
     const widget = document.getElementById('newsletter-content');
-    
+
     if (!authToken) {
         widget.innerHTML = `
             <div class="newsletter-login-prompt">
@@ -687,10 +687,10 @@ async function loadNewsletterStatus() {
 
 function displaySubscribedNewsletter(preferences) {
     const widget = document.getElementById('newsletter-content');
-    
+
     const categories = preferences.categories.join(', ');
     const frequency = preferences.frequency.charAt(0).toUpperCase() + preferences.frequency.slice(1);
-    
+
     widget.innerHTML = `
         <div class="newsletter-subscribed">
             <i class="fas fa-check-circle"></i>
@@ -715,7 +715,7 @@ function displaySubscribedNewsletter(preferences) {
 
 function displayUnsubscribedNewsletter() {
     const widget = document.getElementById('newsletter-content');
-    
+
     widget.innerHTML = `
         <div class="newsletter-section">
             <p>Get daily top headlines delivered to your inbox every morning! 📬</p>
@@ -803,9 +803,9 @@ async function loadCurrentPreferences() {
 
         if (data.success && data.preferences) {
             document.getElementById('newsletter-frequency').value = data.preferences.frequency;
-            
+
             document.querySelectorAll('[name="category"]').forEach(cb => cb.checked = false);
-            
+
             data.preferences.categories.forEach(cat => {
                 const checkbox = document.querySelector(`[name="category"][value="${cat}"]`);
                 if (checkbox) checkbox.checked = true;
@@ -930,17 +930,17 @@ async function handleReaction(articleId, reactionType, btnElement) {
 
         if (data.success) {
             console.log('✅ Server response:', data);
-            
+
             articleReactions[articleId] = data.counts;
-            
+
             const articleIndex = allArticles.findIndex(a => a.id === articleId);
             if (articleIndex !== -1) {
                 allArticles[articleIndex].reactions = data.counts;
             }
-            
+
             const allCards = document.querySelectorAll(`[data-article-id="${articleId}"]`);
             console.log(`📌 Found ${allCards.length} cards to update`);
-            
+
             allCards.forEach(card => {
                 const reactionsContainer = card.querySelector('.reactions');
                 if (reactionsContainer) {
@@ -953,11 +953,11 @@ async function handleReaction(articleId, reactionType, btnElement) {
                             btn.classList.remove('active');
                         }
                     });
-                    
+
                     const likeCountSpan = reactionsContainer.querySelector('[data-type="like"] .reaction-count');
                     const dislikeCountSpan = reactionsContainer.querySelector('[data-type="dislike"] .reaction-count');
                     const neutralCountSpan = reactionsContainer.querySelector('[data-type="neutral"] .reaction-count');
-                    
+
                     if (likeCountSpan) {
                         likeCountSpan.textContent = data.counts.like || 0;
                     }
@@ -969,9 +969,9 @@ async function handleReaction(articleId, reactionType, btnElement) {
                     }
                 }
             });
-            
+
             console.log('✅ All counts updated successfully!');
-            
+
             if (reactionType === 'like') {
                 console.log('🔄 Reloading Daily Mix after like...');
                 setTimeout(() => loadDailyMix(), 500);
@@ -1017,31 +1017,31 @@ async function fetchNews(category = 'all', country = '', lang = 'en') {
         });
 
         const response = await fetch(`${API_BASE_URL}/news?${params}`);
-        
+
         if (!response.ok) {
             throw new Error(`API error: ${response.status}`);
         }
 
         const data = await response.json();
-        
+
         if (data.success && data.articles) {
             isFromCache = data.fromCache;
-            
+
             const cacheStatus = document.getElementById('cache-status');
             const cacheStatusCarousel = document.getElementById('cache-status-carousel');
-            
+
             if (cacheStatus) {
-                cacheStatus.innerHTML = data.fromCache ? 
-                    '<span class="cache-indicator cached">📦 Cached</span>' : 
+                cacheStatus.innerHTML = data.fromCache ?
+                    '<span class="cache-indicator cached">📦 Cached</span>' :
                     '<span class="cache-indicator fresh">🆕 Fresh</span>';
             }
-            
+
             if (cacheStatusCarousel) {
-                cacheStatusCarousel.innerHTML = data.fromCache ? 
-                    '<span class="cache-indicator cached">📦 Cached</span>' : 
+                cacheStatusCarousel.innerHTML = data.fromCache ?
+                    '<span class="cache-indicator cached">📦 Cached</span>' :
                     '<span class="cache-indicator fresh">🆕 Fresh</span>';
             }
-            
+
             allArticles = data.articles.map(article => ({
                 id: article.articleId,
                 title: article.title,
@@ -1058,11 +1058,11 @@ async function fetchNews(category = 'all', country = '', lang = 'en') {
                 lang: article.lang,
                 reactions: article.reactions || { like: 0, dislike: 0, neutral: 0, total: 0 }
             }));
-            
+
             allArticles.forEach(article => {
                 articleReactions[article.id] = article.reactions;
             });
-            
+
             console.log(`Loaded ${allArticles.length} articles (from ${data.fromCache ? 'cache' : 'API'})`);
             return allArticles;
         } else {
@@ -1078,20 +1078,20 @@ async function searchNews(query) {
     try {
         const langSelect = document.getElementById('lang-select');
         const lang = langSelect ? langSelect.value : 'en';
-        
+
         const params = new URLSearchParams({
             query,
             lang
         });
 
         const response = await fetch(`${API_BASE_URL}/news/search?${params}`);
-        
+
         if (!response.ok) {
             throw new Error(`API error: ${response.status}`);
         }
 
         const data = await response.json();
-        
+
         if (data.success && data.articles) {
             return data.articles.map(article => ({
                 id: article.articleId,
@@ -1109,7 +1109,7 @@ async function searchNews(query) {
                 reactions: article.reactions || { like: 0, dislike: 0, neutral: 0, total: 0 }
             }));
         }
-        
+
         return [];
     } catch (error) {
         console.error('Error searching news:', error);
@@ -1120,17 +1120,17 @@ async function searchNews(query) {
 async function findSimilarArticles(articleUri) {
     try {
         const response = await fetch(`${API_BASE_URL}/news/similar/${articleUri}`);
-        
+
         if (!response.ok) {
             throw new Error(`API error: ${response.status}`);
         }
 
         const data = await response.json();
-        
+
         if (data.success && data.articles) {
             return data.articles;
         }
-        
+
         return [];
     } catch (error) {
         console.error('Error finding similar articles:', error);
@@ -1143,15 +1143,15 @@ async function findSimilarArticles(articleUri) {
 async function loadNewsFromAPI(category = 'all', country = '', lang = 'en') {
     const container = document.getElementById('news-container');
     const loading = document.getElementById('news-loading');
-    
+
     loading.style.display = 'flex';
     container.style.display = 'none';
-    
+
     const articles = await fetchNews(category, country, lang);
-    
+
     loading.style.display = 'none';
     container.style.display = 'grid';
-    
+
     await displayNewsArticles(articles, 'news-container');
     updateAnalytics(articles);
     loadCarousel(articles.slice(0, 5));
@@ -1162,32 +1162,32 @@ async function loadTrendingArticles() {
     const loading = document.getElementById('trending-loading');
     const langSelect = document.getElementById('lang-select');
     const lang = langSelect ? langSelect.value : 'en';
-    
+
     loading.style.display = 'flex';
     container.style.display = 'none';
-    
+
     const articles = await fetchNews('all', '', lang);
     const trending = articles.sort((a, b) => {
         const aScore = (a.reactions.total || 0) + (a.shares || 0);
         const bScore = (b.reactions.total || 0) + (b.shares || 0);
         return bScore - aScore;
     }).slice(0, 20);
-    
+
     loading.style.display = 'none';
     container.style.display = 'grid';
-    
+
     await displayNewsArticles(trending, 'trending-news-container');
 }
 
 async function displayNewsArticles(articles, containerId) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
-    
+
     if (articles.length === 0) {
         container.innerHTML = '<p class="empty-state">No articles found</p>';
         return;
     }
-    
+
     for (const article of articles) {
         const newsCard = await createNewsCard(article);
         container.appendChild(newsCard);
@@ -1199,22 +1199,22 @@ async function createNewsCard(article) {
     card.className = 'news-card';
     card.dataset.category = article.category;
     card.dataset.articleId = article.id;
-    
+
     const sentiment = getSentimentLabel(article.sentiment);
     const sentimentClass = sentiment.toLowerCase();
-    
+
     const isBookmarked = userBookmarks.some(b => b.articleId === article.id);
-    
+
     const reactions = article.reactions || { like: 0, dislike: 0, neutral: 0, total: 0 };
     const userReaction = await loadUserReaction(article.id);
-    
+
     let dominantSentiment = 'neutral';
     if (reactions.like > reactions.dislike && reactions.like > reactions.neutral) {
         dominantSentiment = 'positive';
     } else if (reactions.dislike > reactions.like && reactions.dislike > reactions.neutral) {
         dominantSentiment = 'negative';
     }
-    
+
     card.innerHTML = `
         <div class="news-image">
             <img src="${article.image}" alt="News image" onerror="this.src='https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800'">
@@ -1240,33 +1240,38 @@ async function createNewsCard(article) {
                     <button class="btn btn-primary read-more" data-url="${article.url}">Read More</button>
                     <button class="btn btn-similar find-similar" data-uri="${article.uri}">Similar</button>
                 </div>
-                ${authToken ? `
-                <div class="reactions">
-                    <button class="reaction-btn like ${userReaction === 'like' ? 'active' : ''}" data-article-id="${article.id}" data-type="like" title="Like">
-                        👍 <span class="reaction-count" data-type="like">${reactions.like}</span>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    ${authToken ? `
+                    <div class="reactions">
+                        <button class="reaction-btn like ${userReaction === 'like' ? 'active' : ''}" data-article-id="${article.id}" data-type="like" title="Like">
+                            👍 <span class="reaction-count" data-type="like">${reactions.like}</span>
+                        </button>
+                        <button class="reaction-btn dislike ${userReaction === 'dislike' ? 'active' : ''}" data-article-id="${article.id}" data-type="dislike" title="Dislike">
+                            👎 <span class="reaction-count" data-type="dislike">${reactions.dislike}</span>
+                        </button>
+                        <button class="reaction-btn neutral ${userReaction === 'neutral' ? 'active' : ''}" data-article-id="${article.id}" data-type="neutral" title="Neutral">
+                            😐 <span class="reaction-count" data-type="neutral">${reactions.neutral}</span>
+                        </button>
+                    </div>
+                    <button class="btn-share" data-article-id="${article.id}" title="Share to Community">
+                        <i class="fas fa-share-alt"></i>
                     </button>
-                    <button class="reaction-btn dislike ${userReaction === 'dislike' ? 'active' : ''}" data-article-id="${article.id}" data-type="dislike" title="Dislike">
-                        👎 <span class="reaction-count" data-type="dislike">${reactions.dislike}</span>
-                    </button>
-                    <button class="reaction-btn neutral ${userReaction === 'neutral' ? 'active' : ''}" data-article-id="${article.id}" data-type="neutral" title="Neutral">
-                        😐 <span class="reaction-count" data-type="neutral">${reactions.neutral}</span>
-                    </button>
+                    ` : `
+                    <div class="reactions">
+                        <span style="font-size: 12px;">👍 ${reactions.like} 👎 ${reactions.dislike} 😐 ${reactions.neutral}</span>
+                    </div>
+                    `}
                 </div>
-                ` : `
-                <div class="reactions">
-                    <span style="font-size: 12px;">👍 ${reactions.like} 👎 ${reactions.dislike} 😐 ${reactions.neutral}</span>
-                </div>
-                `}
             </div>
         </div>
     `;
-    
+
     // Add credibility badge AFTER card is created
     // Use setTimeout to ensure DOM is ready
     setTimeout(() => {
         addCredibilityBadge(card, article.id);
     }, 0);
-    
+
     return card;
 }
 function loadCarousel(articles) {
@@ -1274,15 +1279,15 @@ function loadCarousel(articles) {
     const indicators = document.getElementById('carousel-indicators');
     const container = document.getElementById('carousel-container');
     const loading = document.getElementById('carousel-loading');
-    
+
     if (articles.length === 0) {
         loading.style.display = 'none';
         return;
     }
-    
+
     carousel.innerHTML = '';
     indicators.innerHTML = '';
-    
+
     articles.forEach((article, index) => {
         const item = document.createElement('div');
         item.className = 'carousel-item';
@@ -1295,54 +1300,54 @@ function loadCarousel(articles) {
             </div>
         `;
         carousel.appendChild(item);
-        
+
         const indicator = document.createElement('div');
         indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
         indicator.dataset.index = index;
         indicators.appendChild(indicator);
     });
-    
+
     loading.style.display = 'none';
     container.style.display = 'block';
-    
+
     initializeCarousel();
 }
 // ========== ANALYTICS FUNCTIONS ==========
 
 function updateAnalytics(articles) {
     if (articles.length === 0) return;
-    
+
     const sentimentCounts = {
         positive: 0,
         negative: 0,
         neutral: 0
     };
-    
+
     articles.forEach(article => {
         const label = getSentimentLabel(article.sentiment).toLowerCase();
         sentimentCounts[label]++;
     });
-    
+
     document.getElementById('stat-total').textContent = articles.length;
     document.getElementById('stat-positive').textContent = sentimentCounts.positive;
     document.getElementById('stat-negative').textContent = sentimentCounts.negative;
     document.getElementById('stat-neutral').textContent = sentimentCounts.neutral;
-    
+
     updateSentimentChart(sentimentCounts);
-    
+
     const sources = {};
     articles.forEach(article => {
         sources[article.source] = (sources[article.source] || 0) + 1;
     });
     updateSourceChart(sources);
-    
+
     const categories = {};
     articles.forEach(article => {
         const cat = article.category || 'General';
         categories[cat] = (categories[cat] || 0) + 1;
     });
     updateCategoryChart(categories);
-    
+
     extractTrendingTopics(articles);
     generateWordCloud(articles);
 }
@@ -1350,25 +1355,25 @@ function updateAnalytics(articles) {
 function extractTrendingTopics(articles) {
     const words = {};
     const stopWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'as', 'is', 'was', 'are', 'been', 'be', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'should', 'could', 'may', 'might', 'must', 'can', 'this', 'that', 'these', 'those'];
-    
+
     articles.forEach(article => {
         const text = (article.title + ' ' + article.summary).toLowerCase();
         const tokens = text.match(/\b[a-z]{4,}\b/g) || [];
-        
+
         tokens.forEach(word => {
             if (!stopWords.includes(word)) {
                 words[word] = (words[word] || 0) + 1;
             }
         });
     });
-    
+
     const sortedWords = Object.entries(words)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 10);
-    
+
     const container = document.getElementById('trending-topics');
     container.innerHTML = '';
-    
+
     sortedWords.forEach(([word, count]) => {
         const tag = document.createElement('a');
         tag.href = '#';
@@ -1385,25 +1390,25 @@ function extractTrendingTopics(articles) {
 function generateWordCloud(articles) {
     const words = {};
     const stopWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'as', 'is', 'was', 'are', 'been', 'be', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'should', 'could', 'may', 'might', 'must', 'can', 'this', 'that', 'these', 'those'];
-    
+
     articles.forEach(article => {
         const text = (article.title + ' ' + article.summary).toLowerCase();
         const tokens = text.match(/\b[a-z]{4,}\b/g) || [];
-        
+
         tokens.forEach(word => {
             if (!stopWords.includes(word)) {
                 words[word] = (words[word] || 0) + 1;
             }
         });
     });
-    
+
     const sortedWords = Object.entries(words)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 20);
-    
+
     const container = document.getElementById('analysis-word-cloud');
     container.innerHTML = '';
-    
+
     sortedWords.forEach(([word, count], index) => {
         const wordElement = document.createElement('span');
         const size = index < 5 ? 'large' : index < 12 ? 'medium' : 'small';
@@ -1455,7 +1460,7 @@ function initializeCharts() {
             }
         });
     }
-    
+
     const sourceCtx = document.getElementById('source-chart');
     if (sourceCtx) {
         sourceChart = new Chart(sourceCtx.getContext('2d'), {
@@ -1483,7 +1488,7 @@ function initializeCharts() {
             }
         });
     }
-    
+
     const analysisSentimentCtx = document.getElementById('analysis-sentiment-chart');
     if (analysisSentimentCtx) {
         analysisSentimentChart = new Chart(analysisSentimentCtx.getContext('2d'), {
@@ -1505,7 +1510,7 @@ function initializeCharts() {
             }
         });
     }
-    
+
     const categoryCtx = document.getElementById('category-chart');
     if (categoryCtx) {
         categoryChart = new Chart(categoryCtx.getContext('2d'), {
@@ -1531,7 +1536,7 @@ function initializeCharts() {
             }
         });
     }
-    
+
     const analysisSourceCtx = document.getElementById('analysis-source-chart');
     if (analysisSourceCtx) {
         analysisSourceChart = new Chart(analysisSourceCtx.getContext('2d'), {
@@ -1562,12 +1567,12 @@ function initializeCharts() {
 
 function updateSentimentChart(sentimentCounts) {
     const data = [sentimentCounts.positive, sentimentCounts.negative, sentimentCounts.neutral];
-    
+
     if (sentimentChart) {
         sentimentChart.data.datasets[0].data = data;
         sentimentChart.update();
     }
-    
+
     if (analysisSentimentChart) {
         analysisSentimentChart.data.datasets[0].data = data;
         analysisSentimentChart.update();
@@ -1578,16 +1583,16 @@ function updateSourceChart(sources) {
     const sortedSources = Object.entries(sources)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 6);
-    
+
     const labels = sortedSources.map(([source]) => source.substring(0, 20));
     const data = sortedSources.map(([, count]) => count);
-    
+
     if (sourceChart) {
         sourceChart.data.labels = labels;
         sourceChart.data.datasets[0].data = data;
         sourceChart.update();
     }
-    
+
     if (analysisSourceChart) {
         analysisSourceChart.data.labels = labels;
         analysisSourceChart.data.datasets[0].data = data;
@@ -1598,7 +1603,7 @@ function updateSourceChart(sources) {
 function updateCategoryChart(categories) {
     const labels = Object.keys(categories);
     const data = Object.values(categories);
-    
+
     if (categoryChart) {
         categoryChart.data.labels = labels;
         categoryChart.data.datasets[0].data = data;
@@ -1616,14 +1621,14 @@ function getSentimentLabel(sentiment) {
 
 function formatTime(dateString) {
     if (!dateString) return t('recently');
-    
+
     const date = new Date(dateString);
     const now = new Date();
     const diffMs = now - date;
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
-    
+
     if (diffMins < 60) return `${diffMins} ${t('minutesAgo')}`;
     if (diffHours < 24) return `${diffHours} ${t('hoursAgo')}`;
     if (diffDays < 7) return `${diffDays} ${t('daysAgo')}`;
@@ -1634,7 +1639,7 @@ function formatTime(dateString) {
 
 function setupEventListeners() {
     setupLanguageSelector();
-    
+
     // Auth Modal
     document.getElementById('show-auth-btn').addEventListener('click', () => {
         document.getElementById('auth-overlay').classList.add('active');
@@ -1668,7 +1673,7 @@ function setupEventListeners() {
     document.addEventListener('click', (e) => {
         const userMenu = document.getElementById('user-menu');
         const userDropdown = document.getElementById('user-dropdown');
-        
+
         if (userMenu && !userMenu.contains(e.target)) {
             userDropdown.classList.remove('active');
         }
@@ -1682,64 +1687,68 @@ function setupEventListeners() {
     // Navigation
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            navLinks.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
-            
-            const pageId = this.dataset.page + '-page';
-            document.querySelectorAll('.page-content').forEach(page => {
-                page.classList.remove('active');
-            });
-            document.getElementById(pageId).classList.add('active');
-            
-            if (pageId === 'trending-page') {
-                loadTrendingArticles();
-            } else if (pageId === 'for-you-page') {
-                loadNewsFromAPI();
+        link.addEventListener('click', function (e) {
+            // Only prevent default if it's a SPA link (has data-page)
+            if (this.hasAttribute('data-page')) {
+                e.preventDefault();
+
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+
+
+                const pageId = this.dataset.page + '-page';
+                document.querySelectorAll('.page-content').forEach(page => {
+                    page.classList.remove('active');
+                });
+                document.getElementById(pageId).classList.add('active');
+
+                if (pageId === 'trending-page') {
+                    loadTrendingArticles();
+                } else if (pageId === 'for-you-page') {
+                    loadNewsFromAPI();
+                }
             }
         });
     });
-    
+
     // Dark mode toggle
     const modeToggle = document.getElementById('mode-toggle');
     const modeLabel = document.getElementById('mode-label');
-    
-    modeToggle.addEventListener('change', function() {
+
+    modeToggle.addEventListener('change', function () {
         document.body.classList.toggle('dark-mode', this.checked);
         modeLabel.textContent = this.checked ? 'Dark Mode' : 'Light Mode';
         localStorage.setItem('darkMode', this.checked);
     });
-    
+
     const savedDarkMode = localStorage.getItem('darkMode') === 'true';
     if (savedDarkMode) {
         modeToggle.checked = true;
         document.body.classList.add('dark-mode');
         modeLabel.textContent = 'Dark Mode';
     }
-    
+
     // Category filters
     const categoryBtns = document.querySelectorAll('.category-btn');
     categoryBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             categoryBtns.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
-            
+
             const category = this.dataset.category;
             const countrySelect = document.getElementById('country-select');
             const langSelect = document.getElementById('lang-select');
             const country = countrySelect ? countrySelect.value : '';
             const lang = langSelect ? langSelect.value : 'en';
-            
+
             loadNewsFromAPI(category, country, lang);
         });
     });
-    
+
     // Country filter
     const countrySelect = document.getElementById('country-select');
     if (countrySelect) {
-        countrySelect.addEventListener('change', function() {
+        countrySelect.addEventListener('change', function () {
             const categoryBtn = document.querySelector('.category-btn.active');
             const category = categoryBtn ? categoryBtn.dataset.category : 'all';
             const langSelect = document.getElementById('lang-select');
@@ -1747,11 +1756,11 @@ function setupEventListeners() {
             loadNewsFromAPI(category, this.value, lang);
         });
     }
-    
+
     // Language filter
     const langSelect = document.getElementById('lang-select');
     if (langSelect) {
-        langSelect.addEventListener('change', function() {
+        langSelect.addEventListener('change', function () {
             const categoryBtn = document.querySelector('.category-btn.active');
             const category = categoryBtn ? categoryBtn.dataset.category : 'all';
             const countrySelect = document.getElementById('country-select');
@@ -1759,12 +1768,12 @@ function setupEventListeners() {
             loadNewsFromAPI(category, country, this.value);
         });
     }
-    
+
     // Search functionality
     const searchInput = document.getElementById('search-input');
-    searchInput.addEventListener('input', debounce(async function() {
+    searchInput.addEventListener('input', debounce(async function () {
         const query = this.value.trim();
-        
+
         if (query.length > 2) {
             await performSearch(query);
         } else if (query.length === 0) {
@@ -1774,41 +1783,41 @@ function setupEventListeners() {
             const langSelect = document.getElementById('lang-select');
             const country = countrySelect ? countrySelect.value : '';
             const lang = langSelect ? langSelect.value : 'en';
-            
+
             loadNewsFromAPI(category, country, lang);
         }
     }, 500));
-    
+
     // Global click handlers
-    document.addEventListener('click', async function(e) {
+    document.addEventListener('click', async function (e) {
         // Bookmark button
         if (e.target.closest('.bookmark-btn')) {
             e.preventDefault();
             e.stopPropagation();
-            
+
             const btn = e.target.closest('.bookmark-btn');
             const articleId = btn.dataset.articleId;
             const article = allArticles.find(a => a.id === articleId);
-            
+
             if (article) {
                 await toggleBookmark(article, btn);
             }
             return;
         }
-        
+
         // Reaction buttons
         if (e.target.closest('.reaction-btn')) {
             e.preventDefault();
             e.stopPropagation();
-            
+
             const btn = e.target.closest('.reaction-btn');
             const articleId = btn.dataset.articleId;
             const reactionType = btn.dataset.type;
-            
+
             await handleReaction(articleId, reactionType, btn);
             return;
         }
-        
+
         // Read more buttons
         if (e.target.classList.contains('read-more')) {
             const url = e.target.dataset.url;
@@ -1817,24 +1826,24 @@ function setupEventListeners() {
             }
             return;
         }
-        
+
         // Find similar articles button
         if (e.target.classList.contains('find-similar')) {
             const uri = e.target.dataset.uri;
             await showSimilarArticles(uri);
             return;
         }
-        
+
         // Modal close
         if (e.target.classList.contains('modal-close')) {
             document.getElementById('similar-modal').classList.remove('active');
             return;
         }
     });
-    
+
     // Close modal when clicking outside
     const modal = document.getElementById('similar-modal');
-    modal.addEventListener('click', function(e) {
+    modal.addEventListener('click', function (e) {
         if (e.target === modal) {
             modal.classList.remove('active');
         }
@@ -1861,16 +1870,16 @@ function setupEventListeners() {
     if (newsletterForm) {
         newsletterForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const frequency = document.getElementById('newsletter-frequency').value;
             const categories = Array.from(document.querySelectorAll('[name="category"]:checked'))
                 .map(cb => cb.value);
-            
+
             if (categories.length === 0) {
                 alert('Please select at least one category');
                 return;
             }
-            
+
             try {
                 const response = await fetch(`${API_BASE_URL}/newsletter/preferences`, {
                     method: 'PUT',
@@ -1903,15 +1912,15 @@ function setupEventListeners() {
 async function performSearch(query) {
     const container = document.getElementById('news-container');
     const loading = document.getElementById('news-loading');
-    
+
     loading.style.display = 'flex';
     container.style.display = 'none';
-    
+
     const articles = await searchNews(query);
-    
+
     loading.style.display = 'none';
     container.style.display = 'grid';
-    
+
     await displayNewsArticles(articles, 'news-container');
     if (articles.length > 0) {
         updateAnalytics(articles);
@@ -1922,25 +1931,25 @@ async function showSimilarArticles(articleUri) {
     const modal = document.getElementById('similar-modal');
     const loading = document.getElementById('similar-loading');
     const list = document.getElementById('similar-articles-list');
-    
+
     modal.classList.add('active');
     loading.style.display = 'flex';
     list.innerHTML = '';
-    
+
     const similarArticles = await findSimilarArticles(articleUri);
-    
+
     loading.style.display = 'none';
-    
+
     if (similarArticles.length === 0) {
         list.innerHTML = '<p class="empty-state">No similar articles found</p>';
         return;
     }
-    
+
     similarArticles.forEach(article => {
         const sentiment = getSentimentLabel(article.sentiment);
         const sentimentEmoji = sentiment === 'Positive' ? '😊' : sentiment === 'Negative' ? '😟' : '😐';
         const similarityPercent = Math.round(article.similarity * 100);
-        
+
         const item = document.createElement('div');
         item.className = 'similar-article';
         item.innerHTML = `
@@ -1960,91 +1969,91 @@ async function showSimilarArticles(articleUri) {
 function initializeCarousel() {
     const carousel = document.querySelector('.carousel');
     if (!carousel) return;
-    
+
     const carouselItems = carousel.querySelectorAll('.carousel-item');
     if (carouselItems.length === 0) return;
-    
+
     const prevBtn = document.querySelector('.carousel-prev');
     const nextBtn = document.querySelector('.carousel-next');
     const indicators = document.querySelectorAll('.indicator');
-    
+
     let currentIndex = 0;
     const totalItems = carouselItems.length;
     let startX = 0;
     let currentX = 0;
     let isDragging = false;
     let autoAdvanceInterval;
-    
+
     function updateCarousel() {
         carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-        
+
         indicators.forEach((indicator, index) => {
             indicator.classList.toggle('active', index === currentIndex);
         });
     }
-    
+
     function nextSlide() {
         currentIndex = (currentIndex + 1) % totalItems;
         updateCarousel();
     }
-    
+
     function prevSlide() {
         currentIndex = (currentIndex - 1 + totalItems) % totalItems;
         updateCarousel();
     }
-    
+
     function startAutoAdvance() {
         autoAdvanceInterval = setInterval(nextSlide, 5000);
     }
-    
+
     function stopAutoAdvance() {
         clearInterval(autoAdvanceInterval);
     }
-    
+
     if (prevBtn) prevBtn.addEventListener('click', () => {
         prevSlide();
         stopAutoAdvance();
         startAutoAdvance();
     });
-    
+
     if (nextBtn) nextBtn.addEventListener('click', () => {
         nextSlide();
         stopAutoAdvance();
         startAutoAdvance();
     });
-    
+
     carousel.addEventListener('touchstart', (e) => {
         startX = e.touches[0].clientX;
         isDragging = true;
         stopAutoAdvance();
     });
-    
+
     carousel.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
         currentX = e.touches[0].clientX;
         const diff = startX - currentX;
-        
+
         if (Math.abs(diff) > 10) {
             e.preventDefault();
         }
     });
-    
+
     carousel.addEventListener('touchend', () => {
         if (!isDragging) return;
-        
+
         const diff = startX - currentX;
         const swipeThreshold = 50;
-        
+
         if (diff > swipeThreshold) {
             nextSlide();
         } else if (diff < -swipeThreshold) {
             prevSlide();
         }
-        
+
         isDragging = false;
         startAutoAdvance();
     });
-    
+
     indicators.forEach((indicator, index) => {
         indicator.addEventListener('click', () => {
             currentIndex = index;
@@ -2053,10 +2062,10 @@ function initializeCarousel() {
             startAutoAdvance();
         });
     });
-    
+
     carousel.addEventListener('mouseenter', stopAutoAdvance);
     carousel.addEventListener('mouseleave', startAutoAdvance);
-    
+
     startAutoAdvance();
 }
 
@@ -2117,12 +2126,12 @@ async function showAISummary(card, articleId) {
     const cardRect = card.getBoundingClientRect();
     const tooltipWidth = 340;
     const spaceOnRight = window.innerWidth - cardRect.right;
-    
+
     let left = cardRect.right + 15;
     if (spaceOnRight < (tooltipWidth + 20)) {
         left = cardRect.left - tooltipWidth - 15;
     }
-    
+
     tooltip.style.top = `${cardRect.top}px`;
     tooltip.style.left = `${left}px`;
 
@@ -2198,13 +2207,13 @@ function addMessage(sender, text) {
     messageDiv.innerHTML = `${text}<div class="message-time">${time}</div>`;
     messagesContainer.appendChild(messageDiv);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    if(sender === 'user') chatMessages.push({ role: 'user', content: text });
+    if (sender === 'user') chatMessages.push({ role: 'user', content: text });
     else chatMessages.push({ role: 'assistant', content: text });
 }
 
 function showTypingIndicator() {
     const messagesContainer = document.getElementById('chatMessages');
-    if(document.getElementById('typingIndicator')) return;
+    if (document.getElementById('typingIndicator')) return;
     const typingDiv = document.createElement('div');
     typingDiv.className = 'typing-indicator';
     typingDiv.id = 'typingIndicator';
@@ -2226,7 +2235,7 @@ async function sendMessage() {
     input.value = '';
     isTyping = true;
     showTypingIndicator();
-    
+
     try {
         const response = await fetch(`${API_BASE_URL}/ai/chat`, {
             method: 'POST',
@@ -2268,7 +2277,7 @@ async function fetchCredibilityScore(articleId) {
     try {
         credibilityLoading[articleId] = true;
         console.log(`🔍 Fetching credibility for: ${articleId}`);
-        
+
         const response = await fetch(`${API_BASE_URL}/credibility/analyze/${articleId}`);
         const data = await response.json();
 
@@ -2293,7 +2302,7 @@ async function fetchCredibilityScore(articleId) {
  */
 function addCredibilityBadge(card, articleId) {
     const placeholder = card.querySelector('.credibility-badge-placeholder');
-    
+
     if (!placeholder) {
         return;
     }
@@ -2316,7 +2325,7 @@ function addCredibilityBadge(card, articleId) {
 
         hoverTimeout = setTimeout(async () => {
             console.log(`🖱️ Hover detected - analyzing ${articleId}`);
-            
+
             // Show loading state
             placeholder.className = 'credibility-badge loading';
             placeholder.innerHTML = `
@@ -2328,7 +2337,7 @@ function addCredibilityBadge(card, articleId) {
 
             // Fetch credibility
             const credibility = await fetchCredibilityScore(articleId);
-            
+
             if (credibility) {
                 isAnalyzed = true;
                 updateCredibilityBadge(placeholder, credibility, articleId);
@@ -2354,13 +2363,13 @@ function addCredibilityBadge(card, articleId) {
  */
 function updateCredibilityBadge(badge, credibility, articleId) {
     const { finalScore, riskLevel } = credibility;
-    
+
     badge.className = `credibility-badge ${riskLevel}-risk`;
     badge.innerHTML = `
         <div class="credibility-score">${finalScore}</div>
         <div class="credibility-label">${getRiskLabel(riskLevel)}</div>
     `;
-    
+
     badge.onclick = (e) => {
         e.stopPropagation();
         showCredibilityBreakdown(credibility);
@@ -2385,12 +2394,12 @@ function getRiskLabel(riskLevel) {
 function showCredibilityBreakdown(credibility) {
     const modal = document.getElementById('credibility-modal');
     const content = document.getElementById('credibility-breakdown-content');
-    
+
     if (!modal || !content) {
         console.error('Credibility modal not found');
         return;
     }
-    
+
     const {
         finalScore,
         riskLevel,
@@ -2451,12 +2460,12 @@ function showCredibilityBreakdown(credibility) {
                     <p><strong>Sources Found:</strong> ${scores.crossSourceVerification.sourcesFound.length}</p>
                     ${scores.crossSourceVerification.sourcesFound.length > 0 ? `
                         <div class="sources-list">
-                            ${scores.crossSourceVerification.sourcesFound.slice(0, 5).map(source => 
-                                `<span class="source-chip">${source}</span>`
-                            ).join('')}
-                            ${scores.crossSourceVerification.sourcesFound.length > 5 ? 
-                                `<span class="source-chip">+${scores.crossSourceVerification.sourcesFound.length - 5} more</span>` 
-                                : ''}
+                            ${scores.crossSourceVerification.sourcesFound.slice(0, 5).map(source =>
+        `<span class="source-chip">${source}</span>`
+    ).join('')}
+                            ${scores.crossSourceVerification.sourcesFound.length > 5 ?
+                `<span class="source-chip">+${scores.crossSourceVerification.sourcesFound.length - 5} more</span>`
+                : ''}
                         </div>
                     ` : '<p class="warning-text">⚠️ No cross-source verification found</p>'}
                 </div>
@@ -2539,12 +2548,12 @@ function showCredibilityBreakdown(credibility) {
             </div>
         </div>
     `;
-    
+
     modal.classList.add('active');
 }
 
 // Close credibility modal
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const credibilityModal = document.getElementById('credibility-modal');
     if (credibilityModal) {
         const closeBtn = credibilityModal.querySelector('.credibility-modal-close');
@@ -2553,7 +2562,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 credibilityModal.classList.remove('active');
             });
         }
-        
+
+
         credibilityModal.addEventListener('click', (e) => {
             if (e.target === credibilityModal) {
                 credibilityModal.classList.remove('active');
@@ -2561,5 +2571,151 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// ========== SHARE TO COMMUNITY FUNCTIONALITY ==========
+
+let currentShareArticle = null;
+
+// Setup share button listeners
+function setupShareListeners() {
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('.btn-share')) {
+            const shareBtn = e.target.closest('.btn-share');
+            const articleId = shareBtn.dataset.articleId;
+            openShareModal(articleId);
+        }
+    });
+
+    // Share modal close
+    const shareModal = document.getElementById('share-modal');
+    if (!shareModal) return;
+
+    const shareModalClose = shareModal.querySelector('.share-modal-close');
+
+    shareModalClose.addEventListener('click', () => {
+        shareModal.classList.remove('active');
+        currentShareArticle = null;
+    });
+
+    // Close on outside click
+    shareModal.addEventListener('click', (e) => {
+        if (e.target === shareModal) {
+            shareModal.classList.remove('active');
+            currentShareArticle = null;
+        }
+    });
+
+    // Share form submit
+    const shareForm = document.getElementById('share-form');
+    if (shareForm) {
+        shareForm.addEventListener('submit', handleShareSubmit);
+    }
+}
+
+function openShareModal(articleId) {
+    if (!authToken) {
+        document.getElementById('auth-overlay').classList.add('active');
+        return;
+    }
+
+    // Find the article in allArticles
+    const article = allArticles.find(a => a.id === articleId);
+    if (!article) {
+        console.error('Article not found:', articleId);
+        return;
+    }
+
+    currentShareArticle = article;
+
+    // Populate share preview
+    const sharePreview = document.getElementById('share-preview');
+    sharePreview.innerHTML = `
+        <h4>Article Preview</h4>
+        <div class="share-preview-article">
+            <div class="share-preview-image">
+                <img src="${article.image || 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800'}" 
+                     alt="${article.title}"
+                     onerror="this.src='https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800'">
+            </div>
+            <div class="share-preview-content">
+                <h5>${article.title}</h5>
+                <p>${article.source} • ${article.category || 'General'}</p>
+            </div>
+        </div>
+    `;
+
+    // Clear previous message
+    document.getElementById('share-message').value = '';
+
+    // Show modal
+    document.getElementById('share-modal').classList.add('active');
+}
+
+async function handleShareSubmit(e) {
+    e.preventDefault();
+
+    if (!currentShareArticle || !authToken) {
+        return;
+    }
+
+    const message = document.getElementById('share-message').value.trim();
+    if (!message) {
+        alert('Please enter a message');
+        return;
+    }
+
+    const submitBtn = document.getElementById('share-submit-btn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sharing...';
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/community/share`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({
+                articleId: currentShareArticle.id,
+                message: message,
+                articleData: {
+                    title: currentShareArticle.title,
+                    summary: currentShareArticle.summary,
+                    image: currentShareArticle.image,
+                    url: currentShareArticle.url,
+                    source: currentShareArticle.source,
+                    category: currentShareArticle.category
+                }
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Close modal
+            document.getElementById('share-modal').classList.remove('active');
+            currentShareArticle = null;
+
+            // Single confirmation popup
+            if (confirm('✅ Article shared successfully! Would you like to view it in the community?')) {
+                window.location.href = 'community.html';
+            }
+        } else {
+            throw new Error(data.message || 'Failed to share article');
+        }
+    } catch (error) {
+        console.error('Error sharing article:', error);
+        alert('❌ Failed to share article: ' + error.message);
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-share-alt"></i> Share to Community';
+    }
+}
+
+// Initialize share functionality when DOM is ready
+document.addEventListener('DOMContentLoaded', function () {
+    setupShareListeners();
+});
+
 
 // ========== END CREDIBILITY SYSTEM ==========

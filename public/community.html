@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community - NewsPulse</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="community.css">
+</head>
+
+<body>
+    <!-- Auth Modal -->
+    <div class="auth-overlay" id="auth-overlay">
+        <div class="auth-modal">
+            <button class="auth-modal-close" id="auth-close">&times;</button>
+
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form-container">
+                <div class="auth-header">
+                    <h2>Welcome Back!</h2>
+                    <p>Login to access community features</p>
+                </div>
+                <form class="auth-form" id="login-form-element">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" placeholder="Enter your password" required>
+                    </div>
+                    <div class="error-message" id="login-error"></div>
+                    <button type="submit" class="btn-auth btn-auth-primary" id="login-btn">
+                        Login
+                    </button>
+                </form>
+                <div class="auth-switch">
+                    Don't have an account? <a id="show-signup">Sign up</a>
+                </div>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signup-form" class="auth-form-container" style="display: none;">
+                <div class="auth-header">
+                    <h2>Create Account</h2>
+                    <p>Join NewsPulse Community</p>
+                </div>
+                <form class="auth-form" id="signup-form-element">
+                    <div class="form-group">
+                        <label for="signup-name">Full Name</label>
+                        <input type="text" id="signup-name" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" placeholder="Create a password (min 6 characters)"
+                            required>
+                    </div>
+                    <div class="error-message" id="signup-error"></div>
+                    <button type="submit" class="btn-auth btn-auth-primary" id="signup-btn">
+                        Sign Up
+                    </button>
+                </form>
+                <div class="auth-switch">
+                    Already have an account? <a id="show-login">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header class="navbar">
+            <div class="nav-left">
+                <a href="index.html" class="logo">📊 NewsPulse</a>
+                <div class="nav-links" id="nav-links">
+                    <a href="index.html" class="nav-link">For You</a>
+                    <a href="index.html" class="nav-link">Trending</a>
+                    <a href="index.html" class="nav-link">Analysis</a>
+                    <a href="community.html" class="nav-link active">Community</a>
+                </div>
+            </div>
+            <div class="nav-right">
+                <div class="mode-switch">
+                    <span id="mode-label">Light Mode</span>
+                    <label class="switch">
+                        <input type="checkbox" id="mode-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <!-- Login Button (shown when logged out) -->
+                <button class="btn-login" id="show-auth-btn">Login</button>
+
+                <!-- User Menu (shown when logged in) -->
+                <div class="user-menu" id="user-menu" style="display: none;">
+                    <div class="user-avatar" id="user-avatar">U</div>
+                    <div class="user-dropdown" id="user-dropdown">
+                        <div class="user-dropdown-item" id="user-name-display">
+                            <i class="fas fa-user"></i>
+                            <span id="user-name-text">User</span>
+                        </div>
+                        <div class="user-dropdown-item" id="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="community-main">
+            <div class="community-header">
+                <h1>🌐 Community</h1>
+                <p>Verify news credibility with the community. Share articles and get feedback!</p>
+            </div>
+
+            <!-- Loading State -->
+            <div id="community-loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- Community Posts -->
+            <div id="community-posts" class="community-posts">
+                <!-- Posts will be loaded here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="community-empty" class="community-empty" style="display: none;">
+                <i class="fas fa-comments"></i>
+                <h3>No posts yet</h3>
+                <p>Be the first to share a news article to the community!</p>
+                <a href="index.html" class="btn btn-primary">Browse News</a>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h4>About NewsPulse</h4>
+                    <p>Bringing you trending headlines with AI-powered sentiment analysis and credibility verification.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <a href="mailto:info@newspulse.com">info@newspulse.com</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 NewsPulse. All rights reserved. Powered by NewsAPI.ai | Credibility System Active</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="community.js"></script>
+</body>
+
+</html>

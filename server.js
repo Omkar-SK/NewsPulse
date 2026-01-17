@@ -18,6 +18,7 @@ const recommendationRoutes = require('./routes/recommendations');
 const newsletterRoutes = require('./routes/newsletter');
 const aiRoutes = require('./routes/ai');
 const credibilityRoutes = require('./routes/credibility'); // NEW
+const communityRoutes = require('./routes/community');
 
 // Import newsletter scheduler
 const { initializeNewsletterScheduler } = require('./utils/newsletterScheduler');
@@ -50,22 +51,22 @@ mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(async () => {
-  console.log('✅ MongoDB Connected');
-  
-  // Clean up expired articles on startup
-  cleanupExpiredArticles();
-  
-  // Test email connection
-  const emailReady = await testEmailConnection();
-  if (emailReady) {
-    // Initialize newsletter scheduler
-    initializeNewsletterScheduler();
-  } else {
-    console.log('⚠️  Email service not configured. Newsletter feature will be disabled.');
-  }
-})
-.catch(err => console.error('❌ MongoDB connection error:', err));
+  .then(async () => {
+    console.log('✅ MongoDB Connected');
+
+    // Clean up expired articles on startup
+    cleanupExpiredArticles();
+
+    // Test email connection
+    const emailReady = await testEmailConnection();
+    if (emailReady) {
+      // Initialize newsletter scheduler
+      initializeNewsletterScheduler();
+    } else {
+      console.log('⚠️  Email service not configured. Newsletter feature will be disabled.');
+    }
+  })
+  .catch(err => console.error('❌ MongoDB connection error:', err));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -76,6 +77,7 @@ app.use('/api/recommendations', recommendationRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/credibility', credibilityRoutes); // NEW
+app.use('/api/community', communityRoutes);
 
 // Serve index.html for root route
 app.get('/', (req, res) => {
@@ -85,8 +87,8 @@ app.get('/', (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ 
-    success: false, 
+  res.status(500).json({
+    success: false,
     message: 'Server Error',
     error: process.env.NODE_ENV === 'development' ? err.message : undefined
   });
@@ -106,7 +108,7 @@ async function cleanupExpiredArticles() {
 }
 
 // Run cleanup every hour
-setInterval(cleanupExpiredArticles,60*60*1000);
+setInterval(cleanupExpiredArticles, 60 * 60 * 1000);
 
 const PORT = process.env.PORT || 5000;
 

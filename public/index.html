@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,13 +10,14 @@
     <script src="i18n-translations.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    
+
     <!-- Auth Modal -->
     <div class="auth-overlay" id="auth-overlay">
         <div class="auth-modal">
             <button class="auth-modal-close" id="auth-close">&times;</button>
-            
+
             <!-- Login Form -->
             <div id="login-form" class="auth-form-container">
                 <div class="auth-header">
@@ -58,7 +60,8 @@
                     </div>
                     <div class="form-group">
                         <label for="signup-password">Password</label>
-                        <input type="password" id="signup-password" placeholder="Create a password (min 6 characters)" required>
+                        <input type="password" id="signup-password" placeholder="Create a password (min 6 characters)"
+                            required>
                     </div>
                     <div class="error-message" id="signup-error"></div>
                     <button type="submit" class="btn-auth btn-auth-primary" id="signup-btn">
@@ -77,9 +80,10 @@
             <div class="nav-left">
                 <a href="#" class="logo">📊 NewsPulse</a>
                 <div class="nav-links" id="nav-links">
-                    <a href="#" class="nav-link active" data-page="for-you">For You</a>
+                    <a href="index.html" class="nav-link active" data-page="for-you">For You</a>
                     <a href="#" class="nav-link" data-page="trending">Trending</a>
                     <a href="#" class="nav-link" data-page="analysis">Analysis</a>
+                    <a href="community.html" class="nav-link">Community</a>
                 </div>
             </div>
             <div class="nav-right">
@@ -94,7 +98,7 @@
                     <i class="fas fa-search"></i>
                     <input type="text" placeholder="Search headlines..." id="search-input">
                 </div>
-                
+
                 <!-- Login Button (shown when logged out) -->
                 <button class="btn-login" id="show-auth-btn">Login</button>
 
@@ -184,11 +188,11 @@
                         <div class="section-header">
                             <h2>Latest News <span id="cache-status"></span></h2>
                         </div>
-                        
+
                         <div id="news-loading" class="loading">
                             <div class="spinner"></div>
                         </div>
-                        
+
                         <div class="news-container" id="news-container" style="display: none;">
                             <!-- News articles will be populated here -->
                         </div>
@@ -204,7 +208,7 @@
                                     <canvas id="sentiment-chart"></canvas>
                                 </div>
                             </div>
-                            
+
                             <div class="analysis-card">
                                 <h3>News Source Distribution</h3>
                                 <div class="chart-container">
@@ -240,7 +244,7 @@
                                 <option value="cn">China</option>
                                 <option value="br">Brazil</option>
                             </select>
-                            
+
                             <label for="lang-select">Language:</label>
                             <select id="lang-select" name="language">
                                 <option value="en">English</option>
@@ -252,7 +256,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="sidebar-widget">
                         <h3>BOOKMARKED ARTICLES</h3>
                         <div class="bookmarked-articles" id="bookmarked-articles">
@@ -262,7 +266,7 @@
                     <div class="sidebar-widget" id="newsletter-widget">
                         <h3>📬 NEWSLETTER</h3>
                         <div id="newsletter-content">
-                             <!-- Will be populated by JavaScript -->
+                            <!-- Will be populated by JavaScript -->
                         </div>
                     </div>
                 </aside>
@@ -277,11 +281,11 @@
                         <div class="section-header">
                             <h2>Most Popular Stories</h2>
                         </div>
-                        
+
                         <div id="trending-loading" class="loading">
                             <div class="spinner"></div>
                         </div>
-                        
+
                         <div class="news-container" id="trending-news-container" style="display: none;">
                             <!-- Trending news will be populated here -->
                         </div>
@@ -305,7 +309,7 @@
                 <main class="feed">
                     <section class="analysis-section">
                         <h2>News Analytics Dashboard</h2>
-                        
+
                         <div class="stats-grid">
                             <div class="stat-card">
                                 <h3>Total Articles</h3>
@@ -324,7 +328,7 @@
                                 <div class="value" id="stat-neutral">0</div>
                             </div>
                         </div>
-                        
+
                         <div class="analysis-container">
                             <div class="analysis-card">
                                 <h3>Sentiment Distribution</h3>
@@ -332,21 +336,21 @@
                                     <canvas id="analysis-sentiment-chart"></canvas>
                                 </div>
                             </div>
-                            
+
                             <div class="analysis-card">
                                 <h3>Category Distribution</h3>
                                 <div class="chart-container">
                                     <canvas id="category-chart"></canvas>
                                 </div>
                             </div>
-                            
+
                             <div class="analysis-card">
                                 <h3>News Source Distribution</h3>
                                 <div class="chart-container">
                                     <canvas id="analysis-source-chart"></canvas>
                                 </div>
                             </div>
-                            
+
                             <div class="analysis-card">
                                 <h3>Top Keywords</h3>
                                 <div class="word-cloud" id="analysis-word-cloud">
@@ -397,11 +401,38 @@
         <!-- ========== GLOBAL AI SUMMARY TOOLTIP ========== -->
         <div id="ai-summary-tooltip" class="ai-summary-tooltip"></div>
 
+        <!-- ========== SHARE TO COMMUNITY MODAL ========== -->
+        <div id="share-modal" class="share-modal">
+            <div class="share-modal-content">
+                <div class="share-modal-header">
+                    <h2>Share to Community</h2>
+                    <button class="share-modal-close">&times;</button>
+                </div>
+                <form id="share-form" class="share-form">
+                    <div>
+                        <label for="share-message">Your Message</label>
+                        <textarea id="share-message" placeholder="e.g., Is this news legit? What do you think?"
+                            maxlength="500" required></textarea>
+                        <small style="color: var(--text-secondary);">Ask the community for their opinion on this
+                            article's credibility</small>
+                    </div>
+                    <div class="share-preview" id="share-preview">
+                        <!-- Article preview will be inserted here -->
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="share-submit-btn">
+                        <i class="fas fa-share-alt"></i> Share to Community
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- ========== END SHARE MODAL ========== -->
+
         <footer class="footer">
             <div class="footer-content">
                 <div class="footer-col">
                     <h4>About NewsPulse</h4>
-                    <p>Bringing you trending headlines with AI-powered sentiment analysis and credibility verification.</p>
+                    <p>Bringing you trending headlines with AI-powered sentiment analysis and credibility verification.
+                    </p>
                 </div>
                 <div class="footer-col">
                     <h4>Contact</h4>
@@ -427,7 +458,7 @@
         <div class="newsletter-modal-content">
             <span class="newsletter-modal-close">&times;</span>
             <h2>📬 Newsletter Preferences</h2>
-            
+
             <form id="newsletter-preferences-form">
                 <div class="newsletter-form-group">
                     <label for="newsletter-frequency">Frequency:</label>
@@ -486,4 +517,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>
