@@ -4135,6 +4135,20 @@ body:not(.dark-mode) .chat-input input {
 
     
 
+        // Security: HTML sanitization function
+        function escapeHtml(text) {
+            if (!text) return '';
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;',
+                '/': '&#x2F;'
+            };
+            return String(text).replace(/[&<>"'/]/g, (char) => map[char]);
+        }
+
         // Helper function to truncate text
         function truncateText(text, maxLength) {
             if (!text) return '';
@@ -7411,28 +7425,28 @@ async function loadReviews(articleId, articleTitle) {
             reviewsList.innerHTML = data.reviews.map(review => `
                 <div class="review-item">
                     <div class="review-header">
-                        <span class="review-author">${review.userId?.name || 'Anonymous'}</span>
+                        <span class="review-author">${escapeHtml(review.userId?.name || 'Anonymous')}</span>
                         <span class="review-date">${new Date(review.createdAt).toLocaleDateString()}</span>
                     </div>
                     <div style="margin: 8px 0;">
-                        <strong>${review.title}</strong>
+                        <strong>${escapeHtml(review.title)}</strong>
                         <div style="color: #f59e0b; font-size: 14px;">
                             ${'★'.repeat(review.overallRating)}${'☆'.repeat(5 - review.overallRating)}
                         </div>
                     </div>
-                    <p style="margin: 10px 0; color: var(--gray);">${review.comment}</p>
+                    <p style="margin: 10px 0; color: var(--gray);">${escapeHtml(review.comment)}</p>
                     <div class="review-ratings">
-                        <span>Credibility: ${review.credibilityScore}/100</span>
-                        <span>Accuracy: ${review.accuracyRating}/5</span>
-                        <span>Sourcing: ${review.sourcingRating}/5</span>
-                        <span>Bias: ${review.biasRating}/5</span>
+                        <span>Credibility: ${parseInt(review.credibilityScore)}/100</span>
+                        <span>Accuracy: ${parseInt(review.accuracyRating)}/5</span>
+                        <span>Sourcing: ${parseInt(review.sourcingRating)}/5</span>
+                        <span>Bias: ${parseInt(review.biasRating)}/5</span>
                     </div>
                     <div class="review-vote-buttons">
-                        <button class="vote-btn vote-helpful" data-review-id="${review._id}">
-                            👍 Helpful (${review.helpfulCount || 0})
+                        <button class="vote-btn vote-helpful" data-review-id="${escapeHtml(review._id)}">
+                            👍 Helpful (${parseInt(review.helpfulCount) || 0})
                         </button>
-                        <button class="vote-btn vote-not-helpful" data-review-id="${review._id}">
-                            👎 Not Helpful (${review.notHelpfulCount || 0})
+                        <button class="vote-btn vote-not-helpful" data-review-id="${escapeHtml(review._id)}">
+                            👎 Not Helpful (${parseInt(review.notHelpfulCount) || 0})
                         </button>
                     </div>
                 </div>
@@ -7551,18 +7565,31 @@ async function loadMediaLiteracy() {
         const data = await response.json();
         
         if (data.success && data.articles) {
-            content.innerHTML = data.articles.map(article => `
-                <div class="news-card" style="cursor: pointer;" onclick="window.open('${API_BASE_URL}/media-literacy/${article.slug}', '_blank')">
+            content.innerHTML = data.articles.map(article => {
+                const safeSlug = encodeURIComponent(article.slug || '');
+                return `
+                <div class="news-card" style="cursor: pointer;" data-slug="${escapeHtml(article.slug)}">
                     <div class="news-content">
-                        <h3>${article.title}</h3>
-                        <p>${article.excerpt || article.content.substring(0, 200) + '...'}</p>
+                        <h3>${escapeHtml(article.title)}</h3>
+                        <p>${escapeHtml(article.excerpt || (article.content ? article.content.substring(0, 200) + '...' : ''))}</p>
                         <div class="news-meta">
                             <span class="source">Media Literacy</span>
                             <span class="time">${new Date(article.createdAt).toLocaleDateString()}</span>
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
+            
+            // Add click handlers using event delegation
+            content.querySelectorAll('.news-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const slug = this.dataset.slug;
+                    if (slug) {
+                        window.open(`${API_BASE_URL}/media-literacy/${encodeURIComponent(slug)}`, '_blank');
+                    }
+                });
+            });
         } else {
             content.innerHTML = '<p style="text-align: center; padding: 40px; color: var(--gray);">No media literacy articles available yet.</p>';
         }
@@ -7594,19 +7621,19 @@ async function loadAdminDashboard() {
             statsContainer.innerHTML = `
                 <div class="stat-card">
                     <div class="stat-label">Total Articles</div>
-                    <div class="stat-value">${stats.totalArticles || 0}</div>
+                    <div class="stat-value">${parseInt(stats.totalArticles) || 0}</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Pending Articles</div>
-                    <div class="stat-value">${stats.pendingArticles || 0}</div>
+                    <div class="stat-value">${parseInt(stats.pendingArticles) || 0}</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Total Reviews</div>
-                    <div class="stat-value">${stats.totalReviews || 0}</div>
+                    <div class="stat-value">${parseInt(stats.totalReviews) || 0}</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Total Users</div>
-                    <div class="stat-value">${stats.totalUsers || 0}</div>
+                    <div class="stat-value">${parseInt(stats.totalUsers) || 0}</div>
                 </div>
             `;
         }
@@ -7618,24 +7645,38 @@ async function loadAdminDashboard() {
         const articlesData = await articlesResponse.json();
         
         if (articlesData.success && articlesData.articles && articlesData.articles.length > 0) {
-            listContainer.innerHTML = articlesData.articles.map(article => `
-                <div class="pending-article-card">
-                    <h4>${article.title}</h4>
-                    <p style="color: var(--gray); margin: 8px 0;">${article.summary}</p>
+            listContainer.innerHTML = articlesData.articles.map(article => {
+                const articleId = escapeHtml(article._id);
+                return `
+                <div class="pending-article-card" data-article-id="${articleId}">
+                    <h4>${escapeHtml(article.title)}</h4>
+                    <p style="color: var(--gray); margin: 8px 0;">${escapeHtml(article.summary)}</p>
                     <div style="font-size: 13px; color: var(--gray); margin: 8px 0;">
-                        <strong>Source:</strong> ${article.source} | 
-                        <strong>Category:</strong> ${article.category} |
-                        <strong>URL:</strong> <a href="${article.url}" target="_blank" style="color: var(--primary);">View</a>
+                        <strong>Source:</strong> ${escapeHtml(article.source)} | 
+                        <strong>Category:</strong> ${escapeHtml(article.category)} |
+                        <strong>URL:</strong> <a href="${escapeHtml(article.url)}" target="_blank" rel="noopener noreferrer" style="color: var(--primary);">View</a>
                     </div>
                     <div style="font-size: 12px; color: var(--gray);">
-                        Submitted by: ${article.submittedBy?.name || 'Unknown'} on ${new Date(article.submittedAt).toLocaleDateString()}
+                        Submitted by: ${escapeHtml(article.submittedBy?.name || 'Unknown')} on ${new Date(article.submittedAt).toLocaleDateString()}
                     </div>
                     <div class="admin-actions">
-                        <button class="btn-auth btn-approve" onclick="reviewArticle('${article._id}', 'approved')">Approve</button>
-                        <button class="btn-auth btn-reject" onclick="reviewArticle('${article._id}', 'rejected')">Reject</button>
+                        <button class="btn-auth btn-approve" data-action="approved">Approve</button>
+                        <button class="btn-auth btn-reject" data-action="rejected">Reject</button>
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
+            
+            // Add event listeners to buttons
+            listContainer.querySelectorAll('.pending-article-card').forEach(card => {
+                const articleId = card.dataset.articleId;
+                card.querySelectorAll('button[data-action]').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const action = this.dataset.action;
+                        reviewArticle(articleId, action);
+                    });
+                });
+            });
         } else {
             listContainer.innerHTML = '<p style="text-align: center; padding: 20px; color: var(--gray);">No pending articles</p>';
         }
