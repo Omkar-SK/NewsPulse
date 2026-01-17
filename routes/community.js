@@ -6,6 +6,7 @@ const {
     shareArticle,
     likePost,
     dislikePost,
+    deletePost,
     getComments,
     addComment
 } = require('../controllers/communityController');
@@ -21,6 +22,9 @@ router.post('/posts/:postId/like', protect, likePost);
 
 // Dislike a post (requires auth)
 router.post('/posts/:postId/dislike', protect, dislikePost);
+
+// Delete a post (requires auth)
+router.delete('/posts/:postId', protect, deletePost);
 
 // Get comments for a post (public)
 router.get('/posts/:postId/comments', getComments);

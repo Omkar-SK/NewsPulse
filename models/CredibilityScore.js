@@ -7,7 +7,7 @@ const CredibilityScoreSchema = new mongoose.Schema({
     unique: true,
     index: true
   },
-  
+
   // Final credibility score (0-100)
   finalScore: {
     type: Number,
@@ -15,14 +15,14 @@ const CredibilityScoreSchema = new mongoose.Schema({
     min: 0,
     max: 100
   },
-  
+
   // Risk level: high, medium, low
   riskLevel: {
     type: String,
     enum: ['high', 'medium', 'low'],
     required: true
   },
-  
+
   // Component scores
   scores: {
     sourceCredibility: {
@@ -51,25 +51,27 @@ const CredibilityScoreSchema = new mongoose.Schema({
       weight: { type: Number, default: 5 }
     }
   },
-  
+
   // Explanation tags
   explanationTags: [String],
-  
+
   // Source metadata
   sourceMetadata: {
     name: String,
     domain: String,
-    trustScore: Number,
-    biasRating: String,
-    transparency: Number
+    trust: Number,
+    bias: String,
+    transparency: Number,
+    category: String,
+    url: String // Added for URL submissions
   },
-  
+
   // Cache timestamp
   calculatedAt: {
     type: Date,
     default: Date.now
   },
-  
+
   // Expire after 24 hours
   expiresAt: {
     type: Date,

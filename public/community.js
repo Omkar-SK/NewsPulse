@@ -251,6 +251,11 @@ function createPostElement(post) {
                     <div class="post-time">${timeAgo}</div>
                 </div>
             </div>
+            ${currentUser && post.userId === currentUser.id ? `
+            <button class="post-delete-btn" onclick="handleDelete('${post._id}')" title="Delete Post">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+            ` : ''}
         </div>
 
         <div class="post-message">
@@ -260,7 +265,7 @@ function createPostElement(post) {
         <div class="post-article">
             <div class="post-article-image">
                 <img src="${post.articleData.image || 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800'}" 
-                     alt="${post.articleData.title}"
+                     alt="${post.articleData.title || 'News'}"
                      onerror="this.src='https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800'">
                 ${credibilityScore !== null && credibilityScore !== undefined ? `
                 <div class="credibility-badge credibility-${credibilityClass}">
@@ -270,15 +275,17 @@ function createPostElement(post) {
                 ` : ''}
             </div>
             <div class="post-article-content">
-                <h3>${post.articleData.title}</h3>
-                <p>${post.articleData.summary}</p>
+                <h3>${post.articleData.title || 'Breaking News'}</h3>
+                <p>${post.articleData.summary || 'No summary available for this article.'}</p>
                 <div class="post-article-meta">
-                    <span><i class="fas fa-newspaper"></i> ${post.articleData.source}</span>
+                    <span><i class="fas fa-newspaper"></i> ${post.articleData.source || 'Unknown Source'}</span>
                     <span><i class="fas fa-tag"></i> ${post.articleData.category || 'General'}</span>
                 </div>
-                <a href="${post.articleData.url}" target="_blank" class="btn btn-sm btn-primary">
-                    Read Article <i class="fas fa-external-link-alt"></i>
-                </a>
+                <div class="post-article-footer" style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                    <a href="${post.articleData.url}" target="_blank" class="btn btn-sm btn-primary">
+                        Read Article <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -485,6 +492,47 @@ async function submitComment(postId) {
     } catch (error) {
         console.error('Error submitting comment:', error);
         alert('Failed to post comment');
+    }
+}
+
+// Handle Delete Post
+async function handleDelete(postId) {
+    if (!authToken) return;
+
+    if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/community/posts/${postId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Remove post from UI
+            const postElement = document.querySelector(`[data-post-id="${postId}"]`);
+            if (postElement) {
+                postElement.style.opacity = '0';
+                postElement.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    postElement.remove();
+                    // If no more posts, show empty state
+                    if (document.querySelectorAll('.community-post').length === 0) {
+                        document.getElementById('community-empty').style.display = 'flex';
+                    }
+                }, 400);
+            }
+        } else {
+            alert('Failed to delete post: ' + data.message);
+        }
+    } catch (error) {
+        console.error('Error deleting post:', error);
+        alert('An error occurred while deleting the post.');
     }
 }
 

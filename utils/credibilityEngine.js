@@ -7,7 +7,9 @@ const articleScraper = require('./articleScraper');
  * Main credibility analysis function
  */
 async function analyzeCredibility(article) {
-  console.log(`\n🔍 Analyzing credibility for: "${article.title?.substring(0, 60)}..."`);
+  // Ensure we have a title to work with (even if placeholder)
+  const displayTitle = article.title || 'Breaking News';
+  console.log(`\n🔍 Analyzing credibility for: "${displayTitle.substring(0, 60)}..."`);
   console.log(`📊 Article data:`, {
     source: article.source,
     url: article.url,
@@ -17,9 +19,9 @@ async function analyzeCredibility(article) {
 
   // 1. Source Credibility
   let sourceIdentifier = article.source;
-  
+
   console.log(`📋 Original source string: "${sourceIdentifier}"`);
-  
+
   // Try to extract domain from source name
   if (sourceIdentifier && (sourceIdentifier.includes('.') || sourceIdentifier.includes('www'))) {
     const domainMatch = sourceIdentifier.match(/([a-z0-9-]+\.[a-z.]+)/i);
@@ -28,7 +30,7 @@ async function analyzeCredibility(article) {
       console.log(`🔗 Extracted domain from source string: ${sourceIdentifier}`);
     }
   }
-  
+
   // Try to extract domain from URL if source is unknown
   if (!sourceIdentifier || sourceIdentifier === 'Unknown Source' || sourceIdentifier.length < 3) {
     if (article.url) {
@@ -44,7 +46,7 @@ async function analyzeCredibility(article) {
 
   const sourceMetadata = sourceCredibilityDB.getSourceCredibility(sourceIdentifier);
   const sourceScore = sourceCredibilityDB.calculateSourceScore(sourceMetadata);
-  
+
   console.log(`📰 Source: ${sourceMetadata.name} (Trust: ${sourceMetadata.trust}, Score: ${sourceScore})`);
 
   // 2. Cross-Source Verification
@@ -52,26 +54,32 @@ async function analyzeCredibility(article) {
     article.title,
     article.uri
   );
-  
+
   const crossSourceResult = crossSourceVerifier.calculateCrossSourceScore(
     similarArticles,
     sourceCredibilityDB
   );
-  
+
   console.log(`🔗 Cross-source: ${crossSourceResult.score}/100 (${crossSourceResult.sourcesFound.length} sources)`);
 
   // 3. Fetch FULL ARTICLE using Jina AI
   let fullArticleText = null;
   let articleMetadata = null;
-  
+
   if (article.url) {
     console.log(`🌐 Attempting to fetch full article...`);
     const scrapedArticle = await articleScraper.fetchFullArticle(article.url);
-    
+
     if (scrapedArticle.success) {
       fullArticleText = scrapedArticle.fullText;
       articleMetadata = articleScraper.extractArticleMetadata(fullArticleText);
-      
+
+      // If we used a placeholder title and found a better one in metadata/scraping, use it
+      if (article.title === 'Breaking News' && scrapedArticle.title) {
+        article.title = scrapedArticle.title;
+        console.log(`📝 Updated title from scraper: "${article.title}"`);
+      }
+
       console.log(`✅ Full article: ${scrapedArticle.wordCount} words, ${scrapedArticle.hasReferences.count} citations`);
     } else {
       console.log(`⚠️ Could not fetch full article: ${scrapedArticle.error}`);
@@ -81,7 +89,12 @@ async function analyzeCredibility(article) {
 
   // 4. AI Content Analysis with FULL ARTICLE
   const contentForAnalysis = fullArticleText || article.body || article.summary;
-  
+
+  if (!contentForAnalysis || contentForAnalysis.trim().length < 50) {
+    console.error(`❌ No content found for analysis`);
+    throw new Error('Could not extract enough content from the URL for analysis. Please try "Manual Submission" instead.');
+  }
+
   console.log(`🤖 Analyzing content (${contentForAnalysis.length} chars)...`);
 
   const aiSignals = await geminiAnalyzer.analyzeArticleContent(
@@ -89,9 +102,9 @@ async function analyzeCredibility(article) {
     article.summary || article.body?.substring(0, 500),
     fullArticleText
   );
-  
+
   const aiScore = geminiAnalyzer.calculateAIScore(aiSignals);
-  
+
   console.log(`🤖 AI analysis: ${aiScore}/100`);
   console.log(`   - Sensationalism: ${aiSignals.sensationalism}%`);
   console.log(`   - Emotional: ${aiSignals.emotionalManipulation}%`);
@@ -152,7 +165,7 @@ function calculateFinalScore(scores) {
     communitySignals
   } = scores;
 
-  const finalScore = 
+  const finalScore =
     (sourceCredibility.score * sourceCredibility.weight / 100) +
     (crossSourceVerification.score * crossSourceVerification.weight / 100) +
     (aiContentAnalysis.score * aiContentAnalysis.weight / 100) +
@@ -197,19 +210,19 @@ function generateExplanationTags(scores, sourceMetadata, articleMetadata) {
 
   // AI content analysis
   const ai = scores.aiContentAnalysis.signals;
-  
+
   if (ai.sensationalism > 70) {
     tags.push('⚠️ High sensationalism');
   }
-  
+
   if (ai.clickbaitProbability > 70) {
     tags.push('⚠️ Clickbait indicators');
   }
-  
+
   if (ai.biasIndicators > 70) {
     tags.push('⚠️ Potential bias');
   }
-  
+
   if (ai.evidenceQuality < 30) {
     tags.push('✅ Well-sourced article');
   } else if (ai.evidenceQuality > 70) {

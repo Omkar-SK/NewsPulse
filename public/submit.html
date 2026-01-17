@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit News - NewsPulse</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .submit-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .submit-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .submit-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--primary), #8e44ad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Tabs Styling */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px 8px 0 0;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -11px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .submit-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.2);
+        }
+
+        .btn-submit {
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-submit:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-submit:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-container {
+            margin-top: 40px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .score-card {
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .score-low {
+            background: rgba(46, 204, 113, 0.1);
+            border: 2px solid #2ecc71;
+        }
+
+        .score-medium {
+            background: rgba(241, 196, 15, 0.1);
+            border: 2px solid #f1c40f;
+        }
+
+        .score-high {
+            background: rgba(231, 76, 60, 0.1);
+            border: 2px solid #e74c3c;
+        }
+
+        .score-value {
+            font-size: 4rem;
+            font-weight: 800;
+            margin: 10px 0;
+        }
+
+        .score-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .tag {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tag-positive {
+            background: rgba(46, 204, 113, 0.15);
+            color: #27ae60;
+            border: 1px solid #2ecc71;
+        }
+
+        .tag-warning {
+            background: rgba(241, 196, 15, 0.15);
+            color: #d35400;
+            border: 1px solid #f1c40f;
+        }
+
+        .tag-danger {
+            background: rgba(231, 76, 60, 0.15);
+            color: #c0392b;
+            border: 1px solid #e74c3c;
+        }
+
+        .loading-spinner {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .auth-warning {
+            padding: 20px;
+            background: rgba(231, 76, 60, 0.1);
+            border-left: 5px solid #e74c3c;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: none;
+        }
+
+        /* Share Modal Styling (copied/adapted from index.html) */
+        .share-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .share-modal.active {
+            display: flex;
+        }
+
+        .share-modal-content {
+            background: var(--bg-secondary);
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            animation: modalSlideUp 0.3s ease;
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .share-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .share-modal-header h2 {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .share-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .share-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .share-preview {
+            background: var(--bg-primary);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 15px;
+        }
+
+        .share-preview-article {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .share-preview-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 6px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .share-preview-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .share-preview-content h5 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
+
+        .share-preview-content p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .btn-share-trigger {
+            margin-top: 15px;
+            padding: 12px 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-share-trigger:hover {
+            background: #2980b9;
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Auth Modal (copied from index.html) -->
+    <div class="auth-overlay" id="auth-overlay">
+        <div class="auth-modal">
+            <button class="auth-modal-close" id="auth-close">&times;</button>
+            <div id="login-form" class="auth-form-container">
+                <div class="auth-header">
+                    <h2>Welcome Back!</h2>
+                    <p>Login to submit news and verify credibility</p>
+                </div>
+                <form class="auth-form" id="login-form-element">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" placeholder="Enter your password" required>
+                    </div>
+                    <div class="error-message" id="login-error"></div>
+                    <button type="submit" class="btn-auth btn-auth-primary" id="login-btn">Login</button>
+                </form>
+                <div class="auth-switch">
+                    Don't have an account? <a id="show-signup">Sign up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header class="navbar">
+            <div class="nav-left">
+                <a href="index.html" class="logo">📊 NewsPulse</a>
+                <div class="nav-links" id="nav-links">
+                    <a href="index.html" class="nav-link">For You</a>
+                    <a href="index.html" class="nav-link">Trending</a>
+                    <a href="index.html" class="nav-link">Analysis</a>
+                    <a href="community.html" class="nav-link">Community</a>
+                    <a href="submit.html" class="nav-link active">Submit News</a>
+                </div>
+            </div>
+            <div class="nav-right">
+                <div class="mode-switch">
+                    <span id="mode-label">Light Mode</span>
+                    <label class="switch">
+                        <input type="checkbox" id="mode-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <button class="btn-login" id="show-auth-btn">Login</button>
+                <div class="user-menu" id="user-menu" style="display: none;">
+                    <div class="user-avatar" id="user-avatar">U</div>
+                    <div class="user-dropdown" id="user-dropdown">
+                        <div class="user-dropdown-item" id="user-name-display">
+                            <i class="fas fa-user"></i>
+                            <span id="user-name-text">User</span>
+                        </div>
+                        <div class="user-dropdown-item" id="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="submit-container">
+            <div class="submit-header">
+                <h1>Verify News Credibility</h1>
+                <p>Choose an option below to analyze news credibility.</p>
+            </div>
+
+            <div id="auth-warning" class="auth-warning">
+                <p><i class="fas fa-exclamation-circle"></i> You need to be logged in to submit news. <a href="#"
+                        id="auth-warning-login">Login here</a>.</p>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="url-tab">
+                    <i class="fas fa-link"></i> URL Submission
+                </button>
+                <button class="tab-btn" data-tab="manual-tab">
+                    <i class="fas fa-pen"></i> Manual Submission
+                </button>
+            </div>
+
+            <!-- URL Tab -->
+            <div id="url-tab" class="tab-content active">
+                <form id="submit-url-form" class="submit-form">
+                    <div class="form-group">
+                        <label for="news-url">Article URL</label>
+                        <input type="url" id="news-url" placeholder="https://www.bbc.com/news/..." required>
+                        <small style="color: grey;">Note: Some sites like TOI might block automated access. Use Manual
+                            Submission if URL fails.</small>
+                    </div>
+                    <button type="submit" class="btn-submit" id="url-submit-btn">
+                        <i class="fas fa-search"></i> Analyze URL
+                    </button>
+                </form>
+            </div>
+
+            <!-- Manual Tab -->
+            <div id="manual-tab" class="tab-content">
+                <form id="submit-manual-form" class="submit-form">
+                    <div class="form-group">
+                        <label for="news-title">Article Title</label>
+                        <input type="text" id="news-title" placeholder="Enter headline..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="news-content">Article Content</label>
+                        <textarea id="news-content" placeholder="Paste the article text here..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit" id="manual-submit-btn">
+                        <i class="fas fa-robot"></i> Analyze Content
+                    </button>
+                </form>
+            </div>
+
+            <div id="loading-state" class="loading-spinner">
+                <div class="spinner"></div>
+                <p id="loading-text">Performing AI analysis...</p>
+            </div>
+
+            <div id="results-container" class="results-container">
+                <div id="score-card" class="score-card">
+                    <div class="score-label" id="score-risk">Low Risk</div>
+                    <div class="score-value" id="score-display">85</div>
+                    <p>Overall Credibility Score</p>
+                    <div class="tags-container" id="tags-container">
+                        <!-- Tags will be inserted here -->
+                    </div>
+                    <button class="btn-share-trigger" id="share-community-btn">
+                        <i class="fas fa-share-alt"></i> Share to Community
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Share Modal -->
+        <div id="share-modal" class="share-modal">
+            <div class="share-modal-content">
+                <div class="share-modal-header">
+                    <h2>Share & Verify with Community</h2>
+                    <button class="share-modal-close" id="share-modal-close">&times;</button>
+                </div>
+                <form id="share-form" class="share-form">
+                    <div class="form-group">
+                        <label for="share-message">Your Message</label>
+                        <textarea id="share-message" placeholder="e.g., Is this news legit? I found this on TOI."
+                            maxlength="500" required></textarea>
+                    </div>
+                    <div class="share-preview" id="share-preview">
+                        <!-- Article preview will be inserted here by JS -->
+                    </div>
+                    <button type="submit" class="btn-submit" id="share-submit-btn">
+                        <i class="fas fa-rocket"></i> Boost & Share to Community
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-bottom">
+                <p>&copy; 2025 NewsPulse. All rights reserved. Powered by NewsAPI.ai | Credibility System Active</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="submit.js"></script>
+</body>
+
+</html>

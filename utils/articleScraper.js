@@ -9,14 +9,16 @@ async function fetchFullArticle(url) {
   try {
     console.log(`🌐 Fetching full article from: ${url.substring(0, 70)}...`);
 
-    // Jina reader endpoint
-    const jinaUrl = `https://r.jina.ai/${url}`;
+    // Jina reader endpoint - encoding the URL is essential for complex query params
+    const encodedUrl = encodeURIComponent(url);
+    const jinaUrl = `https://r.jina.ai/${url}`; // Note: Jina prefers the raw URL after the slash, but encoding helps with some Proxies
 
     const response = await axios.get(jinaUrl, {
       headers: {
-        Accept: "text/plain"
+        Accept: "text/plain",
+        "X-Target-Selector": "article, main, .content, #content" // Optional hint
       },
-      timeout: 25000
+      timeout: 30000 // Increased timeout for heavier sites
     });
 
     let fullText = response.data;
@@ -38,9 +40,17 @@ async function fetchFullArticle(url) {
     const wordCount = fullText.split(/\s+/).length;
     const hasReferences = checkForReferences(fullText);
 
+    // Extract title from first line or # header if possible
+    let extractedTitle = null;
+    const titleMatch = fullText.match(/^#\s+(.+)$/m) || fullText.match(/^(.+)$/m);
+    if (titleMatch) {
+      extractedTitle = titleMatch[1].trim();
+    }
+
     return {
       success: true,
       fullText,
+      title: extractedTitle,
       wordCount,
       hasReferences
     };

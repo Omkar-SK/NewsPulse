@@ -13,7 +13,6 @@ exports.analyzeArticleCredibility = async (req, res) => {
 
     console.log(`\n🔍 Credibility analysis request for: ${articleId}`);
 
-    // Check if we have a cached credibility score (valid for 24 hours)
     const existingScore = await CredibilityScore.findOne({
       articleId,
       expiresAt: { $gt: new Date() }
@@ -28,67 +27,38 @@ exports.analyzeArticleCredibility = async (req, res) => {
       });
     }
 
-    // Fetch FULL article from database
     const article = await Article.findOne({ articleId });
 
     if (!article) {
-      console.error(`❌ Article not found: ${articleId}`);
       return res.status(404).json({
         success: false,
         message: 'Article not found'
       });
     }
 
-    console.log(`📰 Article found:`, {
-      title: article.title?.substring(0, 60) + '...',
-      source: article.source,
-      url: article.url,
-      hasBody: !!article.body,
-      bodyLength: article.body?.length || 0,
-      hasSummary: !!article.summary,
-      summaryLength: article.summary?.length || 0
-    });
+    const analysis = await credibilityEngine.analyzeCredibility(article);
 
-    // Prepare article data for analysis
-    const articleData = {
-      title: article.title,
-      summary: article.summary || '',
-      body: article.body || article.summary || '', // Use body if available, fallback to summary
-      source: article.source,
-      url: article.url,
-      uri: article.uri,
-      lang: article.lang
-    };
-
-    // Log what we're sending for analysis
-    console.log(`📤 Sending for analysis:`, {
-      titleLength: articleData.title?.length,
-      summaryLength: articleData.summary?.length,
-      bodyLength: articleData.body?.length,
-      source: articleData.source
-    });
-
-    // Analyze credibility
-    const analysis = await credibilityEngine.analyzeCredibility(articleData);
-
-    // Save to database
     const credibilityScore = new CredibilityScore({
       articleId: article.articleId,
       finalScore: analysis.finalScore,
       riskLevel: analysis.riskLevel,
       scores: analysis.scores,
       explanationTags: analysis.explanationTags,
-      sourceMetadata: analysis.sourceMetadata,
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+      sourceMetadata: {
+        name: analysis.sourceMetadata.name,
+        domain: analysis.sourceMetadata.domain,
+        trust: analysis.sourceMetadata.trust,
+        bias: analysis.sourceMetadata.bias,
+        transparency: analysis.sourceMetadata.transparency,
+        category: analysis.sourceMetadata.category
+      },
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
     });
 
     await credibilityScore.save();
 
-    console.log(`💾 Credibility score saved: ${analysis.finalScore}/100 (${analysis.riskLevel} risk)\n`);
-
     res.status(200).json({
       success: true,
-      fromCache: false,
       credibility: credibilityScore
     });
 
@@ -96,21 +66,17 @@ exports.analyzeArticleCredibility = async (req, res) => {
     console.error('❌ Error in analyzeArticleCredibility:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error',
-      error: error.message
+      message: 'Server error during analysis'
     });
   }
 };
 
 /**
- * @desc    Get credibility score for an article (if exists)
- * @route   GET /api/credibility/score/:articleId
- * @access  Public
+ * @desc    Get credibility score for an article
  */
 exports.getCredibilityScore = async (req, res) => {
   try {
     const { articleId } = req.params;
-
     const score = await CredibilityScore.findOne({
       articleId,
       expiresAt: { $gt: new Date() }
@@ -119,7 +85,7 @@ exports.getCredibilityScore = async (req, res) => {
     if (!score) {
       return res.status(404).json({
         success: false,
-        message: 'Credibility score not found'
+        message: 'Score not found'
       });
     }
 
@@ -127,13 +93,130 @@ exports.getCredibilityScore = async (req, res) => {
       success: true,
       credibility: score
     });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+/**
+ * @desc    Analyze credibility of a news URL
+ * @route   POST /api/credibility/analyze-url
+ * @access  Private
+ */
+exports.analyzeUrlCredibility = async (req, res) => {
+  try {
+    const { url } = req.body;
+
+    if (!url) {
+      return res.status(400).json({ success: false, message: 'Please provide a URL' });
+    }
+
+    console.log(`\n🌐 URL Credibility analysis request: ${url}`);
+
+    const existingScore = await CredibilityScore.findOne({
+      'sourceMetadata.url': url,
+      expiresAt: { $gt: new Date() }
+    });
+
+    if (existingScore) {
+      return res.status(200).json({ success: true, fromCache: true, credibility: existingScore });
+    }
+
+    const articleData = {
+      url: url,
+      uri: url,
+      title: 'Breaking News',
+      source: 'URL Submission'
+    };
+
+    const analysis = await credibilityEngine.analyzeCredibility(articleData);
+
+    const credibilityScore = new CredibilityScore({
+      articleId: `url-${Buffer.from(url).toString('base64').substring(0, 16)}`,
+      finalScore: analysis.finalScore,
+      riskLevel: analysis.riskLevel,
+      scores: analysis.scores,
+      explanationTags: analysis.explanationTags,
+      sourceMetadata: {
+        name: analysis.sourceMetadata.name,
+        domain: analysis.sourceMetadata.domain,
+        trust: analysis.sourceMetadata.trust,
+        bias: analysis.sourceMetadata.bias,
+        transparency: analysis.sourceMetadata.transparency,
+        category: analysis.sourceMetadata.category,
+        url: url
+      },
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+    });
+
+    await credibilityScore.save();
+
+    res.status(200).json({
+      success: true,
+      credibility: credibilityScore
+    });
 
   } catch (error) {
-    console.error('❌ Error in getCredibilityScore:', error);
+    console.error('❌ Error in analyzeUrlCredibility:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error',
-      error: error.message
+      message: error.message || 'Server error during URL analysis'
+    });
+  }
+};
+
+/**
+ * @desc    Analyze credibility of manual content
+ * @route   POST /api/credibility/analyze-content
+ * @access  Private
+ */
+exports.analyzeContentCredibility = async (req, res) => {
+  try {
+    const { title, content } = req.body;
+
+    if (!title || !content) {
+      return res.status(400).json({ success: false, message: 'Please provide title and content' });
+    }
+
+    console.log(`\n📝 Manual Credibility analysis: "${title.substring(0, 50)}..."`);
+
+    const articleData = {
+      title: title,
+      body: content,
+      source: 'Manual Submission'
+    };
+
+    const analysis = await credibilityEngine.analyzeCredibility(articleData);
+
+    const credibilityScore = new CredibilityScore({
+      articleId: `manual-${Date.now()}`,
+      finalScore: analysis.finalScore,
+      riskLevel: analysis.riskLevel,
+      scores: analysis.scores,
+      explanationTags: analysis.explanationTags,
+      sourceMetadata: {
+        name: 'Manual Submission',
+        domain: 'manual',
+        trust: 50,
+        bias: 'unknown',
+        transparency: 50,
+        category: 'user'
+      },
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+    });
+
+    await credibilityScore.save();
+
+    res.status(200).json({
+      success: true,
+      credibility: credibilityScore
+    });
+
+  } catch (error) {
+    console.error('❌ Error in analyzeContentCredibility:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Server error during content analysis'
     });
   }
 };
