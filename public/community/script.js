@@ -223,6 +223,7 @@ class CommunityApp {
         post.comments.push(comment);
         this.savePosts();
         this.renderComments();
+        this.renderPosts(); // Update comment count in the post card
         
         // Clear input
         commentInput.value = '';
