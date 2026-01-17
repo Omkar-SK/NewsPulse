@@ -1,5 +1,15 @@
 // Community Page JavaScript
 
+// Constants for credibility scoring
+const CREDIBILITY_CONFIG = {
+    UPVOTE_BOOST: 2,
+    DOWNVOTE_PENALTY: 3,
+    MAX_BOOST: 20,
+    MAX_PENALTY: -20,
+    MIN_SCORE: 0,
+    MAX_SCORE: 100
+};
+
 class CommunityApp {
     constructor() {
         this.posts = [];
@@ -152,17 +162,26 @@ class CommunityApp {
         return Math.floor(Math.random() * 36) + 60;
     }
 
-    updateCredibilityScore(postId) {
+    updateCredibilityScore(postId, voteChange) {
         const post = this.posts.find(p => p.id === postId);
         if (!post) return;
 
-        // Update credibility based on votes
-        // More upvotes = higher credibility
-        const voteRatio = post.votes > 0 ? Math.min(post.votes * 2, 20) : Math.max(post.votes * 3, -20);
-        let newScore = post.credibilityScore + voteRatio;
+        // Update credibility based on the vote change (incremental, not cumulative)
+        // voteChange will be +1 for upvote, -1 for downvote, +2 for switching from down to up, etc.
+        let scoreChange = 0;
+        if (voteChange > 0) {
+            // Adding upvote(s) increases credibility
+            scoreChange = Math.min(voteChange * CREDIBILITY_CONFIG.UPVOTE_BOOST, CREDIBILITY_CONFIG.MAX_BOOST);
+        } else if (voteChange < 0) {
+            // Removing upvotes or adding downvotes decreases credibility
+            // Use UPVOTE_BOOST for consistency when undoing votes
+            scoreChange = Math.max(voteChange * CREDIBILITY_CONFIG.UPVOTE_BOOST, CREDIBILITY_CONFIG.MAX_PENALTY);
+        }
+        
+        let newScore = post.credibilityScore + scoreChange;
         
         // Keep score between 0 and 100
-        newScore = Math.max(0, Math.min(100, newScore));
+        newScore = Math.max(CREDIBILITY_CONFIG.MIN_SCORE, Math.min(CREDIBILITY_CONFIG.MAX_SCORE, newScore));
         
         post.credibilityScore = Math.floor(newScore);
         this.savePosts();
@@ -172,6 +191,9 @@ class CommunityApp {
         const post = this.posts.find(p => p.id === postId);
         if (!post) return;
 
+        // Calculate the vote change for credibility update
+        const oldVote = post.userVote;
+        
         // Remove previous vote
         post.votes -= post.userVote;
 
@@ -184,8 +206,11 @@ class CommunityApp {
             post.votes += voteType;
         }
 
-        // Update credibility score dynamically
-        this.updateCredibilityScore(postId);
+        // Calculate the net change in votes for credibility scoring
+        const voteChange = post.userVote - oldVote;
+        
+        // Update credibility score dynamically with the vote change
+        this.updateCredibilityScore(postId, voteChange);
         
         this.savePosts();
         this.renderPosts();
