@@ -109,9 +109,3 @@ exports.createMediaLiteracyContent = async (req, res) => {
     });
   }
 };
-
-module.exports = {
-  getMediaLiteracyContent,
-  getMediaLiteracyArticle,
-  createMediaLiteracyContent
-};

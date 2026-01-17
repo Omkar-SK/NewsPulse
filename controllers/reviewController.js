@@ -258,10 +258,3 @@ async function updateSourceCredibility(sourceId) {
     console.error('Error updating source credibility:', error);
   }
 }
-
-module.exports = {
-  submitReview,
-  getArticleReviews,
-  getSourceReviews,
-  voteReview
-};

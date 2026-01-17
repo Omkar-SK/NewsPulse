@@ -359,14 +359,3 @@ exports.getDashboardStats = async (req, res) => {
     });
   }
 };
-
-module.exports = {
-  getPendingArticles,
-  reviewArticle,
-  getSources,
-  createOrUpdateSource,
-  deleteSource,
-  getFlaggedReviews,
-  moderateReview,
-  getDashboardStats
-};

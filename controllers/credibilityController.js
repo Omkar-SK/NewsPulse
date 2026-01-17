@@ -202,10 +202,3 @@ async function calculateCredibilityScore(article, reviews) {
     verificationStatus: article.verificationStatus
   };
 }
-
-module.exports = {
-  getArticleCredibility,
-  submitArticle,
-  getSourceCredibility,
-  calculateCredibilityScore
-};
