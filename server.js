@@ -15,6 +15,10 @@ const newsRoutes = require('./routes/news');
 const recommendationRoutes = require('./routes/recommendations');
 const newsletterRoutes = require('./routes/newsletter'); // NEW
 const aiRoutes = require('./routes/ai');
+const credibilityRoutes = require('./routes/credibility');
+const reviewRoutes = require('./routes/reviews');
+const adminRoutes = require('./routes/admin');
+const mediaLiteracyRoutes = require('./routes/mediaLiteracy');
 
 // Import newsletter scheduler
 const { initializeNewsletterScheduler } = require('./utils/newsletterScheduler'); // NEW
@@ -60,6 +64,10 @@ app.use('/api/reactions', reactionRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/recommendations', recommendationRoutes);
 app.use('/api/newsletter', newsletterRoutes); // NEW
+app.use('/api/credibility', credibilityRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/media-literacy', mediaLiteracyRoutes);
 
 // Serve index.html for root route
 app.get('/', (req, res) => {

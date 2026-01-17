@@ -25,6 +25,33 @@ const UserSchema = new mongoose.Schema({
     minlength: [6, 'Password must be at least 6 characters'],
     select: false
   },
+  // Role and permissions
+  role: {
+    type: String,
+    enum: ['user', 'admin', 'moderator'],
+    default: 'user'
+  },
+  // User reputation and contributions
+  reputationScore: {
+    type: Number,
+    default: 50,
+    min: 0,
+    max: 100
+  },
+  contributionStats: {
+    articlesSubmitted: {
+      type: Number,
+      default: 0
+    },
+    reviewsPosted: {
+      type: Number,
+      default: 0
+    },
+    helpfulReviews: {
+      type: Number,
+      default: 0
+    }
+  },
   // Newsletter fields
   newsletterSubscribed: {
     type: Boolean,
