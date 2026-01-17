@@ -17,20 +17,26 @@ mongoose.connect(process.env.MONGODB_URI, {
 });
 
 // Sample data
-// NOTE: These passwords are for development/testing only
-// In production, use strong passwords via environment variables
+// ⚠️ SECURITY WARNING: Default passwords are WEAK and for development ONLY
+// In production, MUST set ADMIN_PASSWORD and MODERATOR_PASSWORD environment variables
+if (process.env.NODE_ENV === 'production' && (!process.env.ADMIN_PASSWORD || !process.env.MODERATOR_PASSWORD)) {
+  console.error('❌ SECURITY ERROR: Admin passwords MUST be set via environment variables in production');
+  console.error('   Set ADMIN_PASSWORD and MODERATOR_PASSWORD before running seeder');
+  process.exit(1);
+}
+
 const users = [
   {
     name: 'Admin User',
     email: 'admin@newspulse.com',
-    password: process.env.ADMIN_PASSWORD || 'admin123456', // Change in production!
+    password: process.env.ADMIN_PASSWORD || 'admin123456', // WEAK - Development only!
     role: 'admin',
     reputationScore: 100
   },
   {
     name: 'Moderator User',
     email: 'moderator@newspulse.com',
-    password: process.env.MODERATOR_PASSWORD || 'moderator123456', // Change in production!
+    password: process.env.MODERATOR_PASSWORD || 'moderator123456', // WEAK - Development only!
     role: 'moderator',
     reputationScore: 85
   }
