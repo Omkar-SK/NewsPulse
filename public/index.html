@@ -2555,41 +2555,6 @@ body.dark-mode .navbar {
 
 /* ========== CREDIBILITY & REVIEW SYSTEM STYLES ========== */
 
-.credibility-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-    margin-left: 8px;
-}
-
-.credibility-high {
-    background-color: rgba(16, 185, 129, 0.2);
-    color: #10b981;
-}
-
-.credibility-good {
-    background-color: rgba(245, 158, 11, 0.2);
-    color: #f59e0b;
-}
-
-.credibility-mixed {
-    background-color: rgba(251, 146, 60, 0.2);
-    color: #fb923c;
-}
-
-.credibility-low {
-    background-color: rgba(239, 68, 68, 0.2);
-    color: #ef4444;
-}
-
-.verification-icon {
-    font-size: 14px;
-    margin-left: 4px;
-}
 
 .review-actions {
     display: flex;
@@ -2625,22 +2590,6 @@ body.dark-mode .navbar {
     color: white;
 }
 
-.star-rating {
-    display: flex;
-    gap: 4px;
-    font-size: 24px;
-}
-
-.star-rating .star {
-    cursor: pointer;
-    color: var(--gray-light);
-    transition: color 0.2s;
-}
-
-.star-rating .star.active,
-.star-rating .star:hover {
-    color: #f59e0b;
-}
 
 .slider-container {
     width: 100%;
@@ -4443,9 +4392,10 @@ body:not(.dark-mode) .chat-input input {
                 '>': '&gt;',
                 '"': '&quot;',
                 "'": '&#039;',
-                '/': '&#x2F;'
+                '/': '&#x2F;',
+                '`': '&#96;'
             };
-            return String(text).replace(/[&<>"'/]/g, (char) => map[char]);
+            return String(text).replace(/[&<>"'/`]/g, (char) => map[char]);
         }
 
         // Helper function to truncate text
@@ -7649,12 +7599,12 @@ if (reviewForm) {
         errorEl.classList.remove('active');
         successEl.style.display = 'none';
         
-        const overallRating = document.getElementById('overall-rating').dataset.rating || 0;
-        const accuracyRating = document.getElementById('accuracy-rating').dataset.rating || 0;
-        const sourcingRating = document.getElementById('sourcing-rating').dataset.rating || 0;
-        const biasRating = document.getElementById('bias-rating').dataset.rating || 0;
+        const overallRating = document.getElementById('overall-rating').dataset.rating || '0';
+        const accuracyRating = document.getElementById('accuracy-rating').dataset.rating || '0';
+        const sourcingRating = document.getElementById('sourcing-rating').dataset.rating || '0';
+        const biasRating = document.getElementById('bias-rating').dataset.rating || '0';
         
-        if (overallRating === 0 || accuracyRating === 0 || sourcingRating === 0 || biasRating === 0) {
+        if (overallRating == 0 || accuracyRating == 0 || sourcingRating == 0 || biasRating == 0) {
             errorEl.textContent = 'Please provide all ratings';
             errorEl.classList.add('active');
             return;
