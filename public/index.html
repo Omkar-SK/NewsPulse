@@ -2553,6 +2553,256 @@ body.dark-mode .navbar {
 
 /* ========== END Z-INDEX FIX ========== */
 
+/* ========== CREDIBILITY & REVIEW SYSTEM STYLES ========== */
+
+.credibility-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+.credibility-high {
+    background-color: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+
+.credibility-good {
+    background-color: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+}
+
+.credibility-mixed {
+    background-color: rgba(251, 146, 60, 0.2);
+    color: #fb923c;
+}
+
+.credibility-low {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.verification-icon {
+    font-size: 14px;
+    margin-left: 4px;
+}
+
+.review-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.btn-review {
+    padding: 6px 12px;
+    font-size: 13px;
+    border: 1px solid var(--gray-light);
+    background-color: white;
+    color: var(--dark);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-review:hover {
+    background-color: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.dark-mode .btn-review {
+    background-color: #475569;
+    border-color: #64748b;
+    color: var(--light);
+}
+
+.dark-mode .btn-review:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+.star-rating {
+    display: flex;
+    gap: 4px;
+    font-size: 24px;
+}
+
+.star-rating .star {
+    cursor: pointer;
+    color: var(--gray-light);
+    transition: color 0.2s;
+}
+
+.star-rating .star.active,
+.star-rating .star:hover {
+    color: #f59e0b;
+}
+
+.slider-container {
+    width: 100%;
+}
+
+.slider-container input[type="range"] {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.slider-value {
+    text-align: center;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--primary);
+}
+
+.review-item {
+    padding: 15px;
+    border-bottom: 1px solid var(--gray-light);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.review-author {
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.dark-mode .review-author {
+    color: var(--light);
+}
+
+.review-date {
+    font-size: 12px;
+    color: var(--gray);
+}
+
+.review-ratings {
+    display: flex;
+    gap: 15px;
+    margin: 10px 0;
+    font-size: 12px;
+}
+
+.review-vote-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.vote-btn {
+    padding: 4px 12px;
+    border: 1px solid var(--gray-light);
+    background-color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s;
+}
+
+.vote-btn:hover {
+    background-color: var(--gray-light);
+}
+
+.dark-mode .vote-btn {
+    background-color: #475569;
+    border-color: #64748b;
+    color: var(--light);
+}
+
+.admin-dashboard {
+    padding: 20px;
+}
+
+.pending-articles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.pending-article-card {
+    padding: 15px;
+    border: 1px solid var(--gray-light);
+    border-radius: 8px;
+    background-color: white;
+}
+
+.dark-mode .pending-article-card {
+    background-color: #334155;
+    border-color: #64748b;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.btn-approve {
+    background-color: var(--success);
+    color: white;
+}
+
+.btn-reject {
+    background-color: var(--danger);
+    color: white;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.stat-card {
+    padding: 20px;
+    border-radius: 8px;
+    background-color: var(--gray-light);
+    text-align: center;
+}
+
+.dark-mode .stat-card {
+    background-color: #475569;
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 10px 0;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: var(--gray);
+}
+
+.submit-article-btn {
+    padding: 8px 16px;
+    background-color: var(--success);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.submit-article-btn:hover {
+    opacity: 0.9;
+}
+
+/* ========== END CREDIBILITY & REVIEW SYSTEM STYLES ========== */
+
 .newsletter-section {
     padding: 15px;
 }
@@ -3244,6 +3494,163 @@ body:not(.dark-mode) .chat-input input {
         </div>
     </div>
 
+    <!-- Submit Article Modal -->
+    <div class="auth-overlay" id="submit-article-overlay">
+        <div class="auth-modal">
+            <button class="auth-modal-close" id="submit-article-close">&times;</button>
+            <div class="auth-header">
+                <h2>Submit Article</h2>
+                <p>Share a news article for review</p>
+            </div>
+            <form class="auth-form" id="submit-article-form">
+                <div class="form-group">
+                    <label for="article-title">Title</label>
+                    <input type="text" id="article-title" placeholder="Enter article title" required>
+                </div>
+                <div class="form-group">
+                    <label for="article-url">URL</label>
+                    <input type="url" id="article-url" placeholder="Enter article URL" required>
+                </div>
+                <div class="form-group">
+                    <label for="article-summary">Summary</label>
+                    <textarea id="article-summary" placeholder="Brief summary of the article" rows="4" style="padding: 12px 16px; border-radius: 8px; border: 1px solid var(--gray-light); font-size: 14px; font-family: inherit; resize: vertical;" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="article-source">Source</label>
+                    <input type="text" id="article-source" placeholder="e.g., BBC News, CNN" required>
+                </div>
+                <div class="form-group">
+                    <label for="article-category">Category</label>
+                    <select id="article-category" style="padding: 12px 16px; border-radius: 8px; border: 1px solid var(--gray-light); font-size: 14px; width: 100%;" required>
+                        <option value="">Select a category</option>
+                        <option value="business">Business</option>
+                        <option value="technology">Technology</option>
+                        <option value="sports">Sports</option>
+                        <option value="politics">Politics</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="health">Health</option>
+                        <option value="science">Science</option>
+                    </select>
+                </div>
+                <div class="error-message" id="submit-article-error"></div>
+                <div class="success-message" style="color: var(--success); font-size: 13px; display: none;" id="submit-article-success"></div>
+                <button type="submit" class="btn-auth btn-auth-primary" id="submit-article-submit">
+                    Submit Article
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="auth-overlay" id="review-overlay">
+        <div class="auth-modal" style="max-width: 550px;">
+            <button class="auth-modal-close" id="review-close">&times;</button>
+            <div class="auth-header">
+                <h2>Write Review</h2>
+                <p>Share your assessment of this article</p>
+            </div>
+            <form class="auth-form" id="review-form">
+                <input type="hidden" id="review-article-id">
+                
+                <div class="form-group">
+                    <label>Overall Rating</label>
+                    <div class="star-rating" id="overall-rating">
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="credibility-rating">Credibility Score (0-100)</label>
+                    <div class="slider-container">
+                        <input type="range" id="credibility-rating" min="0" max="100" value="50" step="1">
+                        <div class="slider-value" id="credibility-value">50</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Accuracy Rating</label>
+                    <div class="star-rating" id="accuracy-rating">
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Sourcing Rating</label>
+                    <div class="star-rating" id="sourcing-rating">
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Bias Rating</label>
+                    <div class="star-rating" id="bias-rating">
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="review-title">Review Title</label>
+                    <input type="text" id="review-title" placeholder="Brief title for your review" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="review-comment">Your Review</label>
+                    <textarea id="review-comment" placeholder="Share your detailed thoughts..." rows="4" style="padding: 12px 16px; border-radius: 8px; border: 1px solid var(--gray-light); font-size: 14px; font-family: inherit; resize: vertical;" required></textarea>
+                </div>
+                
+                <div class="error-message" id="review-error"></div>
+                <div class="success-message" style="color: var(--success); font-size: 13px; display: none;" id="review-success"></div>
+                <button type="submit" class="btn-auth btn-auth-primary" id="review-submit">
+                    Submit Review
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Reviews Modal -->
+    <div class="auth-overlay" id="view-reviews-overlay">
+        <div class="auth-modal" style="max-width: 650px; max-height: 80vh; overflow-y: auto;">
+            <button class="auth-modal-close" id="view-reviews-close">&times;</button>
+            <div class="auth-header">
+                <h2>Article Reviews</h2>
+                <p id="reviews-article-title"></p>
+            </div>
+            <div id="reviews-list">
+                <!-- Reviews will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- My Contributions Modal -->
+    <div class="auth-overlay" id="contributions-overlay">
+        <div class="auth-modal" style="max-width: 700px; max-height: 80vh; overflow-y: auto;">
+            <button class="auth-modal-close" id="contributions-close">&times;</button>
+            <div class="auth-header">
+                <h2>My Contributions</h2>
+                <p>Your articles and reviews</p>
+            </div>
+            <div id="contributions-content">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <header class="navbar">
             <div class="nav-left">
@@ -3252,6 +3659,8 @@ body:not(.dark-mode) .chat-input input {
                     <a href="#" class="nav-link active" data-page="for-you">For You</a>
                     <a href="#" class="nav-link" data-page="trending">Trending</a>
                     <a href="#" class="nav-link" data-page="analysis">Analysis</a>
+                    <a href="#" class="nav-link" data-page="media-literacy">Media Literacy</a>
+                    <a href="#" class="nav-link" data-page="admin-dashboard" id="admin-nav-link" style="display: none;">Admin</a>
                 </div>
             </div>
             <div class="nav-right">
@@ -3267,6 +3676,11 @@ body:not(.dark-mode) .chat-input input {
                     <input type="text" placeholder="Search headlines..." id="search-input">
                 </div>
                 
+                <!-- Submit Article Button (shown when logged in) -->
+                <button class="submit-article-btn" id="submit-article-btn" style="display: none;">
+                    <i class="fas fa-plus"></i> Submit Article
+                </button>
+                
                 <!-- Login Button (shown when logged out) -->
                 <button class="btn-login" id="show-auth-btn">Login</button>
 
@@ -3277,6 +3691,14 @@ body:not(.dark-mode) .chat-input input {
                         <div class="user-dropdown-item" id="user-name-display">
                             <i class="fas fa-user"></i>
                             <span id="user-name-text">User</span>
+                        </div>
+                        <div class="user-dropdown-item" id="reputation-display" style="display: none;">
+                            <i class="fas fa-star"></i>
+                            <span>Reputation: <span id="reputation-score">0</span></span>
+                        </div>
+                        <div class="user-dropdown-item" id="my-contributions-btn">
+                            <i class="fas fa-list"></i>
+                            <span>My Contributions</span>
                         </div>
                         <div class="user-dropdown-item" id="logout-btn">
                             <i class="fas fa-sign-out-alt"></i>
@@ -3538,6 +3960,54 @@ body:not(.dark-mode) .chat-input input {
                         </div>
                     </div>
                 </aside>
+            </div>
+        </div>
+
+        <!-- Media Literacy Page -->
+        <div class="page-content" id="media-literacy-page">
+            <div class="main-content">
+                <main class="feed">
+                    <section class="media-literacy-section">
+                        <div class="section-header">
+                            <h2>Media Literacy Resources</h2>
+                            <p>Learn to identify credible news and avoid misinformation</p>
+                        </div>
+                        <div id="media-literacy-loading" class="loading">
+                            <div class="spinner"></div>
+                        </div>
+                        <div id="media-literacy-content">
+                            <!-- Media literacy articles will be loaded here -->
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard Page -->
+        <div class="page-content" id="admin-dashboard-page">
+            <div class="main-content">
+                <main class="feed">
+                    <section class="admin-dashboard">
+                        <div class="section-header">
+                            <h2>Admin Dashboard</h2>
+                            <p>Manage articles and monitor platform statistics</p>
+                        </div>
+                        
+                        <div class="stats-grid" id="admin-stats">
+                            <!-- Stats will be loaded here -->
+                        </div>
+                        
+                        <div style="margin-top: 30px;">
+                            <h3>Pending Articles</h3>
+                            <div id="pending-articles-loading" class="loading">
+                                <div class="spinner"></div>
+                            </div>
+                            <div class="pending-articles-list" id="pending-articles-list">
+                                <!-- Pending articles will be loaded here -->
+                            </div>
+                        </div>
+                    </section>
+                </main>
             </div>
         </div>
 
@@ -4649,6 +5119,7 @@ setupLanguageSelector();
                 authToken = token;
                 currentUser = JSON.parse(user);
                 updateUIForLoggedInUser();
+                updateUserUIAfterLogin();
                 loadUserBookmarks().then(() => {
                     loadNewsFromAPI();
                     loadDailyMix();
@@ -4718,6 +5189,7 @@ setupLanguageSelector();
 
                 document.getElementById('auth-overlay').classList.remove('active');
                 updateUIForLoggedInUser();
+                updateUserUIAfterLogin();
                 
                 await loadUserBookmarks();
                 await loadNewsFromAPI();
@@ -4791,6 +5263,17 @@ setupLanguageSelector();
             updateUIForLoggedOutUser();
             loadNewsFromAPI();
             showDailyMixLoginPrompt();
+            
+            // Hide submit article button
+            const submitBtn = document.getElementById('submit-article-btn');
+            if (submitBtn) submitBtn.style.display = 'none';
+            
+            // Hide admin nav
+            const adminNav = document.getElementById('admin-nav-link');
+            if (adminNav) adminNav.style.display = 'none';
+            
+            // Hide reputation
+            document.getElementById('reputation-display').style.display = 'none';
         }
 
         // ========== DAILY MIX FUNCTIONS ========== 
@@ -5644,12 +6127,52 @@ document.addEventListener('DOMContentLoaded', function() {
                 dominantSentiment = 'negative';
             }
             
+            // Fetch credibility data
+            let credibilityHtml = '';
+            try {
+                const credResponse = await fetch(`${API_BASE_URL}/credibility/article/${article.id}`);
+                if (credResponse.ok) {
+                    const credData = await credResponse.json();
+                    if (credData.success && credData.data) {
+                        const score = credData.data.score || 0;
+                        const status = credData.data.verificationStatus || 'unverified';
+                        
+                        let credClass = 'credibility-low';
+                        let credLabel = 'Low';
+                        if (score >= 80) {
+                            credClass = 'credibility-high';
+                            credLabel = 'High';
+                        } else if (score >= 60) {
+                            credClass = 'credibility-good';
+                            credLabel = 'Good';
+                        } else if (score >= 40) {
+                            credClass = 'credibility-mixed';
+                            credLabel = 'Mixed';
+                        }
+                        
+                        const statusIcon = status === 'verified' ? '✓' : 
+                                         status === 'disputed' ? '⚠' : 
+                                         status === 'false' ? '✗' : '?';
+                        
+                        credibilityHtml = `
+                            <span class="credibility-badge ${credClass}">
+                                ${credLabel} ${score}
+                                <span class="verification-icon" title="${status}">${statusIcon}</span>
+                            </span>
+                        `;
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching credibility:', error);
+            }
+            
             card.innerHTML = `
                 <div class="news-image">
                     <img src="${article.image}" alt="News image" onerror="this.src='https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800'">
                     <span class="sentiment-badge sentiment-${dominantSentiment}">
                         ${dominantSentiment === 'positive' ? '😊' : dominantSentiment === 'negative' ? '😟' : '😐'} ${dominantSentiment.charAt(0).toUpperCase() + dominantSentiment.slice(1)}
                     </span>
+                    ${credibilityHtml}
                     ${authToken ? `
                     <button class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" data-article-id="${article.id}">
                         <i class="${isBookmarked ? 'fas' : 'far'} fa-bookmark"></i>
@@ -5667,6 +6190,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                             <button class="btn btn-primary read-more" data-url="${article.url}">Read More</button>
                             <button class="btn btn-similar find-similar" data-uri="${article.uri}">Similar</button>
+                            ${authToken ? `
+                            <button class="btn-review write-review" data-article-id="${article.id}" data-article-title="${article.title.replace(/"/g, '&quot;')}">Write Review</button>
+                            <button class="btn-review view-reviews" data-article-id="${article.id}" data-article-title="${article.title.replace(/"/g, '&quot;')}">View Reviews</button>
+                            ` : ''}
                         </div>
                         ${authToken ? `
                         <div class="reactions">
@@ -6117,6 +6644,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         loadTrendingArticles();
                     } else if (pageId === 'for-you-page') {
                         loadNewsFromAPI();
+                    } else if (pageId === 'media-literacy-page') {
+                        loadMediaLiteracy();
+                    } else if (pageId === 'admin-dashboard-page') {
+                        loadAdminDashboard();
                     }
                 });
             });
@@ -6638,6 +7169,528 @@ async function sendMessage() {
     isTyping = false;
 }
 // ========== END AI FEATURES LOGIC ==========
+
+// ========== CREDIBILITY & REVIEW SYSTEM FUNCTIONS ==========
+
+// Star rating functionality
+function initializeStarRatings() {
+    const ratingContainers = document.querySelectorAll('.star-rating');
+    ratingContainers.forEach(container => {
+        let selectedValue = 0;
+        const stars = container.querySelectorAll('.star');
+        
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                selectedValue = parseInt(this.dataset.value);
+                updateStars(container, selectedValue);
+                container.dataset.rating = selectedValue;
+            });
+            
+            star.addEventListener('mouseenter', function() {
+                updateStars(container, parseInt(this.dataset.value));
+            });
+        });
+        
+        container.addEventListener('mouseleave', function() {
+            updateStars(container, selectedValue);
+        });
+    });
+}
+
+function updateStars(container, value) {
+    const stars = container.querySelectorAll('.star');
+    stars.forEach((star, index) => {
+        if (index < value) {
+            star.classList.add('active');
+        } else {
+            star.classList.remove('active');
+        }
+    });
+}
+
+// Credibility slider
+const credibilitySlider = document.getElementById('credibility-rating');
+const credibilityValue = document.getElementById('credibility-value');
+if (credibilitySlider && credibilityValue) {
+    credibilitySlider.addEventListener('input', function() {
+        credibilityValue.textContent = this.value;
+    });
+}
+
+// Submit Article Modal
+const submitArticleBtn = document.getElementById('submit-article-btn');
+const submitArticleOverlay = document.getElementById('submit-article-overlay');
+const submitArticleClose = document.getElementById('submit-article-close');
+const submitArticleForm = document.getElementById('submit-article-form');
+
+if (submitArticleBtn) {
+    submitArticleBtn.addEventListener('click', () => {
+        submitArticleOverlay.classList.add('active');
+    });
+}
+
+if (submitArticleClose) {
+    submitArticleClose.addEventListener('click', () => {
+        submitArticleOverlay.classList.remove('active');
+        submitArticleForm.reset();
+        document.getElementById('submit-article-error').classList.remove('active');
+        document.getElementById('submit-article-success').style.display = 'none';
+    });
+}
+
+if (submitArticleForm) {
+    submitArticleForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const errorEl = document.getElementById('submit-article-error');
+        const successEl = document.getElementById('submit-article-success');
+        errorEl.classList.remove('active');
+        successEl.style.display = 'none';
+        
+        const articleData = {
+            title: document.getElementById('article-title').value,
+            url: document.getElementById('article-url').value,
+            summary: document.getElementById('article-summary').value,
+            source: document.getElementById('article-source').value,
+            category: document.getElementById('article-category').value
+        };
+        
+        try {
+            const response = await fetch(`${API_BASE_URL}/credibility/submit`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(articleData)
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                successEl.textContent = 'Article submitted successfully! It will be reviewed by moderators.';
+                successEl.style.display = 'block';
+                submitArticleForm.reset();
+                setTimeout(() => {
+                    submitArticleOverlay.classList.remove('active');
+                    successEl.style.display = 'none';
+                }, 2000);
+            } else {
+                errorEl.textContent = data.message || 'Failed to submit article';
+                errorEl.classList.add('active');
+            }
+        } catch (error) {
+            console.error('Error submitting article:', error);
+            errorEl.textContent = 'Network error. Please try again.';
+            errorEl.classList.add('active');
+        }
+    });
+}
+
+// Review Modal
+const reviewOverlay = document.getElementById('review-overlay');
+const reviewClose = document.getElementById('review-close');
+const reviewForm = document.getElementById('review-form');
+
+if (reviewClose) {
+    reviewClose.addEventListener('click', () => {
+        reviewOverlay.classList.remove('active');
+        reviewForm.reset();
+        document.getElementById('review-error').classList.remove('active');
+        document.getElementById('review-success').style.display = 'none';
+        document.querySelectorAll('.star-rating').forEach(container => {
+            container.dataset.rating = '0';
+            updateStars(container, 0);
+        });
+    });
+}
+
+// Event delegation for Write Review buttons
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('write-review') || e.target.closest('.write-review')) {
+        const btn = e.target.classList.contains('write-review') ? e.target : e.target.closest('.write-review');
+        const articleId = btn.dataset.articleId;
+        const articleTitle = btn.dataset.articleTitle;
+        
+        document.getElementById('review-article-id').value = articleId;
+        document.querySelector('#review-overlay .auth-header p').textContent = articleTitle;
+        reviewOverlay.classList.add('active');
+        initializeStarRatings();
+    }
+    
+    if (e.target.classList.contains('view-reviews') || e.target.closest('.view-reviews')) {
+        const btn = e.target.classList.contains('view-reviews') ? e.target : e.target.closest('.view-reviews');
+        const articleId = btn.dataset.articleId;
+        const articleTitle = btn.dataset.articleTitle;
+        
+        loadReviews(articleId, articleTitle);
+    }
+});
+
+if (reviewForm) {
+    reviewForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const errorEl = document.getElementById('review-error');
+        const successEl = document.getElementById('review-success');
+        errorEl.classList.remove('active');
+        successEl.style.display = 'none';
+        
+        const overallRating = document.getElementById('overall-rating').dataset.rating || 0;
+        const accuracyRating = document.getElementById('accuracy-rating').dataset.rating || 0;
+        const sourcingRating = document.getElementById('sourcing-rating').dataset.rating || 0;
+        const biasRating = document.getElementById('bias-rating').dataset.rating || 0;
+        
+        if (overallRating === 0 || accuracyRating === 0 || sourcingRating === 0 || biasRating === 0) {
+            errorEl.textContent = 'Please provide all ratings';
+            errorEl.classList.add('active');
+            return;
+        }
+        
+        const reviewData = {
+            articleId: document.getElementById('review-article-id').value,
+            overallRating: parseInt(overallRating),
+            credibilityScore: parseInt(document.getElementById('credibility-rating').value),
+            accuracyRating: parseInt(accuracyRating),
+            sourcingRating: parseInt(sourcingRating),
+            biasRating: parseInt(biasRating),
+            title: document.getElementById('review-title').value,
+            comment: document.getElementById('review-comment').value
+        };
+        
+        try {
+            const response = await fetch(`${API_BASE_URL}/reviews`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(reviewData)
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                successEl.textContent = 'Review submitted successfully!';
+                successEl.style.display = 'block';
+                reviewForm.reset();
+                document.querySelectorAll('.star-rating').forEach(container => {
+                    container.dataset.rating = '0';
+                    updateStars(container, 0);
+                });
+                setTimeout(() => {
+                    reviewOverlay.classList.remove('active');
+                    successEl.style.display = 'none';
+                }, 2000);
+            } else {
+                errorEl.textContent = data.message || 'Failed to submit review';
+                errorEl.classList.add('active');
+            }
+        } catch (error) {
+            console.error('Error submitting review:', error);
+            errorEl.textContent = 'Network error. Please try again.';
+            errorEl.classList.add('active');
+        }
+    });
+}
+
+// Load Reviews
+async function loadReviews(articleId, articleTitle) {
+    const overlay = document.getElementById('view-reviews-overlay');
+    const reviewsList = document.getElementById('reviews-list');
+    document.getElementById('reviews-article-title').textContent = articleTitle;
+    
+    reviewsList.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+    overlay.classList.add('active');
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/reviews/article/${articleId}`);
+        const data = await response.json();
+        
+        if (data.success && data.reviews && data.reviews.length > 0) {
+            reviewsList.innerHTML = data.reviews.map(review => `
+                <div class="review-item">
+                    <div class="review-header">
+                        <span class="review-author">${review.userId?.name || 'Anonymous'}</span>
+                        <span class="review-date">${new Date(review.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <div style="margin: 8px 0;">
+                        <strong>${review.title}</strong>
+                        <div style="color: #f59e0b; font-size: 14px;">
+                            ${'★'.repeat(review.overallRating)}${'☆'.repeat(5 - review.overallRating)}
+                        </div>
+                    </div>
+                    <p style="margin: 10px 0; color: var(--gray);">${review.comment}</p>
+                    <div class="review-ratings">
+                        <span>Credibility: ${review.credibilityScore}/100</span>
+                        <span>Accuracy: ${review.accuracyRating}/5</span>
+                        <span>Sourcing: ${review.sourcingRating}/5</span>
+                        <span>Bias: ${review.biasRating}/5</span>
+                    </div>
+                    <div class="review-vote-buttons">
+                        <button class="vote-btn vote-helpful" data-review-id="${review._id}">
+                            👍 Helpful (${review.helpfulCount || 0})
+                        </button>
+                        <button class="vote-btn vote-not-helpful" data-review-id="${review._id}">
+                            👎 Not Helpful (${review.notHelpfulCount || 0})
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Add vote button handlers
+            document.querySelectorAll('.vote-helpful, .vote-not-helpful').forEach(btn => {
+                btn.addEventListener('click', async function() {
+                    if (!authToken) {
+                        alert('Please login to vote');
+                        return;
+                    }
+                    
+                    const reviewId = this.dataset.reviewId;
+                    const isHelpful = this.classList.contains('vote-helpful');
+                    
+                    try {
+                        const response = await fetch(`${API_BASE_URL}/reviews/${reviewId}/vote`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${authToken}`
+                            },
+                            body: JSON.stringify({ helpful: isHelpful })
+                        });
+                        
+                        const data = await response.json();
+                        if (data.success) {
+                            loadReviews(articleId, articleTitle);
+                        } else {
+                            alert(data.message || 'Failed to vote');
+                        }
+                    } catch (error) {
+                        console.error('Error voting:', error);
+                        alert('Failed to vote. Please try again.');
+                    }
+                });
+            });
+        } else {
+            reviewsList.innerHTML = '<p style="text-align: center; padding: 20px; color: var(--gray);">No reviews yet. Be the first to review!</p>';
+        }
+    } catch (error) {
+        console.error('Error loading reviews:', error);
+        reviewsList.innerHTML = '<p style="text-align: center; padding: 20px; color: var(--danger);">Failed to load reviews</p>';
+    }
+}
+
+const viewReviewsClose = document.getElementById('view-reviews-close');
+if (viewReviewsClose) {
+    viewReviewsClose.addEventListener('click', () => {
+        document.getElementById('view-reviews-overlay').classList.remove('active');
+    });
+}
+
+// My Contributions Modal
+const myContributionsBtn = document.getElementById('my-contributions-btn');
+const contributionsOverlay = document.getElementById('contributions-overlay');
+const contributionsClose = document.getElementById('contributions-close');
+
+if (myContributionsBtn) {
+    myContributionsBtn.addEventListener('click', () => {
+        loadMyContributions();
+        contributionsOverlay.classList.add('active');
+    });
+}
+
+if (contributionsClose) {
+    contributionsClose.addEventListener('click', () => {
+        contributionsOverlay.classList.remove('active');
+    });
+}
+
+async function loadMyContributions() {
+    const content = document.getElementById('contributions-content');
+    content.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+    
+    try {
+        // Load user stats
+        const statsResponse = await fetch(`${API_BASE_URL}/auth/me`, {
+            headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        const statsData = await statsResponse.json();
+        
+        if (statsData.success) {
+            const reputation = statsData.user.reputation || 0;
+            document.getElementById('reputation-score').textContent = reputation;
+            document.getElementById('reputation-display').style.display = 'flex';
+            
+            content.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h3>Reputation Score</h3>
+                    <div class="stat-value">${reputation}</div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <h4>Your Activity</h4>
+                    <p style="color: var(--gray); margin-top: 10px;">Track your contributions and earn reputation by submitting articles and writing reviews!</p>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('Error loading contributions:', error);
+        content.innerHTML = '<p style="text-align: center; color: var(--danger);">Failed to load contributions</p>';
+    }
+}
+
+// Media Literacy Page
+async function loadMediaLiteracy() {
+    const loading = document.getElementById('media-literacy-loading');
+    const content = document.getElementById('media-literacy-content');
+    
+    loading.style.display = 'block';
+    content.innerHTML = '';
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/media-literacy`);
+        const data = await response.json();
+        
+        if (data.success && data.articles) {
+            content.innerHTML = data.articles.map(article => `
+                <div class="news-card" style="cursor: pointer;" onclick="window.open('${API_BASE_URL}/media-literacy/${article.slug}', '_blank')">
+                    <div class="news-content">
+                        <h3>${article.title}</h3>
+                        <p>${article.excerpt || article.content.substring(0, 200) + '...'}</p>
+                        <div class="news-meta">
+                            <span class="source">Media Literacy</span>
+                            <span class="time">${new Date(article.createdAt).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            content.innerHTML = '<p style="text-align: center; padding: 40px; color: var(--gray);">No media literacy articles available yet.</p>';
+        }
+    } catch (error) {
+        console.error('Error loading media literacy:', error);
+        content.innerHTML = '<p style="text-align: center; padding: 40px; color: var(--danger);">Failed to load content</p>';
+    }
+    
+    loading.style.display = 'none';
+}
+
+// Admin Dashboard
+async function loadAdminDashboard() {
+    const statsContainer = document.getElementById('admin-stats');
+    const loading = document.getElementById('pending-articles-loading');
+    const listContainer = document.getElementById('pending-articles-list');
+    
+    loading.style.display = 'block';
+    
+    try {
+        // Load stats
+        const statsResponse = await fetch(`${API_BASE_URL}/admin/stats`, {
+            headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        const statsData = await statsResponse.json();
+        
+        if (statsData.success) {
+            const stats = statsData.stats;
+            statsContainer.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-label">Total Articles</div>
+                    <div class="stat-value">${stats.totalArticles || 0}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Pending Articles</div>
+                    <div class="stat-value">${stats.pendingArticles || 0}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Reviews</div>
+                    <div class="stat-value">${stats.totalReviews || 0}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Users</div>
+                    <div class="stat-value">${stats.totalUsers || 0}</div>
+                </div>
+            `;
+        }
+        
+        // Load pending articles
+        const articlesResponse = await fetch(`${API_BASE_URL}/admin/articles/pending`, {
+            headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        const articlesData = await articlesResponse.json();
+        
+        if (articlesData.success && articlesData.articles && articlesData.articles.length > 0) {
+            listContainer.innerHTML = articlesData.articles.map(article => `
+                <div class="pending-article-card">
+                    <h4>${article.title}</h4>
+                    <p style="color: var(--gray); margin: 8px 0;">${article.summary}</p>
+                    <div style="font-size: 13px; color: var(--gray); margin: 8px 0;">
+                        <strong>Source:</strong> ${article.source} | 
+                        <strong>Category:</strong> ${article.category} |
+                        <strong>URL:</strong> <a href="${article.url}" target="_blank" style="color: var(--primary);">View</a>
+                    </div>
+                    <div style="font-size: 12px; color: var(--gray);">
+                        Submitted by: ${article.submittedBy?.name || 'Unknown'} on ${new Date(article.submittedAt).toLocaleDateString()}
+                    </div>
+                    <div class="admin-actions">
+                        <button class="btn-auth btn-approve" onclick="reviewArticle('${article._id}', 'approved')">Approve</button>
+                        <button class="btn-auth btn-reject" onclick="reviewArticle('${article._id}', 'rejected')">Reject</button>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            listContainer.innerHTML = '<p style="text-align: center; padding: 20px; color: var(--gray);">No pending articles</p>';
+        }
+    } catch (error) {
+        console.error('Error loading admin dashboard:', error);
+        listContainer.innerHTML = '<p style="text-align: center; padding: 20px; color: var(--danger);">Failed to load dashboard</p>';
+    }
+    
+    loading.style.display = 'none';
+}
+
+async function reviewArticle(articleId, action) {
+    if (!confirm(`Are you sure you want to ${action} this article?`)) return;
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/admin/articles/${articleId}/review`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({ action })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            alert(`Article ${action} successfully!`);
+            loadAdminDashboard();
+        } else {
+            alert(data.message || `Failed to ${action} article`);
+        }
+    } catch (error) {
+        console.error('Error reviewing article:', error);
+        alert('Network error. Please try again.');
+    }
+}
+
+// Update user UI on login
+function updateUserUIAfterLogin() {
+    const submitBtn = document.getElementById('submit-article-btn');
+    if (submitBtn && authToken) {
+        submitBtn.style.display = 'block';
+    }
+    
+    // Check if user is admin/moderator
+    if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'moderator')) {
+        const adminNav = document.getElementById('admin-nav-link');
+        if (adminNav) {
+            adminNav.style.display = 'block';
+        }
+    }
+}
+
+// ========== END CREDIBILITY & REVIEW SYSTEM FUNCTIONS ==========
     
 
 
