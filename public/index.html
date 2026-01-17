@@ -12,12 +12,12 @@
 </head>
 
 <body>
-
+    
     <!-- Auth Modal -->
     <div class="auth-overlay" id="auth-overlay">
         <div class="auth-modal">
             <button class="auth-modal-close" id="auth-close">&times;</button>
-
+            
             <!-- Login Form -->
             <div id="login-form" class="auth-form-container">
                 <div class="auth-header">
@@ -60,8 +60,7 @@
                     </div>
                     <div class="form-group">
                         <label for="signup-password">Password</label>
-                        <input type="password" id="signup-password" placeholder="Create a password (min 6 characters)"
-                            required>
+                        <input type="password" id="signup-password" placeholder="Create a password (min 6 characters)" required>
                     </div>
                     <div class="error-message" id="signup-error"></div>
                     <button type="submit" class="btn-auth btn-auth-primary" id="signup-btn">
@@ -80,10 +79,9 @@
             <div class="nav-left">
                 <a href="#" class="logo">📊 NewsPulse</a>
                 <div class="nav-links" id="nav-links">
-                    <a href="index.html" class="nav-link active" data-page="for-you">For You</a>
+                    <a href="#" class="nav-link active" data-page="for-you">For You</a>
                     <a href="#" class="nav-link" data-page="trending">Trending</a>
                     <a href="#" class="nav-link" data-page="analysis">Analysis</a>
-                    <a href="community.html" class="nav-link">Community</a>
                 </div>
             </div>
             <div class="nav-right">
@@ -98,7 +96,7 @@
                     <i class="fas fa-search"></i>
                     <input type="text" placeholder="Search headlines..." id="search-input">
                 </div>
-
+                
                 <!-- Login Button (shown when logged out) -->
                 <button class="btn-login" id="show-auth-btn">Login</button>
 
@@ -188,11 +186,11 @@
                         <div class="section-header">
                             <h2>Latest News <span id="cache-status"></span></h2>
                         </div>
-
+                        
                         <div id="news-loading" class="loading">
                             <div class="spinner"></div>
                         </div>
-
+                        
                         <div class="news-container" id="news-container" style="display: none;">
                             <!-- News articles will be populated here -->
                         </div>
@@ -208,7 +206,7 @@
                                     <canvas id="sentiment-chart"></canvas>
                                 </div>
                             </div>
-
+                            
                             <div class="analysis-card">
                                 <h3>News Source Distribution</h3>
                                 <div class="chart-container">
@@ -244,19 +242,20 @@
                                 <option value="cn">China</option>
                                 <option value="br">Brazil</option>
                             </select>
-
+                            
                             <label for="lang-select">Language:</label>
                             <select id="lang-select" name="language">
                                 <option value="en">English</option>
                                 <option value="hi">हिंदी (Hindi)</option>
                                 <option value="mr">मराठी (Marathi)</option>
                                 <option value="ta">தமிழ் (Tamil)</option>
+                                
                                 <option value="fr">Français (French)</option>
                                 <option value="es">Español (Spanish)</option>
                             </select>
                         </div>
                     </div>
-
+                    
                     <div class="sidebar-widget">
                         <h3>BOOKMARKED ARTICLES</h3>
                         <div class="bookmarked-articles" id="bookmarked-articles">
@@ -266,7 +265,7 @@
                     <div class="sidebar-widget" id="newsletter-widget">
                         <h3>📬 NEWSLETTER</h3>
                         <div id="newsletter-content">
-                            <!-- Will be populated by JavaScript -->
+                             <!-- Will be populated by JavaScript -->
                         </div>
                     </div>
                 </aside>
@@ -281,11 +280,11 @@
                         <div class="section-header">
                             <h2>Most Popular Stories</h2>
                         </div>
-
+                        
                         <div id="trending-loading" class="loading">
                             <div class="spinner"></div>
                         </div>
-
+                        
                         <div class="news-container" id="trending-news-container" style="display: none;">
                             <!-- Trending news will be populated here -->
                         </div>
@@ -309,7 +308,7 @@
                 <main class="feed">
                     <section class="analysis-section">
                         <h2>News Analytics Dashboard</h2>
-
+                        
                         <div class="stats-grid">
                             <div class="stat-card">
                                 <h3>Total Articles</h3>
@@ -328,7 +327,7 @@
                                 <div class="value" id="stat-neutral">0</div>
                             </div>
                         </div>
-
+                        
                         <div class="analysis-container">
                             <div class="analysis-card">
                                 <h3>Sentiment Distribution</h3>
@@ -336,21 +335,21 @@
                                     <canvas id="analysis-sentiment-chart"></canvas>
                                 </div>
                             </div>
-
+                            
                             <div class="analysis-card">
                                 <h3>Category Distribution</h3>
                                 <div class="chart-container">
                                     <canvas id="category-chart"></canvas>
                                 </div>
                             </div>
-
+                            
                             <div class="analysis-card">
                                 <h3>News Source Distribution</h3>
                                 <div class="chart-container">
                                     <canvas id="analysis-source-chart"></canvas>
                                 </div>
                             </div>
-
+                            
                             <div class="analysis-card">
                                 <h3>Top Keywords</h3>
                                 <div class="word-cloud" id="analysis-word-cloud">
@@ -386,53 +385,14 @@
             </div>
         </div>
 
-        <!-- ========== CREDIBILITY MODAL ========== -->
-        <div id="credibility-modal" class="modal credibility-modal">
-            <div class="modal-content credibility-modal-content">
-                <span class="modal-close credibility-modal-close">&times;</span>
-                <h2>📊 Credibility Breakdown</h2>
-                <div id="credibility-breakdown-content">
-                    <!-- Content will be populated by JavaScript -->
-                </div>
-            </div>
-        </div>
-        <!-- ========== END CREDIBILITY MODAL ========== -->
-
-        <!-- ========== GLOBAL AI SUMMARY TOOLTIP ========== -->
-        <div id="ai-summary-tooltip" class="ai-summary-tooltip"></div>
-
-        <!-- ========== SHARE TO COMMUNITY MODAL ========== -->
-        <div id="share-modal" class="share-modal">
-            <div class="share-modal-content">
-                <div class="share-modal-header">
-                    <h2>Share to Community</h2>
-                    <button class="share-modal-close">&times;</button>
-                </div>
-                <form id="share-form" class="share-form">
-                    <div>
-                        <label for="share-message">Your Message</label>
-                        <textarea id="share-message" placeholder="e.g., Is this news legit? What do you think?"
-                            maxlength="500" required></textarea>
-                        <small style="color: var(--text-secondary);">Ask the community for their opinion on this
-                            article's credibility</small>
-                    </div>
-                    <div class="share-preview" id="share-preview">
-                        <!-- Article preview will be inserted here -->
-                    </div>
-                    <button type="submit" class="btn btn-primary" id="share-submit-btn">
-                        <i class="fas fa-share-alt"></i> Share to Community
-                    </button>
-                </form>
-            </div>
-        </div>
-        <!-- ========== END SHARE MODAL ========== -->
+         <!-- ========== GLOBAL AI SUMMARY TOOLTIP ========== -->
+    <div id="ai-summary-tooltip" class="ai-summary-tooltip"></div>
 
         <footer class="footer">
             <div class="footer-content">
                 <div class="footer-col">
                     <h4>About NewsPulse</h4>
-                    <p>Bringing you trending headlines with AI-powered sentiment analysis and credibility verification.
-                    </p>
+                    <p>Bringing you trending headlines with AI-powered sentiment analysis and insights.</p>
                 </div>
                 <div class="footer-col">
                     <h4>Contact</h4>
@@ -448,73 +408,71 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 NewsPulse. All rights reserved. Powered by NewsAPI.ai | Credibility System Active</p>
+                <p>&copy; 2025 NewsPulse. All rights reserved. Powered by NewsAPI.ai</p>
             </div>
         </footer>
     </div>
 
-    <!-- Newsletter Modal -->
     <div id="newsletter-modal" class="newsletter-modal">
-        <div class="newsletter-modal-content">
-            <span class="newsletter-modal-close">&times;</span>
-            <h2>📬 Newsletter Preferences</h2>
+    <div class="newsletter-modal-content">
+        <span class="newsletter-modal-close">&times;</span>
+        <h2>📬 Newsletter Preferences</h2>
+        
+        <form id="newsletter-preferences-form">
+            <div class="newsletter-form-group">
+                <label for="newsletter-frequency">Frequency:</label>
+                <select id="newsletter-frequency" name="frequency">
+                    <option value="daily">Daily (Every morning at 8 AM)</option>
+                    <option value="weekly">Weekly (Every Monday at 8 AM)</option>
+                </select>
+            </div>
 
-            <form id="newsletter-preferences-form">
-                <div class="newsletter-form-group">
-                    <label for="newsletter-frequency">Frequency:</label>
-                    <select id="newsletter-frequency" name="frequency">
-                        <option value="daily">Daily (Every morning at 8 AM)</option>
-                        <option value="weekly">Weekly (Every Monday at 8 AM)</option>
-                    </select>
+            <div class="newsletter-form-group">
+                <label>Select Categories:</label>
+                <div class="newsletter-categories">
+                    <label class="category-checkbox">
+                        <input type="checkbox" name="category" value="all" checked>
+                        All
+                    </label>
+                    <label class="category-checkbox">
+                        <input type="checkbox" name="category" value="business">
+                        Business
+                    </label>
+                    <label class="category-checkbox">
+                        <input type="checkbox" name="category" value="technology">
+                        Technology
+                    </label>
+                    <label class="category-checkbox">
+                        <input type="checkbox" name="category" value="sports">
+                        Sports
+                    </label>
+                    <label class="category-checkbox">
+                        <input type="checkbox" name="category" value="politics">
+                        Politics
+                    </label>
+                    <label class="category-checkbox">
+                        <input type="checkbox" name="category" value="entertainment">
+                        Entertainment
+                    </label>
+                    <label class="category-checkbox">
+                        <input type="checkbox" name="category" value="health">
+                        Health
+                    </label>
+                    <label class="category-checkbox">
+                        <input type="checkbox" name="category" value="science">
+                        Science
+                    </label>
                 </div>
+            </div>
 
-                <div class="newsletter-form-group">
-                    <label>Select Categories:</label>
-                    <div class="newsletter-categories">
-                        <label class="category-checkbox">
-                            <input type="checkbox" name="category" value="all" checked>
-                            All
-                        </label>
-                        <label class="category-checkbox">
-                            <input type="checkbox" name="category" value="business">
-                            Business
-                        </label>
-                        <label class="category-checkbox">
-                            <input type="checkbox" name="category" value="technology">
-                            Technology
-                        </label>
-                        <label class="category-checkbox">
-                            <input type="checkbox" name="category" value="sports">
-                            Sports
-                        </label>
-                        <label class="category-checkbox">
-                            <input type="checkbox" name="category" value="politics">
-                            Politics
-                        </label>
-                        <label class="category-checkbox">
-                            <input type="checkbox" name="category" value="entertainment">
-                            Entertainment
-                        </label>
-                        <label class="category-checkbox">
-                            <input type="checkbox" name="category" value="health">
-                            Health
-                        </label>
-                        <label class="category-checkbox">
-                            <input type="checkbox" name="category" value="science">
-                            Science
-                        </label>
-                    </div>
-                </div>
-
-                <div class="newsletter-modal-actions">
-                    <button type="submit" class="btn-newsletter btn-subscribe">
-                        Save Preferences
-                    </button>
-                </div>
-            </form>
-        </div>
+            <div class="newsletter-modal-actions">
+                <button type="submit" class="btn-newsletter btn-subscribe">
+                    Save Preferences
+                </button>
+            </div>
+        </form>
     </div>
-
+    </div>
     <script src="script.js"></script>
 </body>
 
