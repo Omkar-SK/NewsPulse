@@ -59,6 +59,34 @@ const ArticleSchema = new mongoose.Schema({
     rating: String,
     checkedAt: Date
   }],
+  // AI-based fake news detection
+  aiCredibilityAnalysis: {
+    score: {
+      type: Number,
+      min: 0,
+      max: 100,
+      default: null
+    },
+    reasoning: String,
+    redFlags: [String],
+    confidence: {
+      type: Number,
+      min: 0,
+      max: 100,
+      default: null
+    },
+    analyzedAt: Date,
+    userRatings: {
+      helpful: {
+        type: Number,
+        default: 0
+      },
+      notHelpful: {
+        type: Number,
+        default: 0
+      }
+    }
+  },
   submittedBy: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',

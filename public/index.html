@@ -3674,6 +3674,126 @@ body:not(.dark-mode) .chat-input input {
     font-weight: 600;
     margin-bottom: 5px;
 }
+
+/* AI Analysis Styles */
+.ai-analysis-box {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    border: 2px solid #667eea;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.dark-mode .ai-analysis-box {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+}
+
+.ai-score-display {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.ai-score-number {
+    font-size: 48px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.ai-confidence {
+    font-size: 14px;
+    color: var(--gray);
+    margin-top: 5px;
+}
+
+.ai-reasoning {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+.dark-mode .ai-reasoning {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.ai-red-flags {
+    margin-top: 15px;
+}
+
+.red-flag-item {
+    display: flex;
+    align-items: start;
+    gap: 8px;
+    padding: 8px;
+    background-color: rgba(239, 68, 68, 0.1);
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.red-flag-item i {
+    color: #ef4444;
+    margin-top: 2px;
+}
+
+.ai-rating-section {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--gray-light);
+}
+
+.ai-rating-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 2px solid var(--gray-light);
+    background-color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+}
+
+.dark-mode .ai-rating-btn {
+    background-color: #334155;
+    border-color: #475569;
+}
+
+.ai-rating-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.ai-rating-btn.helpful {
+    border-color: #10b981;
+    color: #10b981;
+}
+
+.ai-rating-btn.helpful:hover {
+    background-color: rgba(16, 185, 129, 0.1);
+}
+
+.ai-rating-btn.not-helpful {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.ai-rating-btn.not-helpful:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+.btn-ai-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
 /* ========== END CREDIBILITY STYLES ========== */
 
 
@@ -3895,6 +4015,20 @@ body:not(.dark-mode) .chat-input input {
             </div>
             <div id="contributions-content">
                 <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Analysis Modal -->
+    <div class="auth-overlay" id="ai-analysis-overlay">
+        <div class="auth-modal" style="max-width: 700px; max-height: 80vh; overflow-y: auto;">
+            <button class="auth-modal-close" id="ai-analysis-close">&times;</button>
+            <div class="auth-header">
+                <h2><i class="fas fa-robot"></i> AI Credibility Analysis</h2>
+                <p id="ai-analysis-article-title"></p>
+            </div>
+            <div id="ai-analysis-content">
+                <div class="loading"><div class="spinner"></div></div>
             </div>
         </div>
     </div>
@@ -6453,6 +6587,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                             <button class="btn btn-primary read-more" data-url="${article.url}">Read More</button>
                             <button class="btn btn-similar find-similar" data-uri="${article.uri}">Similar</button>
+                            <button class="btn-ai-check check-credibility" data-article-id="${article.id}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+                                <i class="fas fa-robot"></i> AI Check
+                            </button>
                             ${authToken ? `
                             <button class="btn-review write-review" data-article-id="${article.id}" data-article-title="${escapeHtml(article.title)}">Write Review</button>
                             <button class="btn-review view-reviews" data-article-id="${article.id}" data-article-title="${escapeHtml(article.title)}">View Reviews</button>
@@ -7798,6 +7935,139 @@ async function loadMyContributions() {
     } catch (error) {
         console.error('Error loading contributions:', error);
         content.innerHTML = '<p style="text-align: center; color: var(--danger);">Failed to load contributions</p>';
+    }
+}
+
+// AI Analysis Modal
+const aiAnalysisOverlay = document.getElementById('ai-analysis-overlay');
+const aiAnalysisClose = document.getElementById('ai-analysis-close');
+
+if (aiAnalysisClose) {
+    aiAnalysisClose.addEventListener('click', () => {
+        aiAnalysisOverlay.classList.remove('active');
+    });
+}
+
+// Event delegation for AI Check buttons
+document.addEventListener('click', async (e) => {
+    if (e.target.classList.contains('check-credibility') || e.target.closest('.check-credibility')) {
+        const btn = e.target.classList.contains('check-credibility') ? e.target : e.target.closest('.check-credibility');
+        const articleId = btn.dataset.articleId;
+        
+        await analyzeArticleWithAI(articleId);
+    }
+});
+
+async function analyzeArticleWithAI(articleId) {
+    const overlay = aiAnalysisOverlay;
+    const content = document.getElementById('ai-analysis-content');
+    
+    overlay.classList.add('active');
+    content.innerHTML = '<div class="loading"><div class="spinner"></div><p style="margin-top: 15px;">Analyzing article with AI...</p></div>';
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/credibility/analyze/${articleId}`, {
+            method: 'POST'
+        });
+        
+        const data = await response.json();
+        
+        if (data.success && data.analysis) {
+            const analysis = data.analysis;
+            const userRatings = analysis.userRatings || { helpful: 0, notHelpful: 0 };
+            const totalRatings = userRatings.helpful + userRatings.notHelpful;
+            
+            let scoreClass = 'low';
+            if (analysis.score >= 80) scoreClass = 'high';
+            else if (analysis.score >= 60) scoreClass = 'good';
+            else if (analysis.score >= 40) scoreClass = 'mixed';
+            
+            content.innerHTML = `
+                <div class="ai-analysis-box">
+                    <div class="ai-score-display">
+                        <div class="ai-score-number">${analysis.score}</div>
+                        <div style="font-size: 18px; font-weight: 600; color: var(--dark); margin-top: 5px;">
+                            Credibility Score
+                        </div>
+                        <div class="ai-confidence">
+                            <i class="fas fa-chart-line"></i> ${analysis.confidence}% Confidence
+                            ${data.cached ? ' • <i class="fas fa-clock"></i> Cached' : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="ai-reasoning">
+                        <h4 style="margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-lightbulb"></i> Analysis
+                        </h4>
+                        <p style="line-height: 1.6;">${escapeHtml(analysis.reasoning)}</p>
+                    </div>
+                    
+                    ${analysis.redFlags && analysis.redFlags.length > 0 ? `
+                        <div class="ai-red-flags">
+                            <h4 style="margin-bottom: 10px; color: #ef4444; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-exclamation-triangle"></i> Potential Concerns
+                            </h4>
+                            ${analysis.redFlags.map(flag => `
+                                <div class="red-flag-item">
+                                    <i class="fas fa-flag"></i>
+                                    <span>${escapeHtml(flag)}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    <div class="ai-rating-section">
+                        <p style="width: 100%; text-align: center; margin-bottom: 10px; font-size: 14px; color: var(--gray);">
+                            Was this AI analysis helpful?
+                            ${totalRatings > 0 ? `<br><small>(${userRatings.helpful} helpful, ${userRatings.notHelpful} not helpful)</small>` : ''}
+                        </p>
+                        ${authToken ? `
+                            <button class="ai-rating-btn helpful" data-article-id="${articleId}" data-helpful="true">
+                                <i class="fas fa-thumbs-up"></i> Helpful
+                            </button>
+                            <button class="ai-rating-btn not-helpful" data-article-id="${articleId}" data-helpful="false">
+                                <i class="fas fa-thumbs-down"></i> Not Helpful
+                            </button>
+                        ` : '<p style="font-size: 13px; color: var(--gray);">Login to rate this analysis</p>'}
+                    </div>
+                </div>
+            `;
+            
+            // Add rating button handlers
+            content.querySelectorAll('.ai-rating-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const articleId = btn.dataset.articleId;
+                    const helpful = btn.dataset.helpful === 'true';
+                    
+                    try {
+                        const rateResponse = await fetch(`${API_BASE_URL}/credibility/analyze/${articleId}/rate`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${authToken}`
+                            },
+                            body: JSON.stringify({ helpful })
+                        });
+                        
+                        const rateData = await rateResponse.json();
+                        
+                        if (rateData.success) {
+                            // Re-analyze to show updated ratings
+                            await analyzeArticleWithAI(articleId);
+                        }
+                    } catch (error) {
+                        console.error('Error rating AI analysis:', error);
+                    }
+                });
+            });
+            
+        } else {
+            content.innerHTML = '<p style="text-align: center; padding: 20px; color: var(--danger);">Failed to analyze article</p>';
+        }
+        
+    } catch (error) {
+        console.error('Error analyzing article:', error);
+        content.innerHTML = '<p style="text-align: center; padding: 20px; color: var(--danger);">Error analyzing article. Please try again.</p>';
     }
 }
 
