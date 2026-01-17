@@ -2308,6 +2308,7 @@ async function sendMessage() {
 
 let credibilityCache = {};
 let credibilityLoading = {};
+const NEWS_API_KEY = '/api'; // Ensure this matches your server setup
 
 /**
  * Fetch credibility score for an article (called on hover)
@@ -2425,7 +2426,7 @@ function updateCredibilityBadge(badge, credibility, articleId) {
 }
 
 /**
- * Get risk label
+ * Get risk label text
  */
 function getRiskLabel(riskLevel) {
     const labels = {
@@ -2437,7 +2438,26 @@ function getRiskLabel(riskLevel) {
 }
 
 /**
- * Show credibility breakdown modal
+ * Helper: Get Color for Score (Green for High, Red for Low)
+ */
+function getScoreColor(score) {
+    if (score >= 70) return '#2ecc71'; // Green
+    if (score >= 40) return '#f1c40f'; // Yellow
+    return '#e74c3c'; // Red
+}
+
+/**
+ * Helper: Get Color for Signals (Red for High, Green for Low)
+ * Used for bad things like Clickbait or Bias
+ */
+function getSignalColor(score) {
+    if (score >= 70) return '#e74c3c'; // Red
+    if (score >= 40) return '#f1c40f'; // Yellow
+    return '#2ecc71'; // Green
+}
+
+/**
+ * Show credibility breakdown modal (Visual Dashboard)
  */
 function showCredibilityBreakdown(credibility) {
     const modal = document.getElementById('credibility-modal');
@@ -2456,167 +2476,175 @@ function showCredibilityBreakdown(credibility) {
         sourceMetadata
     } = credibility;
 
+    // Determine CSS classes based on risk
+    const scoreClass = riskLevel === 'low' ? 'score-high' 
+                     : riskLevel === 'medium' ? 'score-medium' 
+                     : 'score-low';
+    
+    const riskBadgeClass = `risk-${riskLevel}`;
+
+    // Generate Tags HTML
+    const tagsHtml = explanationTags.map(tag => {
+        let icon = '📌';
+        if(tag.includes('✅')) icon = ''; 
+        if(tag.includes('⚠️')) icon = '';
+        return `<span class="cred-tag">${icon} ${tag}</span>`;
+    }).join('');
+
+    // Generate Sources List
+    const sourcesList = scores.crossSourceVerification.sourcesFound.length > 0
+        ? scores.crossSourceVerification.sourcesFound.slice(0, 5).map(s => 
+            `<span class="source-chip">${s}</span>`
+          ).join('') + (scores.crossSourceVerification.sourcesFound.length > 5 ? `<span class="source-chip">+${scores.crossSourceVerification.sourcesFound.length - 5} more</span>` : '')
+        : '<small style="color:var(--text-secondary)">No other sources found.</small>';
+
+    // Build the Dashboard HTML
     content.innerHTML = `
+        <!-- HEADER -->
         <div class="credibility-header">
-            <div class="credibility-main-score ${riskLevel}-risk">
-                <div class="score-circle">
-                    <svg viewBox="0 0 36 36" class="circular-chart">
-                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        <path class="circle" stroke-dasharray="${finalScore}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                    </svg>
-                    <div class="score-text">
-                        <span class="score-number">${finalScore}</span>
-                        <span class="score-label">/100</span>
-                    </div>
-                </div>
-                <h3>${getRiskLabel(riskLevel)}</h3>
+            <div class="score-circle ${scoreClass}">
+                ${finalScore}
+                <span>/ 100</span>
+            </div>
+            <div class="credibility-title">
+                <h3>${getRiskLabel(riskLevel)} Content</h3>
+                <span class="risk-badge ${riskBadgeClass}">${riskLevel.toUpperCase()} RISK</span>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 5px;">
+                    Analysis based on source history, AI content check, and community validation.
+                </p>
             </div>
         </div>
 
-        <div class="explanation-tags">
-            ${explanationTags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+        <!-- TAGS -->
+        <div class="tags-container">
+            ${tagsHtml}
         </div>
 
-        <div class="credibility-breakdown">
-            <h4>Credibility Analysis</h4>
+        <!-- METRICS GRID -->
+        <div class="metrics-grid">
             
-            <div class="breakdown-section">
-                <div class="section-header">
-                    <span class="section-title">📰 Source Credibility</span>
-                    <span class="section-score">${scores.sourceCredibility.score}/100</span>
+            <!-- 1. Source Trust -->
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span>📰 Source Trust</span>
+                    <span style="color: ${getScoreColor(scores.sourceCredibility.score)}">${scores.sourceCredibility.score}/100</span>
                 </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: ${scores.sourceCredibility.score}%"></div>
+                <div class="progress-bg">
+                    <div class="progress-fill" style="width: ${scores.sourceCredibility.score}%; background: ${getScoreColor(scores.sourceCredibility.score)}"></div>
                 </div>
-                <div class="section-details">
-                    <p><strong>Source:</strong> ${sourceMetadata.name}</p>
-                    <p><strong>Trust Rating:</strong> ${sourceMetadata.trust}/100</p>
-                    <p><strong>Bias:</strong> ${sourceMetadata.bias}</p>
-                    <p><strong>Transparency:</strong> ${sourceMetadata.transparency}/100</p>
+                <p style="font-size: 0.85rem; margin-top: 10px; color: var(--text-secondary);">
+                    <b>${sourceMetadata.name || 'Unknown'}</b><br>
+                    Transparency: ${sourceMetadata.transparency || 'N/A'}/10 • Bias: ${sourceMetadata.biasRating || 'Unknown'}
+                </p>
+            </div>
+
+            <!-- 2. Community Score -->
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span>👥 Community Vote</span>
+                    <span style="color: ${getScoreColor(scores.communitySignals.score)}">${scores.communitySignals.score}/100</span>
+                </div>
+                <div class="progress-bg">
+                    <div class="progress-fill" style="width: ${scores.communitySignals.score}%; background: ${getScoreColor(scores.communitySignals.score)}"></div>
+                </div>
+                <p style="font-size: 0.85rem; margin-top: 10px; color: var(--text-secondary);">
+                    This score is dynamic based on user ratings and fact-checks.
+                </p>
+            </div>
+
+            <!-- 3. Cross Verification -->
+            <div class="metric-card" style="grid-column: span 2;">
+                <div class="metric-header">
+                    <span>🌍 Cross-Verification</span>
+                    <span style="color: ${getScoreColor(scores.crossSourceVerification.score)}">${scores.crossSourceVerification.score}/100</span>
+                </div>
+                <div class="progress-bg" style="margin-bottom: 10px;">
+                    <div class="progress-fill" style="width: ${scores.crossSourceVerification.score}%; background: ${getScoreColor(scores.crossSourceVerification.score)}"></div>
+                </div>
+                <div class="sources-list" style="display:flex; gap:5px; flex-wrap:wrap;">
+                    ${sourcesList}
                 </div>
             </div>
 
-            <div class="breakdown-section">
-                <div class="section-header">
-                    <span class="section-title">🔗 Cross-Source Verification</span>
-                    <span class="section-score">${scores.crossSourceVerification.score}/100</span>
+            <!-- 4. AI Content Analysis -->
+            <div class="metric-card" style="grid-column: span 2;">
+                <div class="metric-header">
+                    <span>🤖 AI Content Scan</span>
+                    <span style="color: ${getScoreColor(scores.aiContentAnalysis.score)}">${scores.aiContentAnalysis.score}/100</span>
                 </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: ${scores.crossSourceVerification.score}%"></div>
-                </div>
-                <div class="section-details">
-                    <p><strong>Sources Found:</strong> ${scores.crossSourceVerification.sourcesFound.length}</p>
-                    ${scores.crossSourceVerification.sourcesFound.length > 0 ? `
-                        <div class="sources-list">
-                            ${scores.crossSourceVerification.sourcesFound.slice(0, 5).map(source =>
-        `<span class="source-chip">${source}</span>`
-    ).join('')}
-                            ${scores.crossSourceVerification.sourcesFound.length > 5 ?
-                `<span class="source-chip">+${scores.crossSourceVerification.sourcesFound.length - 5} more</span>`
-                : ''}
-                        </div>
-                    ` : '<p class="warning-text">⚠️ No cross-source verification found</p>'}
-                </div>
-            </div>
-
-            <div class="breakdown-section">
-                <div class="section-header">
-                    <span class="section-title">🤖 AI Content Analysis</span>
-                    <span class="section-score">${scores.aiContentAnalysis.score}/100</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: ${scores.aiContentAnalysis.score}%"></div>
-                </div>
-                <div class="section-details">
-                    <div class="ai-signals">
-                        <div class="signal">
-                            <span>Sensationalism</span>
-                            <div class="signal-bar">
-                                <div class="signal-fill" style="width: ${scores.aiContentAnalysis.signals.sensationalism}%"></div>
-                            </div>
-                            <span>${scores.aiContentAnalysis.signals.sensationalism}%</span>
-                        </div>
-                        <div class="signal">
-                            <span>Emotional Manipulation</span>
-                            <div class="signal-bar">
-                                <div class="signal-fill" style="width: ${scores.aiContentAnalysis.signals.emotionalManipulation}%"></div>
-                            </div>
-                            <span>${scores.aiContentAnalysis.signals.emotionalManipulation}%</span>
-                        </div>
-                        <div class="signal">
-                            <span>Clickbait Probability</span>
-                            <div class="signal-bar">
-                                <div class="signal-fill" style="width: ${scores.aiContentAnalysis.signals.clickbaitProbability}%"></div>
-                            </div>
-                            <span>${scores.aiContentAnalysis.signals.clickbaitProbability}%</span>
-                        </div>
-                        <div class="signal">
-                            <span>Bias Indicators</span>
-                            <div class="signal-bar">
-                                <div class="signal-fill" style="width: ${scores.aiContentAnalysis.signals.biasIndicators}%"></div>
-                            </div>
-                            <span>${scores.aiContentAnalysis.signals.biasIndicators}%</span>
-                        </div>
-                        <div class="signal">
-                            <span>Lacks Evidence</span>
-                            <div class="signal-bar">
-                                <div class="signal-fill" style="width: ${scores.aiContentAnalysis.signals.evidenceQuality}%"></div>
-                            </div>
-                            <span>${scores.aiContentAnalysis.signals.evidenceQuality}%</span>
-                        </div>
-                    </div>
-                    <p class="signal-note">Lower percentages indicate better quality</p>
-                </div>
+                <ul class="ai-signals">
+                    <li class="ai-signal-item">
+                        <span>Clickbait Probability</span>
+                        <span class="signal-value" style="color: ${getSignalColor(scores.aiContentAnalysis.signals.clickbaitProbability)}">
+                            ${scores.aiContentAnalysis.signals.clickbaitProbability}%
+                        </span>
+                    </li>
+                    <li class="ai-signal-item">
+                        <span>Emotional Manipulation</span>
+                        <span class="signal-value" style="color: ${getSignalColor(scores.aiContentAnalysis.signals.emotionalManipulation)}">
+                            ${scores.aiContentAnalysis.signals.emotionalManipulation}%
+                        </span>
+                    </li>
+                    <li class="ai-signal-item">
+                        <span>Sensationalism</span>
+                        <span class="signal-value" style="color: ${getSignalColor(scores.aiContentAnalysis.signals.sensationalism)}">
+                            ${scores.aiContentAnalysis.signals.sensationalism}%
+                        </span>
+                    </li>
+                </ul>
+                <p style="font-size: 0.8rem; margin-top:5px; color:var(--text-secondary); text-align:right;">
+                    *Lower % is better for these metrics
+                </p>
             </div>
         </div>
 
-        <div class="credibility-formula">
-            <h4>How We Calculate This Score</h4>
-            <div class="formula-breakdown">
-                <div class="formula-item">
-                    <span>Source Credibility</span>
-                    <span>${scores.sourceCredibility.score} × 35% = ${Math.round(scores.sourceCredibility.score * 0.35)}</span>
-                </div>
-                <div class="formula-item">
-                    <span>Cross-Source Verification</span>
-                    <span>${scores.crossSourceVerification.score} × 35% = ${Math.round(scores.crossSourceVerification.score * 0.35)}</span>
-                </div>
-                <div class="formula-item">
-                    <span>AI Content Analysis</span>
-                    <span>${scores.aiContentAnalysis.score} × 25% = ${Math.round(scores.aiContentAnalysis.score * 0.25)}</span>
-                </div>
-                <div class="formula-item">
-                    <span>Community Signals</span>
-                    <span>${scores.communitySignals.score} × 5% = ${Math.round(scores.communitySignals.score * 0.05)}</span>
-                </div>
-                <div class="formula-total">
-                    <span><strong>Final Score</strong></span>
-                    <span><strong>${finalScore}/100</strong></span>
-                </div>
+        <!-- TRANSPARENCY FORMULA -->
+        <div class="credibility-formula" style="background: var(--bg-primary); padding: 15px; border-radius: 8px; font-size: 0.9rem;">
+            <h4 style="margin-top:0; border-bottom:1px solid var(--border-color); padding-bottom:5px;">🧮 How We Calculate This Score</h4>
+            <div style="display: grid; grid-template-columns: 1fr auto; gap: 5px; margin-top: 10px;">
+                <span>Source Credibility (35%)</span>
+                <span>${Math.round(scores.sourceCredibility.score * 0.35)} pts</span>
+                
+                <span>Cross-Verification (35%)</span>
+                <span>${Math.round(scores.crossSourceVerification.score * 0.35)} pts</span>
+                
+                <span>AI Analysis (25%)</span>
+                <span>${Math.round(scores.aiContentAnalysis.score * 0.25)} pts</span>
+                
+                <span>Community (5%)</span>
+                <span>${Math.round(scores.communitySignals.score * 0.05)} pts</span>
+                
+                <span style="font-weight:bold; border-top:1px solid var(--border-color); padding-top:5px; margin-top:5px;">FINAL SCORE</span>
+                <span style="font-weight:bold; border-top:1px solid var(--border-color); padding-top:5px; margin-top:5px;">${finalScore}/100</span>
             </div>
         </div>
     `;
 
-    modal.classList.add('active');
+    modal.style.display = 'block';
+    // Add active class if your CSS uses it for transitions
+    setTimeout(() => modal.classList.add('active'), 10);
 }
 
-// Close credibility modal
+// Close credibility modal logic
 document.addEventListener('DOMContentLoaded', function () {
     const credibilityModal = document.getElementById('credibility-modal');
     if (credibilityModal) {
-        const closeBtn = credibilityModal.querySelector('.credibility-modal-close');
+        // Close on X button
+        const closeBtn = credibilityModal.querySelector('.credibility-modal-close') || credibilityModal.querySelector('.modal-close');
         if (closeBtn) {
             closeBtn.addEventListener('click', () => {
                 credibilityModal.classList.remove('active');
+                credibilityModal.style.display = 'none';
             });
         }
 
-
-        credibilityModal.addEventListener('click', (e) => {
-            if (e.target === credibilityModal) {
+        // Close on clicking outside
+        window.onclick = function(event) {
+            if (event.target == credibilityModal) {
                 credibilityModal.classList.remove('active');
+                credibilityModal.style.display = 'none';
             }
-        });
+        }
     }
 });
 
@@ -2640,10 +2668,12 @@ function setupShareListeners() {
 
     const shareModalClose = shareModal.querySelector('.share-modal-close');
 
-    shareModalClose.addEventListener('click', () => {
-        shareModal.classList.remove('active');
-        currentShareArticle = null;
-    });
+    if(shareModalClose) {
+        shareModalClose.addEventListener('click', () => {
+            shareModal.classList.remove('active');
+            currentShareArticle = null;
+        });
+    }
 
     // Close on outside click
     shareModal.addEventListener('click', (e) => {
@@ -2661,15 +2691,20 @@ function setupShareListeners() {
 }
 
 function openShareModal(articleId) {
-    if (!authToken) {
-        document.getElementById('auth-overlay').classList.add('active');
+    // Check global authToken or however you store login state
+    if (typeof authToken === 'undefined' || !authToken) {
+        // Open Login Modal instead
+        const authOverlay = document.getElementById('auth-overlay');
+        if(authOverlay) authOverlay.classList.add('active');
         return;
     }
 
-    // Find the article in allArticles
-    const article = allArticles.find(a => a.id === articleId);
+    // Assuming 'allArticles' is your global array of fetched news
+    // If not, you might need to fetch the specific article details again
+    const article = (typeof allArticles !== 'undefined') ? allArticles.find(a => a.id === articleId || a.articleId === articleId) : null;
+    
     if (!article) {
-        console.error('Article not found:', articleId);
+        console.error('Article not found in local cache:', articleId);
         return;
     }
 
@@ -2677,23 +2712,26 @@ function openShareModal(articleId) {
 
     // Populate share preview
     const sharePreview = document.getElementById('share-preview');
-    sharePreview.innerHTML = `
-        <h4>Article Preview</h4>
-        <div class="share-preview-article">
-            <div class="share-preview-image">
-                <img src="${article.image || 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800'}" 
-                     alt="${article.title}"
-                     onerror="this.src='https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800'">
+    if(sharePreview) {
+        sharePreview.innerHTML = `
+            <h4>Article Preview</h4>
+            <div class="share-preview-article" style="display: flex; gap: 10px; margin-top: 10px; padding: 10px; background: var(--bg-secondary); border-radius: 6px;">
+                <div class="share-preview-image" style="width: 80px; height: 60px; flex-shrink: 0;">
+                    <img src="${article.image || 'https://via.placeholder.com/80'}" 
+                        style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;"
+                        onerror="this.src='https://via.placeholder.com/80'">
+                </div>
+                <div class="share-preview-content">
+                    <h5 style="margin: 0; font-size: 0.9rem; line-height: 1.3;">${article.title}</h5>
+                    <p style="margin: 5px 0 0; font-size: 0.8rem; color: var(--text-secondary);">${article.source} • ${article.category || 'News'}</p>
+                </div>
             </div>
-            <div class="share-preview-content">
-                <h5>${article.title}</h5>
-                <p>${article.source} • ${article.category || 'General'}</p>
-            </div>
-        </div>
-    `;
+        `;
+    }
 
     // Clear previous message
-    document.getElementById('share-message').value = '';
+    const msgInput = document.getElementById('share-message');
+    if(msgInput) msgInput.value = '';
 
     // Show modal
     document.getElementById('share-modal').classList.add('active');
@@ -2713,6 +2751,7 @@ async function handleShareSubmit(e) {
     }
 
     const submitBtn = document.getElementById('share-submit-btn');
+    const originalBtnText = submitBtn.innerHTML;
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sharing...';
 
@@ -2724,7 +2763,7 @@ async function handleShareSubmit(e) {
                 'Authorization': `Bearer ${authToken}`
             },
             body: JSON.stringify({
-                articleId: currentShareArticle.id,
+                articleId: currentShareArticle.id || currentShareArticle.articleId,
                 message: message,
                 articleData: {
                     title: currentShareArticle.title,
@@ -2756,7 +2795,7 @@ async function handleShareSubmit(e) {
         alert('❌ Failed to share article: ' + error.message);
     } finally {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-share-alt"></i> Share to Community';
+        submitBtn.innerHTML = originalBtnText;
     }
 }
 
@@ -2764,6 +2803,5 @@ async function handleShareSubmit(e) {
 document.addEventListener('DOMContentLoaded', function () {
     setupShareListeners();
 });
-
 
 // ========== END CREDIBILITY SYSTEM ==========
