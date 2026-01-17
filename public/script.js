@@ -1,3 +1,46 @@
+// Priority sources to show at the top in "Latest News"
+const PRIORITY_SOURCES = [
+    'BBC',
+    'BBC News',
+    'Reuters',
+    'AP News',
+    'Associated Press',
+    'The Hindu',
+    'Indian Express',
+    'The Indian Express',
+    'The Guardian',
+    'New York Times',
+    'The New York Times',
+    'Financial Times',
+    'The Economist',
+    'Al Jazeera',
+    'NDTV',
+    'Bloomberg'
+];
+
+function isPrioritySource(source) {
+    if (!source) return false;
+    const s = source.toLowerCase();
+    return PRIORITY_SOURCES.some(name => s.includes(name.toLowerCase()));
+}
+
+function prioritizeSources(articles) {
+    if (!Array.isArray(articles)) return articles;
+
+    // Stable sort: keep original order inside each group
+    return [...articles]
+        .map((article, index) => ({ article, index }))
+        .sort((a, b) => {
+            const aGood = isPrioritySource(a.article.source);
+            const bGood = isPrioritySource(b.article.source);
+
+            if (aGood && !bGood) return -1;   // good source comes first
+            if (!aGood && bGood) return 1;    // non-good comes after
+            return a.index - b.index;         // keep original order otherwise
+        })
+        .map(x => x.article);
+}
+
 // API Configuration
 const API_BASE_URL = 'http://localhost:5000/api';
 
@@ -1143,18 +1186,22 @@ async function findSimilarArticles(articleUri) {
 async function loadNewsFromAPI(category = 'all', country = '', lang = 'en') {
     const container = document.getElementById('news-container');
     const loading = document.getElementById('news-loading');
-
+    
     loading.style.display = 'flex';
     container.style.display = 'none';
-
+    
     const articles = await fetchNews(category, country, lang);
 
+    // NEW: prioritize good sources (BBC, Reuters, The Hindu, etc.)
+    const prioritizedArticles = prioritizeSources(articles);
+    
     loading.style.display = 'none';
     container.style.display = 'grid';
-
-    await displayNewsArticles(articles, 'news-container');
-    updateAnalytics(articles);
-    loadCarousel(articles.slice(0, 5));
+    
+    // Use prioritized list for rendering and analytics
+    await displayNewsArticles(prioritizedArticles, 'news-container');
+    updateAnalytics(prioritizedArticles);
+    loadCarousel(prioritizedArticles.slice(0, 5));
 }
 
 async function loadTrendingArticles() {
