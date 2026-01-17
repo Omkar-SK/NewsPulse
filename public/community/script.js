@@ -2,10 +2,7 @@
 
 // Constants for credibility scoring
 const CREDIBILITY_CONFIG = {
-    UPVOTE_BOOST: 2,
-    DOWNVOTE_PENALTY: 3,
-    MAX_BOOST: 20,
-    MAX_PENALTY: -20,
+    VOTE_IMPACT: 2,  // How much each vote affects credibility
     MIN_SCORE: 0,
     MAX_SCORE: 100
 };
@@ -167,16 +164,8 @@ class CommunityApp {
         if (!post) return;
 
         // Update credibility based on the vote change (incremental, not cumulative)
-        // voteChange will be +1 for upvote, -1 for downvote, +2 for switching from down to up, etc.
-        let scoreChange = 0;
-        if (voteChange > 0) {
-            // Adding upvote(s) increases credibility
-            scoreChange = Math.min(voteChange * CREDIBILITY_CONFIG.UPVOTE_BOOST, CREDIBILITY_CONFIG.MAX_BOOST);
-        } else if (voteChange < 0) {
-            // Removing upvotes or adding downvotes decreases credibility
-            // Use UPVOTE_BOOST for consistency when undoing votes
-            scoreChange = Math.max(voteChange * CREDIBILITY_CONFIG.UPVOTE_BOOST, CREDIBILITY_CONFIG.MAX_PENALTY);
-        }
+        // voteChange will be +1 for upvote, -1 for removing upvote, +2 for switching from down to up, etc.
+        const scoreChange = voteChange * CREDIBILITY_CONFIG.VOTE_IMPACT;
         
         let newScore = post.credibilityScore + scoreChange;
         
