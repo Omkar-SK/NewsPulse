@@ -1,0 +1,130 @@
+{
+  "bbc.com": {
+    "name": "BBC News",
+    "trust": 88,
+    "bias": "center",
+    "transparency": 90,
+    "factCheckHistory": "excellent",
+    "category": "tier1"
+  },
+  "bbc.co.uk": {
+    "name": "BBC News",
+    "trust": 88,
+    "bias": "center",
+    "transparency": 90,
+    "factCheckHistory": "excellent",
+    "category": "tier1"
+  },
+  "reuters.com": {
+    "name": "Reuters",
+    "trust": 92,
+    "bias": "center",
+    "transparency": 95,
+    "factCheckHistory": "excellent",
+    "category": "tier1"
+  },
+  "apnews.com": {
+    "name": "Associated Press",
+    "trust": 90,
+    "bias": "center",
+    "transparency": 93,
+    "factCheckHistory": "excellent",
+    "category": "tier1"
+  },
+  "theguardian.com": {
+    "name": "The Guardian",
+    "trust": 82,
+    "bias": "center-left",
+    "transparency": 85,
+    "factCheckHistory": "good",
+    "category": "tier1"
+  },
+  "nytimes.com": {
+    "name": "New York Times",
+    "trust": 85,
+    "bias": "center-left",
+    "transparency": 88,
+    "factCheckHistory": "good",
+    "category": "tier1"
+  },
+  "wsj.com": {
+    "name": "Wall Street Journal",
+    "trust": 84,
+    "bias": "center-right",
+    "transparency": 86,
+    "factCheckHistory": "good",
+    "category": "tier1"
+  },
+  "thehindu.com": {
+    "name": "The Hindu",
+    "trust": 80,
+    "bias": "center-left",
+    "transparency": 82,
+    "factCheckHistory": "good",
+    "category": "tier1"
+  },
+  "hindustantimes.com": {
+    "name": "Hindustan Times",
+    "trust": 75,
+    "bias": "center",
+    "transparency": 78,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "timesofindia.indiatimes.com": {
+    "name": "Times of India",
+    "trust": 72,
+    "bias": "center",
+    "transparency": 70,
+    "factCheckHistory": "mixed",
+    "category": "tier2"
+  },
+  "cnn.com": {
+    "name": "CNN",
+    "trust": 75,
+    "bias": "center-left",
+    "transparency": 78,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "foxnews.com": {
+    "name": "Fox News",
+    "trust": 65,
+    "bias": "right",
+    "transparency": 68,
+    "factCheckHistory": "mixed",
+    "category": "tier2"
+  },
+  "aljazeera.com": {
+    "name": "Al Jazeera",
+    "trust": 78,
+    "bias": "center",
+    "transparency": 80,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "ndtv.com": {
+    "name": "NDTV",
+    "trust": 77,
+    "bias": "center-left",
+    "transparency": 79,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "indianexpress.com": {
+    "name": "Indian Express",
+    "trust": 81,
+    "bias": "center",
+    "transparency": 83,
+    "factCheckHistory": "good",
+    "category": "tier1"
+  },
+  "default": {
+    "name": "Unknown Source",
+    "trust": 50,
+    "bias": "unknown",
+    "transparency": 50,
+    "factCheckHistory": "unknown",
+    "category": "tier3"
+  }
+}

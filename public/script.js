@@ -1,32 +1,28 @@
+// API Configuration
+const API_BASE_URL = 'http://localhost:5000/api';
 
-        // API Configuration
-        const API_BASE_URL = 'http://localhost:5000/api';
+// Global state
+let currentLanguage = 'en';
+let currentUser = null;
+let authToken = null;
+let allArticles = [];
+let userBookmarks = [];
+let articleReactions = {};
+let sentimentChart = null;
+let sourceChart = null;
+let categoryChart = null;
+let analysisSentimentChart = null;
+let analysisSourceChart = null;
+let isFromCache = false;
 
-        // Global state
-        let currentLanguage = 'en';
-        let currentUser = null;
-        let authToken = null;
-        let allArticles = [];
-        let userBookmarks = [];
-        let articleReactions = {};
-        let sentimentChart = null;
-        let sourceChart = null;
-        let categoryChart = null;
-        let analysisSentimentChart = null;
-        let analysisSourceChart = null;
-        let isFromCache = false;
+// Helper function to truncate text
+function truncateText(text, maxLength) {
+    if (!text) return '';
+    if (text.length <= maxLength) return text;
+    return text.substr(0, maxLength).trim() + '...';
+}
 
-    
-
-        // Helper function to truncate text
-        function truncateText(text, maxLength) {
-            if (!text) return '';
-            if (text.length <= maxLength) return text;
-            return text.substr(0, maxLength).trim() + '...';
-        }
-
-
-        const translations = {
+const translations = {
     en: {
         // Navbar
         logo: '📊 NewsPulse',
@@ -236,382 +232,6 @@
         contact: 'संपर्क',
         followUs: 'हमें फॉलो करें',
         footerCopyright: '© 2025 न्यूज़पल्स। सर्वाधिकार सुरक्षित। NewsAPI.ai द्वारा संचालित'
-    },
-    
-    mr: {
-        logo: '📊 न्यूजपल्स',
-        forYou: 'तुमच्यासाठी',
-        trending: 'ट्रेंडिंग',
-        analysis: 'विश्लेषण',
-        login: 'लॉगिन',
-        logout: 'लॉगआउट',
-        searchPlaceholder: 'मथळे शोधा...',
-        lightMode: 'लाइट मोड',
-        darkMode: 'डार्क मोड',
-        welcomeBack: 'परत आपले स्वागत!',
-        loginSubtitle: 'तुमच्या वैयक्तिक बातम्यांच्या फीडसाठी लॉगिन करा',
-        email: 'ईमेल',
-        password: 'पासवर्ड',
-        fullName: 'पूर्ण नाव',
-        loginButton: 'लॉगिन करा',
-        signupButton: 'साइन अप करा',
-        dontHaveAccount: 'खाते नाही?',
-        alreadyHaveAccount: 'आधीच खाते आहे?',
-        createAccount: 'खाते तयार करा',
-        joinNewsPulse: 'अपडेट राहण्यासाठी न्यूजपल्समध्ये सामील व्हा',
-        dailyMix: '✨ तुमचा दैनिक मिश्र',
-        dailyMixSubtitle: 'वैयक्तिक बातम्या शिफारसी',
-        recommended: 'शिफारस केलेले',
-        unlockDailyMix: 'तुमचा दैनिक मिश्र अनलॉक करा',
-        loginForRecommendations: 'वैयक्तिक बातम्या शिफारसी मिळवण्यासाठी लॉगिन करा',
-        loginNow: 'आता लॉगिन करा',
-        startBuildingMix: 'तुमचा मिश्र तयार करणे सुरू करा',
-        likeArticlesForRecs: 'वैयक्तिक शिफारसी मिळवण्यासाठी लेख लाइक करा',
-        exploreNews: 'बातम्या एक्सप्लोर करा',
-        filterByCategory: 'श्रेणीनुसार फिल्टर करा',
-        all: 'सर्व',
-        business: 'व्यवसाय',
-        technology: 'तंत्रज्ञान',
-        sports: 'क्रीडा',
-        politics: 'राजकारण',
-        entertainment: 'मनोरंजन',
-        health: 'आरोग्य',
-        science: 'विज्ञान',
-        trendingNews: 'ट्रेंडिंग बातम्या',
-        latestNews: 'ताज्या बातम्या',
-        readMore: 'अधिक वाचा',
-        similar: 'समान',
-        readFullStory: 'संपूर्ण कथा वाचा',
-        cached: '📦 कॅश केलेले',
-        fresh: '🆕 ताजे',
-        trendingTopics: 'ट्रेंडिंग विषय',
-        filters: 'फिल्टर',
-        country: 'देश:',
-        language: 'भाषा:',
-        bookmarkedArticles: 'बुकमार्क केलेले लेख',
-        newsletter: '📬 वृत्तपत्र',
-        loginToViewBookmarks: 'बुकमार्क पाहण्यासाठी लॉगिन करा',
-        noBookmarks: 'अद्याप कोणतेही बुकमार्क नाहीत',
-        getDailyHeadlines: 'दररोज सकाळी तुमच्या इनबॉक्समध्ये शीर्ष मथळे मिळवा! 📬',
-        subscribeNow: 'आता सदस्यता घ्या',
-        subscribed: '✅ सदस्यता घेतली!',
-        youllReceiveUpdates: 'तुम्हाला %s अपडेट मिळतील',
-        frequency: 'वारंवारता:',
-        categories: 'श्रेणी:',
-        managePreferences: 'प्राधान्ये व्यवस्थापित करा',
-        unsubscribe: 'सदस्यता रद्द करा',
-        daily: 'दैनिक',
-        weekly: 'साप्ताहिक',
-        mostPopularStories: 'सर्वाधिक लोकप्रिय कथा',
-        sentimentTrends: 'भावना ट्रेंड',
-        newsAnalyticsDashboard: 'बातम्या विश्लेषण डॅशबोर्ड',
-        totalArticles: 'एकूण लेख',
-        positiveNews: 'सकारात्मक बातम्या',
-        negativeNews: 'नकारात्मक बातम्या',
-        neutralNews: 'तटस्थ बातम्या',
-        sentimentDistribution: 'भावना वितरण',
-        categoryDistribution: 'श्रेणी वितरण',
-        newsSourceDistribution: 'बातम्या स्रोत वितरण',
-        topKeywords: 'शीर्ष कीवर्ड',
-        keyInsights: 'मुख्य अंतर्दृष्टी',
-        similarArticles: 'समान लेख',
-        noSimilarArticles: 'कोणतेही समान लेख आढळले नाहीत',
-        positive: 'सकारात्मक',
-        negative: 'नकारात्मक',
-        neutral: 'तटस्थ',
-        recently: 'अलीकडे',
-        minutesAgo: 'मिनिटांपूर्वी',
-        hoursAgo: 'तासांपूर्वी',
-        daysAgo: 'दिवसांपूर्वी',
-        noArticlesFound: 'कोणतेही लेख सापडले नाहीत',
-        analyzingData: 'डेटा विश्लेषण...',
-        aboutNewsPulse: 'न्यूजपल्स बद्दल',
-        aboutDescription: 'एआय-संचालित भावना विश्लेषण आणि अंतर्दृष्टीसह ट्रेंडिंग मथळे आणत आहे.',
-        contact: 'संपर्क',
-        followUs: 'आम्हाला फॉलो करा',
-        footerCopyright: '© 2025 न्यूजपल्स। सर्व हक्क राखीव। NewsAPI.ai द्वारे समर्थित'
-    },
-    
-    ta: {
-        logo: '📊 நியூஸ்பல்ஸ்',
-        forYou: 'உங்களுக்காக',
-        trending: 'டிரெண்டிங்',
-        analysis: 'பகுப்பாய்வு',
-        login: 'உள்நுழைய',
-        logout: 'வெளியேறு',
-        searchPlaceholder: 'தலைப்புச் செய்திகளைத் தேடு...',
-        lightMode: 'லைட் மோட்',
-        darkMode: 'டார்க் மோட்',
-        welcomeBack: 'மீண்டும் வரவேற்கிறோம்!',
-        loginSubtitle: 'உங்கள் தனிப்பயன் செய்தி ஊட்டத்தை அணுக உள்நுழைக',
-        email: 'மின்னஞ்சல்',
-        password: 'கடவுச்சொல்',
-        fullName: 'முழு பெயர்',
-        loginButton: 'உள்நுழைய',
-        signupButton: 'பதிவு செய்ய',
-        dontHaveAccount: 'கணக்கு இல்லையா?',
-        alreadyHaveAccount: 'ஏற்கனவே கணக்கு உள்ளதா?',
-        createAccount: 'கணக்கை உருவாக்கு',
-        joinNewsPulse: 'புதுப்பித்த நிலையில் இருக்க நியூஸ்பல்ஸ் இல் சேரவும்',
-        dailyMix: '✨ உங்கள் தினசரி கலவை',
-        dailyMixSubtitle: 'தனிப்பயனாக்கப்பட்ட செய்தி பரிந்துரைகள்',
-        recommended: 'பரிந்துரைக்கப்பட்டது',
-        unlockDailyMix: 'உங்கள் தினசரி கலவையைத் திறக்கவும்',
-        loginForRecommendations: 'தனிப்பயன் செய்தி பரிந்துரைகளைப் பெற உள்நுழைக',
-        loginNow: 'இப்போது உள்நுழைக',
-        startBuildingMix: 'உங்கள் கலவையை உருவாக்கத் தொடங்குங்கள்',
-        likeArticlesForRecs: 'பரிந்துரைகளைப் பெற கட்டுரைகளை விரும்பவும்',
-        exploreNews: 'செய்திகளை ஆராயுங்கள்',
-        filterByCategory: 'வகையின்படி வடிகட்டு',
-        all: 'அனைத்தும்',
-        business: 'வணிகம்',
-        technology: 'தொழில்நுட்பம்',
-        sports: 'விளையாட்டு',
-        politics: 'அரசியல்',
-        entertainment: 'பொழுதுபோக்கு',
-        health: 'சுகாதாரம்',
-        science: 'அறிவியல்',
-        trendingNews: 'டிரெண்டிங் செய்திகள்',
-        latestNews: 'சமீபத்திய செய்திகள்',
-        readMore: 'மேலும் படிக்க',
-        similar: 'ஒத்த',
-        readFullStory: 'முழு கதையைப் படிக்கவும்',
-        cached: '📦 சேமித்த',
-        fresh: '🆕 புதிய',
-        trendingTopics: 'டிரெண்டிங் தலைப்புகள்',
-        filters: 'வடிப்பான்கள்',
-        country: 'நாடு:',
-        language: 'மொழி:',
-        bookmarkedArticles: 'புக்மார்க் செய்யப்பட்ட கட்டுரைகள்',
-        newsletter: '📬 செய்திமடல்',
-        loginToViewBookmarks: 'புக்மார்க்குகளைக் காண உள்நுழைக',
-        noBookmarks: 'இதுவரை புக்மார்க்குகள் இல்லை',
-        getDailyHeadlines: 'தினமும் காலையில் உங்கள் இன்பாக்ஸில் முக்கிய தலைப்புச் செய்திகளைப் பெறுங்கள்! 📬',
-        subscribeNow: 'இப்போது குழுசேர்',
-        subscribed: '✅ குழுசேர்ந்தீர்கள்!',
-        youllReceiveUpdates: 'நீங்கள் %s புதுப்பிப்புகளைப் பெறுவீர்கள்',
-        frequency: 'அதிர்வெண்:',
-        categories: 'வகைகள்:',
-        managePreferences: 'விருப்பத்தேர்வுகளை நிர்வகிக்கவும்',
-        unsubscribe: 'குழுவிலகு',
-        daily: 'தினசரி',
-        weekly: 'வாராந்திர',
-        mostPopularStories: 'மிகவும் பிரபலமான கதைகள்',
-        sentimentTrends: 'உணர்வு போக்குகள்',
-        newsAnalyticsDashboard: 'செய்தி பகுப்பாய்வு டாஷ்போர்டு',
-        totalArticles: 'மொத்த கட்டுரைகள்',
-        positiveNews: 'நேர்மறை செய்திகள்',
-        negativeNews: 'எதிர்மறை செய்திகள்',
-        neutralNews: 'நடுநிலை செய்திகள்',
-        sentimentDistribution: 'உணர்வு விநியோகம்',
-        categoryDistribution: 'வகை விநியோகம்',
-        newsSourceDistribution: 'செய்தி மூல விநியோகம்',
-        topKeywords: 'முதன்மை முக்கிய சொற்கள்',
-        keyInsights: 'முக்கிய நுண்ணறிவுகள்',
-        similarArticles: 'ஒத்த கட்டுரைகள்',
-        noSimilarArticles: 'ஒத்த கட்டுரைகள் எதுவும் கிடைக்கவில்லை',
-        positive: 'நேர்மறை',
-        negative: 'எதிர்மறை',
-        neutral: 'நடுநிலை',
-        recently: 'சமீபத்தில்',
-        minutesAgo: 'நிமிடங்களுக்கு முன்',
-        hoursAgo: 'மணிநேரங்களுக்கு முன்',
-        daysAgo: 'நாட்களுக்கு முன்',
-        noArticlesFound: 'கட்டுரைகள் எதுவும் கிடைக்கவில்லை',
-        analyzingData: 'தரவுகளை பகுப்பாய்வு செய்கிறது...',
-        aboutNewsPulse: 'நியூஸ்பல்ஸ் பற்றி',
-        aboutDescription: 'AI-இயக்கப்படும் உணர்வு பகுப்பாய்வு மற்றும் நுண்ணறிவுடன் டிரெண்டிங் தலைப்புச் செய்திகளை கொண்டு வருகிறது.',
-        contact: 'தொடர்பு',
-        followUs: 'எங்களைப் பின்தொடருங்கள்',
-        footerCopyright: '© 2025 நியூஸ்பல்ஸ். அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை. NewsAPI.ai மூலம் இயக்கப்படுகிறது'
-    },
-    
-    es: {
-        logo: '📊 NewsPulse',
-        forYou: 'Para Ti',
-        trending: 'Tendencias',
-        analysis: 'Análisis',
-        login: 'Iniciar Sesión',
-        logout: 'Cerrar Sesión',
-        searchPlaceholder: 'Buscar titulares...',
-        lightMode: 'Modo Claro',
-        darkMode: 'Modo Oscuro',
-        welcomeBack: '¡Bienvenido de Nuevo!',
-        loginSubtitle: 'Inicia sesión para acceder a tu feed personalizado',
-        email: 'Correo Electrónico',
-        password: 'Contraseña',
-        fullName: 'Nombre Completo',
-        loginButton: 'Iniciar Sesión',
-        signupButton: 'Registrarse',
-        dontHaveAccount: '¿No tienes cuenta?',
-        alreadyHaveAccount: '¿Ya tienes cuenta?',
-        createAccount: 'Crear Cuenta',
-        joinNewsPulse: 'Únete a NewsPulse para mantenerte actualizado',
-        dailyMix: '✨ Tu Mezcla Diaria',
-        dailyMixSubtitle: 'Recomendaciones de noticias personalizadas',
-        recommended: 'Recomendado',
-        unlockDailyMix: 'Desbloquea Tu Mezcla Diaria',
-        loginForRecommendations: 'Inicia sesión para obtener recomendaciones',
-        loginNow: 'Iniciar Sesión Ahora',
-        startBuildingMix: 'Comienza a Construir Tu Mezcla',
-        likeArticlesForRecs: 'Dale me gusta a artículos para obtener recomendaciones',
-        exploreNews: 'Explorar Noticias',
-        filterByCategory: 'Filtrar por Categoría',
-        all: 'Todos',
-        business: 'Negocios',
-        technology: 'Tecnología',
-        sports: 'Deportes',
-        politics: 'Política',
-        entertainment: 'Entretenimiento',
-        health: 'Salud',
-        science: 'Ciencia',
-        trendingNews: 'Noticias en Tendencia',
-        latestNews: 'Últimas Noticias',
-        readMore: 'Leer Más',
-        similar: 'Similar',
-        readFullStory: 'Leer Historia Completa',
-        cached: '📦 Caché',
-        fresh: '🆕 Nuevo',
-        trendingTopics: 'TEMAS POPULARES',
-        filters: 'FILTROS',
-        country: 'País:',
-        language: 'Idioma:',
-        bookmarkedArticles: 'ARTÍCULOS GUARDADOS',
-        newsletter: '📬 BOLETÍN',
-        loginToViewBookmarks: 'Inicia sesión para ver marcadores',
-        noBookmarks: 'No hay artículos guardados',
-        getDailyHeadlines: '¡Recibe titulares principales cada mañana! 📬',
-        subscribeNow: 'Suscribirse Ahora',
-        subscribed: '✅ ¡Suscrito!',
-        youllReceiveUpdates: 'Recibirás actualizaciones %s',
-        frequency: 'Frecuencia:',
-        categories: 'Categorías:',
-        managePreferences: 'Gestionar Preferencias',
-        unsubscribe: 'Cancelar Suscripción',
-        daily: 'diario',
-        weekly: 'semanal',
-        mostPopularStories: 'Historias Más Populares',
-        sentimentTrends: 'TENDENCIAS DE SENTIMIENTO',
-        newsAnalyticsDashboard: 'Panel de Análisis de Noticias',
-        totalArticles: 'Artículos Totales',
-        positiveNews: 'Noticias Positivas',
-        negativeNews: 'Noticias Negativas',
-        neutralNews: 'Noticias Neutrales',
-        sentimentDistribution: 'Distribución de Sentimiento',
-        categoryDistribution: 'Distribución de Categorías',
-        newsSourceDistribution: 'Distribución de Fuentes',
-        topKeywords: 'Palabras Clave Principales',
-        keyInsights: 'INFORMACIÓN CLAVE',
-        similarArticles: 'Artículos Similares',
-        noSimilarArticles: 'No se encontraron artículos similares',
-        positive: 'Positivo',
-        negative: 'Negativo',
-        neutral: 'Neutral',
-        recently: 'Recientemente',
-        minutesAgo: 'minutos atrás',
-        hoursAgo: 'horas atrás',
-        daysAgo: 'días atrás',
-        noArticlesFound: 'No se encontraron artículos',
-        analyzingData: 'Analizando datos...',
-        aboutNewsPulse: 'Acerca de NewsPulse',
-        aboutDescription: 'Trayendo titulares de tendencia con análisis de sentimiento impulsado por IA.',
-        contact: 'Contacto',
-        followUs: 'Síguenos',
-        footerCopyright: '© 2025 NewsPulse. Todos los derechos reservados. Powered by NewsAPI.ai'
-    },
-    
-    fr: {
-        logo: '📊 NewsPulse',
-        forYou: 'Pour Vous',
-        trending: 'Tendances',
-        analysis: 'Analyse',
-        login: 'Connexion',
-        logout: 'Déconnexion',
-        searchPlaceholder: 'Rechercher des titres...',
-        lightMode: 'Mode Clair',
-        darkMode: 'Mode Sombre',
-        welcomeBack: 'Bon Retour!',
-        loginSubtitle: 'Connectez-vous pour accéder à votre flux personnalisé',
-        email: 'E-mail',
-        password: 'Mot de passe',
-        fullName: 'Nom Complet',
-        loginButton: 'Connexion',
-        signupButton: "S'inscrire",
-        dontHaveAccount: "Pas de compte?",
-        alreadyHaveAccount: 'Déjà un compte?',
-        createAccount: 'Créer un Compte',
-        joinNewsPulse: 'Rejoignez NewsPulse pour rester à jour',
-        dailyMix: '✨ Votre Mix Quotidien',
-        dailyMixSubtitle: 'Recommandations de nouvelles personnalisées',
-        recommended: 'Recommandé',
-        unlockDailyMix: 'Déverrouillez Votre Mix Quotidien',
-        loginForRecommendations: 'Connectez-vous pour obtenir des recommandations',
-        loginNow: 'Se Connecter Maintenant',
-        startBuildingMix: 'Commencez à Construire Votre Mix',
-        likeArticlesForRecs: "Aimez des articles pour obtenir des recommandations",
-        exploreNews: 'Explorer les Nouvelles',
-        filterByCategory: 'Filtrer par Catégorie',
-        all: 'Tous',
-        business: 'Affaires',
-        technology: 'Technologie',
-        sports: 'Sports',
-        politics: 'Politique',
-        entertainment: 'Divertissement',
-        health: 'Santé',
-        science: 'Science',
-        trendingNews: 'Nouvelles Tendance',
-        latestNews: 'Dernières Nouvelles',
-        readMore: 'Lire Plus',
-        similar: 'Similaire',
-        readFullStory: "Lire l'Histoire Complète",
-        cached: '📦 En Cache',
-        fresh: '🆕 Nouveau',
-        trendingTopics: 'SUJETS TENDANCE',
-        filters: 'FILTRES',
-        country: 'Pays:',
-        language: 'Langue:',
-        bookmarkedArticles: 'ARTICLES FAVORIS',
-        newsletter: '📬 BULLETIN',
-        loginToViewBookmarks: 'Connectez-vous pour voir les favoris',
-        noBookmarks: 'Aucun article favori',
-        getDailyHeadlines: 'Recevez les principaux titres chaque matin! 📬',
-        subscribeNow: "S'abonner Maintenant",
-        subscribed: '✅ Abonné!',
-        youllReceiveUpdates: 'Vous recevrez des mises à jour %s',
-        frequency: 'Fréquence:',
-        categories: 'Catégories:',
-        managePreferences: 'Gérer les Préférences',
-        unsubscribe: 'Se Désabonner',
-        daily: 'quotidien',
-        weekly: 'hebdomadaire',
-        mostPopularStories: 'Histoires les Plus Populaires',
-        sentimentTrends: 'TENDANCES DE SENTIMENT',
-        newsAnalyticsDashboard: "Tableau de Bord d'Analyse des Nouvelles",
-        totalArticles: 'Articles Totaux',
-        positiveNews: 'Nouvelles Positives',
-        negativeNews: 'Nouvelles Négatives',
-        neutralNews: 'Nouvelles Neutres',
-        sentimentDistribution: 'Distribution du Sentiment',
-        categoryDistribution: 'Distribution des Catégories',
-        newsSourceDistribution: 'Distribution des Sources',
-        topKeywords: 'Mots-clés Principaux',
-        keyInsights: 'INFORMATIONS CLÉS',
-        similarArticles: 'Articles Similaires',
-        noSimilarArticles: 'Aucun article similaire trouvé',
-        positive: 'Positif',
-        negative: 'Négatif',
-        neutral: 'Neutre',
-        recently: 'Récemment',
-        minutesAgo: 'minutes il y a',
-        hoursAgo: 'heures il y a',
-        daysAgo: 'jours il y a',
-        noArticlesFound: 'Aucun article trouvé',
-        analyzingData: 'Analyse des données...',
-        aboutNewsPulse: 'À Propos de NewsPulse',
-        aboutDescription: "Apporter des titres tendance avec l'analyse de sentiment IA.",
-        contact: 'Contact',
-        followUs: 'Suivez-nous',
-        footerCopyright: '© 2025 NewsPulse. Tous droits réservés. Powered by NewsAPI.ai'
     }
 };
 
@@ -624,7 +244,6 @@ function t(key) {
 function updateUILanguage() {
     console.log('🌍 Updating UI language to:', currentLanguage);
     
-    // Navbar
     const logo = document.querySelector('.logo');
     if (logo) logo.textContent = t('logo');
     
@@ -646,715 +265,389 @@ function updateUILanguage() {
         const isDark = document.getElementById('mode-toggle').checked;
         modeLabel.textContent = isDark ? t('darkMode') : t('lightMode');
     }
-    
-    // Auth Modal
-    updateAuthModal();
-    
-    // Daily Mix
-    updateDailyMixSection();
-    
-    // Categories
-    updateCategories();
-    
-    // News Sections
-    updateNewsSections();
-    
-    // Sidebar
-    updateSidebar();
-    
-    // Pages
-    updatePages();
-    
-    // Footer
-    updateFooter();
-    
-    // Dynamic content
-    updateDynamicContent();
 }
 
-function updateAuthModal() {
-    // Login form
-    const loginHeader = document.querySelector('#login-form .auth-header h2');
-    if (loginHeader) loginHeader.textContent = t('welcomeBack');
-    
-    const loginSubtitle = document.querySelector('#login-form .auth-header p');
-    if (loginSubtitle) loginSubtitle.textContent = t('loginSubtitle');
-    
-    // Signup form
-    const signupHeader = document.querySelector('#signup-form .auth-header h2');
-    if (signupHeader) signupHeader.textContent = t('createAccount');
-    
-    const signupSubtitle = document.querySelector('#signup-form .auth-header p');
-    if (signupSubtitle) signupSubtitle.textContent = t('joinNewsPulse');
-    
-    // Labels
-    document.querySelectorAll('label[for*="email"]').forEach(label => {
-        label.textContent = t('email');
-    });
-    
-    document.querySelectorAll('label[for*="password"]').forEach(label => {
-        label.textContent = t('password');
-    });
-    
-    const nameLabel = document.querySelector('label[for="signup-name"]');
-    if (nameLabel) nameLabel.textContent = t('fullName');
-    
-    // Buttons
-    const loginButton = document.getElementById('login-btn');
-    if (loginButton && !loginButton.disabled) {
-        loginButton.textContent = t('loginButton');
-    }
-    
-    const signupButton = document.getElementById('signup-btn');
-    if (signupButton && !signupButton.disabled) {
-        signupButton.textContent = t('signupButton');
-    }
-    
-    // Auth switches
-    const loginSwitchDiv = document.querySelector('#login-form .auth-switch');
-    if (loginSwitchDiv) {
-        loginSwitchDiv.innerHTML = t('dontHaveAccount') + ' <a id="show-signup">' + t('signupButton') + '</a>';
-        // Re-attach event listener
-        document.getElementById('show-signup').addEventListener('click', () => {
-            document.getElementById('login-form').style.display = 'none';
-            document.getElementById('signup-form').style.display = 'block';
-        });
-    }
-    
-    const signupSwitchDiv = document.querySelector('#signup-form .auth-switch');
-    if (signupSwitchDiv) {
-        signupSwitchDiv.innerHTML = t('alreadyHaveAccount') + ' <a id="show-login">' + t('loginButton') + '</a>';
-        // Re-attach event listener
-        document.getElementById('show-login').addEventListener('click', () => {
-            document.getElementById('signup-form').style.display = 'none';
-            document.getElementById('login-form').style.display = 'block';
-        });
-    }
-}
-
-function updateDailyMixSection() {
-    const dailyMixTitle = document.querySelector('.daily-mix-title h2');
-    if (dailyMixTitle) dailyMixTitle.textContent = t('dailyMix');
-    
-    const dailyMixSubtitle = document.querySelector('.daily-mix-subtitle');
-    if (dailyMixSubtitle) dailyMixSubtitle.textContent = t('dailyMixSubtitle');
-    
-    // Update Daily Mix empty states
-    const dailyMixEmpty = document.querySelector('.daily-mix-empty');
-    if (dailyMixEmpty) {
-        const h3 = dailyMixEmpty.querySelector('h3');
-        const p = dailyMixEmpty.querySelector('p');
-        const btn = dailyMixEmpty.querySelector('.btn');
-        
-        if (h3) {
-            if (h3.textContent.includes('Unlock')) h3.textContent = t('unlockDailyMix');
-            if (h3.textContent.includes('Start')) h3.textContent = t('startBuildingMix');
-        }
-        if (p) {
-            if (p.textContent.includes('Login')) p.textContent = t('loginForRecommendations');
-            if (p.textContent.includes('Like')) p.textContent = t('likeArticlesForRecs');
-        }
-        if (btn) {
-            if (btn.textContent.includes('Login')) btn.textContent = t('loginNow');
-            if (btn.textContent.includes('Explore')) btn.textContent = t('exploreNews');
-        }
-    }
-    
-    // Update "Recommended" badges
-    document.querySelectorAll('.daily-mix-recommended-badge').forEach(badge => {
-        const icon = badge.querySelector('i');
-        badge.textContent = t('recommended');
-        if (icon) badge.prepend(icon);
-    });
-}
-
-function updateCategories() {
-    const categoryHeader = document.querySelector('.category-section h2');
-    if (categoryHeader) categoryHeader.textContent = t('filterByCategory');
-    
-    document.querySelectorAll('.category-btn').forEach(btn => {
-        const category = btn.dataset.category;
-        btn.textContent = t(category);
-    });
-}
-
-function updateNewsSections() {
-    // Update section headers
-    document.querySelectorAll('.section-header h2').forEach(header => {
-        const text = header.textContent.trim();
-        let cacheSpan = header.querySelector('span');
-        
-        if (text.includes('Trending News') || text.includes('ट्रेंडिंग') || text.includes('டிரெண்டிங்')) {
-            header.textContent = t('trendingNews') + ' ';
-            if (cacheSpan) header.appendChild(cacheSpan);
-        } else if (text.includes('Latest News') || text.includes('नवीनतम') || text.includes('சமீபத்திய')) {
-            header.textContent = t('latestNews') + ' ';
-            if (cacheSpan) header.appendChild(cacheSpan);
-        }
-    });
-}
-
-function updateSidebar() {
-    document.querySelectorAll('.sidebar-widget h3').forEach(h3 => {
-        const text = h3.textContent.trim();
-        if (text.includes('TRENDING') || text.includes('ट्रेंडिंग') || text.includes('டிரெண்டிங்')) {
-            h3.textContent = t('trendingTopics');
-        }
-        if (text.includes('FILTER') || text.includes('फ़िल्टर') || text.includes('வடிப்பான்')) {
-            h3.textContent = t('filters');
-        }
-        if (text.includes('BOOKMARK') || text.includes('बुकमार्क') || text.includes('புக்மார்க்')) {
-            h3.textContent = t('bookmarkedArticles');
-        }
-        if (text.includes('NEWSLETTER') || text.includes('न्यूज़लेटर') || text.includes('செய்திமடல்')) {
-            h3.textContent = t('newsletter');
-        }
-    });
-    
-    // Filter labels
-    const countryLabel = document.querySelector('label[for="country-select"]');
-    if (countryLabel) countryLabel.textContent = t('country');
-    
-    const langLabel = document.querySelector('label[for="lang-select"]');
-    if (langLabel) langLabel.textContent = t('language');
-}
-
-function updatePages() {
-    // Trending Page
-    const trendingHeader = document.querySelector('#trending-page .section-header h2');
-    if (trendingHeader) trendingHeader.textContent = t('mostPopularStories');
-    
-    const sentimentTrendsHeader = document.querySelector('#trending-page .sidebar-widget h3');
-    if (sentimentTrendsHeader && sentimentTrendsHeader.textContent.includes('SENTIMENT')) {
-        sentimentTrendsHeader.textContent = t('sentimentTrends');
-    }
-    
-    // Analysis Page
-    const analyticsHeader = document.querySelector('#analysis-page h2');
-    if (analyticsHeader && (analyticsHeader.textContent.includes('Analytics') || analyticsHeader.textContent.includes('विश्लेषण'))) {
-        analyticsHeader.textContent = t('newsAnalyticsDashboard');
-    }
-    
-    // Stat cards
-    document.querySelectorAll('.stat-card h3').forEach(h3 => {
-        const text = h3.textContent.trim();
-        if (text.includes('Total') || text.includes('कुल') || text.includes('மொத்த')) {
-            h3.textContent = t('totalArticles');
-        }
-        if (text.includes('Positive') || text.includes('सकारात्मक') || text.includes('நேர்மறை')) {
-            h3.textContent = t('positiveNews');
-        }
-        if (text.includes('Negative') || text.includes('नकारात्मक') || text.includes('எதிர்மறை')) {
-            h3.textContent = t('negativeNews');
-        }
-        if (text.includes('Neutral') || text.includes('तटस्थ') || text.includes('நடுநிலை')) {
-            h3.textContent = t('neutralNews');
-        }
-    });
-    
-    // Analysis cards
-    document.querySelectorAll('.analysis-card h3').forEach(h3 => {
-        const text = h3.textContent.trim();
-        if (text.includes('Sentiment Distribution')) h3.textContent = t('sentimentDistribution');
-        if (text.includes('Category Distribution')) h3.textContent = t('categoryDistribution');
-        if (text.includes('Source Distribution')) h3.textContent = t('newsSourceDistribution');
-        if (text.includes('Keywords')) h3.textContent = t('topKeywords');
-    });
-}
-
-function updateFooter() {
-    document.querySelectorAll('.footer-col h4').forEach(h4 => {
-        const text = h4.textContent.trim();
-        if (text.includes('About')) h4.textContent = t('aboutNewsPulse');
-        if (text === 'Contact') h4.textContent = t('contact');
-        if (text.includes('Follow')) h4.textContent = t('followUs');
-    });
-    
-    const aboutDesc = document.querySelector('.footer-col p');
-    if (aboutDesc && aboutDesc.textContent.includes('Bringing')) {
-        aboutDesc.textContent = t('aboutDescription');
-    }
-    
-    const footerCopyright = document.querySelector('.footer-bottom p');
-    if (footerCopyright) footerCopyright.textContent = t('footerCopyright');
-}
-
-function updateDynamicContent() {
-    // Update Read More buttons
-    document.querySelectorAll('.read-more').forEach(btn => {
-        if (btn.textContent.includes('Read More') || btn.textContent.includes('और') || btn.textContent.includes('Leer')) {
-            btn.textContent = t('readMore');
-        }
-        if (btn.textContent.includes('Full Story') || btn.textContent.includes('पूरी') || btn.textContent.includes('முழு')) {
-            btn.textContent = t('readFullStory');
-        }
-    });
-    
-    // Update Similar buttons
-    document.querySelectorAll('.find-similar, .btn-similar').forEach(btn => {
-        btn.textContent = t('similar');
-    });
-    
-    // Update cache indicators
-    document.querySelectorAll('.cache-indicator').forEach(indicator => {
-        if (indicator.textContent.includes('Cached') || indicator.textContent.includes('कैश')) {
-            indicator.textContent = t('cached');
-        } else if (indicator.textContent.includes('Fresh') || indicator.textContent.includes('ताजा')) {
-            indicator.textContent = t('fresh');
-        }
-    });
-    
-    // Update empty states
-    document.querySelectorAll('.empty-state').forEach(state => {
-        const text = state.textContent.trim();
-        if (text.includes('No articles')) state.textContent = t('noArticlesFound');
-        if (text.includes('Login to view')) state.textContent = t('loginToViewBookmarks');
-        if (text.includes('No bookmarked')) state.textContent = t('noBookmarks');
-        if (text.includes('Analyzing')) state.textContent = t('analyzingData');
-    });
-}
-
-// Override getSentimentLabel function
-function getSentimentLabel(sentiment) {
-    if (sentiment > 0.1) return t('positive');
-    if (sentiment < -0.1) return t('negative');
-    return t('neutral');
-}
-
-// Override formatTime function
-function formatTime(dateString) {
-    if (!dateString) return t('recently');
-    
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now - date;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-    
-    if (diffMins < 60) return `${diffMins} ${t('minutesAgo')}`;
-    if (diffHours < 24) return `${diffHours} ${t('hoursAgo')}`;
-    if (diffDays < 7) return `${diffDays} ${t('daysAgo')}`;
-    return date.toLocaleDateString();
-}
-
-// Initialize language on page load
-document.addEventListener('DOMContentLoaded', function() {
-    // Load saved language preference
-    const savedLang = localStorage.getItem('preferredLanguage');
-    if (savedLang && translations[savedLang]) {
-        currentLanguage = savedLang;
-        const langSelect = document.getElementById('lang-select');
-        if (langSelect) langSelect.value = savedLang;
-        updateUILanguage();
-    }
-});
-
-// Language selector change handler
 function setupLanguageSelector() {
     const langSelect = document.getElementById('lang-select');
     if (!langSelect) return;
-    
-    // Store original change handler
-    const originalOnChange = langSelect.onchange;
     
     langSelect.addEventListener('change', function() {
         const newLang = this.value;
         console.log('🌍 Language changed to:', newLang);
         
-        // Update current language
         currentLanguage = newLang;
-        
-        // Save preference
         localStorage.setItem('preferredLanguage', newLang);
-        
-        // Update all UI text
         updateUILanguage();
-        
-        // Call original handler if exists (for news filtering)
-        if (originalOnChange) {
-            originalOnChange.call(this);
-        }
     });
 }
 
-// Call this in your main initialization
-console.log('✅ i18n Translation System Loaded');
-setupLanguageSelector();
+// Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+    checkAuthStatus();
+    setupEventListeners();
+    initializeCharts();
+    initAISummaries();
+    initChatbot();
+});
 
+// Auth Functions
+function checkAuthStatus() {
+    const token = localStorage.getItem('authToken');
+    const user = localStorage.getItem('user');
 
+    if (token && user) {
+        authToken = token;
+        currentUser = JSON.parse(user);
+        updateUIForLoggedInUser();
+        loadUserBookmarks().then(() => {
+            loadNewsFromAPI();
+            loadDailyMix();
+        });
+    } else {
+        updateUIForLoggedOutUser();
+        loadNewsFromAPI();
+        showDailyMixLoginPrompt();
+    }
+}
 
-        // Initialize the application
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuthStatus();
-            setupEventListeners();
-            initializeCharts();
-            initAISummaries(); // <-- ADD THIS LINE
-            initChatbot(); 
+function updateUIForLoggedInUser() {
+    document.getElementById('show-auth-btn').style.display = 'none';
+    document.getElementById('user-menu').style.display = 'block';
+    document.getElementById('nav-links').style.display = 'flex';
+    document.getElementById('search-bar').style.display = 'flex';
+
+    const userAvatar = document.getElementById('user-avatar');
+    const userNameText = document.getElementById('user-name-text');
+    
+    userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+    userNameText.textContent = currentUser.name;
+}
+
+function updateUIForLoggedOutUser() {
+    document.getElementById('show-auth-btn').style.display = 'block';
+    document.getElementById('user-menu').style.display = 'none';
+    document.getElementById('nav-links').style.display = 'flex';
+    document.getElementById('search-bar').style.display = 'flex';
+
+    const bookmarksContainer = document.getElementById('bookmarked-articles');
+    bookmarksContainer.innerHTML = '<p class="empty-state">Login to view bookmarks</p>';
+}
+
+async function handleSignup(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('signup-name').value;
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+    const errorDiv = document.getElementById('signup-error');
+    const submitBtn = document.getElementById('signup-btn');
+
+    errorDiv.classList.remove('active');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Creating Account...';
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, email, password })
         });
 
-        // Auth Functions
-        function checkAuthStatus() {
-            const token = localStorage.getItem('authToken');
-            const user = localStorage.getItem('user');
+        const data = await response.json();
 
-            if (token && user) {
-                authToken = token;
-                currentUser = JSON.parse(user);
-                updateUIForLoggedInUser();
-                loadUserBookmarks().then(() => {
-                    loadNewsFromAPI();
-                    loadDailyMix();
-                });
-            } else {
-                updateUIForLoggedOutUser();
-                loadNewsFromAPI();
-                showDailyMixLoginPrompt();
-            }
+        if (!response.ok) {
+            throw new Error(data.message || 'Signup failed');
         }
 
-        function updateUIForLoggedInUser() {
-            document.getElementById('show-auth-btn').style.display = 'none';
-            document.getElementById('user-menu').style.display = 'block';
-            document.getElementById('nav-links').style.display = 'flex';
-            document.getElementById('search-bar').style.display = 'flex';
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        authToken = data.token;
+        currentUser = data.user;
 
-            const userAvatar = document.getElementById('user-avatar');
-            const userNameText = document.getElementById('user-name-text');
-            
-            userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
-            userNameText.textContent = currentUser.name;
-        }
-
-        function updateUIForLoggedOutUser() {
-            document.getElementById('show-auth-btn').style.display = 'block';
-            document.getElementById('user-menu').style.display = 'none';
-            document.getElementById('nav-links').style.display = 'flex';
-            document.getElementById('search-bar').style.display = 'flex';
-
-            const bookmarksContainer = document.getElementById('bookmarked-articles');
-            bookmarksContainer.innerHTML = '<p class="empty-state">Login to view bookmarks</p>';
-        }
-
-        async function handleSignup(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('signup-name').value;
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
-            const errorDiv = document.getElementById('signup-error');
-            const submitBtn = document.getElementById('signup-btn');
-
-            errorDiv.classList.remove('active');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Creating Account...';
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/auth/signup`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ name, email, password })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.message || 'Signup failed');
-                }
-
-                localStorage.setItem('authToken', data.token);
-                localStorage.setItem('user', JSON.stringify(data.user));
-                authToken = data.token;
-                currentUser = data.user;
-
-                document.getElementById('auth-overlay').classList.remove('active');
-                updateUIForLoggedInUser();
-                
-                await loadUserBookmarks();
-                await loadNewsFromAPI();
-                await loadDailyMix();
-
-            } catch (error) {
-                errorDiv.textContent = error.message;
-                errorDiv.classList.add('active');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Sign Up';
-            }
-        }
-
-        async function handleLogin(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const errorDiv = document.getElementById('login-error');
-            const submitBtn = document.getElementById('login-btn');
-
-            errorDiv.classList.remove('active');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Logging in...';
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/auth/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.message || 'Login failed');
-                }
-
-                localStorage.setItem('authToken', data.token);
-                localStorage.setItem('user', JSON.stringify(data.user));
-                authToken = data.token;
-                currentUser = data.user;
-
-                document.getElementById('auth-overlay').classList.remove('active');
-                updateUIForLoggedInUser();
-                
-                await loadUserBookmarks();
-                await loadNewsFromAPI();
-                await loadDailyMix();
-
-            } catch (error) {
-                errorDiv.textContent = error.message;
-                errorDiv.classList.add('active');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Login';
-            }
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('user');
-            authToken = null;
-            currentUser = null;
-            userBookmarks = [];
-            articleReactions = {};
-
-            updateUIForLoggedOutUser();
-            loadNewsFromAPI();
-            showDailyMixLoginPrompt();
-        }
-
-        // ========== DAILY MIX FUNCTIONS ========== 
+        document.getElementById('auth-overlay').classList.remove('active');
+        updateUIForLoggedInUser();
         
-        async function loadDailyMix() {
-            if (!authToken) {
-                showDailyMixLoginPrompt();
-                return;
+        await loadUserBookmarks();
+        await loadNewsFromAPI();
+        await loadDailyMix();
+
+    } catch (error) {
+        errorDiv.textContent = error.message;
+        errorDiv.classList.add('active');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Sign Up';
+    }
+}
+
+async function handleLogin(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const errorDiv = document.getElementById('login-error');
+    const submitBtn = document.getElementById('login-btn');
+
+    errorDiv.classList.remove('active');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Logging in...';
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Login failed');
+        }
+
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        authToken = data.token;
+        currentUser = data.user;
+
+        document.getElementById('auth-overlay').classList.remove('active');
+        updateUIForLoggedInUser();
+        
+        await loadUserBookmarks();
+        await loadNewsFromAPI();
+        await loadDailyMix();
+
+    } catch (error) {
+        errorDiv.textContent = error.message;
+        errorDiv.classList.add('active');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Login';
+    }
+}
+
+function handleLogout() {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('user');
+    authToken = null;
+    currentUser = null;
+    userBookmarks = [];
+    articleReactions = {};
+
+    updateUIForLoggedOutUser();
+    loadNewsFromAPI();
+    showDailyMixLoginPrompt();
+}
+
+// ========== DAILY MIX FUNCTIONS ========== 
+
+async function loadDailyMix() {
+    if (!authToken) {
+        showDailyMixLoginPrompt();
+        return;
+    }
+
+    const loadingDiv = document.getElementById('daily-mix-loading');
+    const contentDiv = document.getElementById('daily-mix-content');
+
+    loadingDiv.style.display = 'flex';
+    contentDiv.innerHTML = '';
+
+    try {
+        console.log('🎯 Fetching Daily Mix recommendations...');
+        
+        const response = await fetch(`${API_BASE_URL}/recommendations?limit=15`, {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
             }
+        });
 
-            const loadingDiv = document.getElementById('daily-mix-loading');
-            const contentDiv = document.getElementById('daily-mix-content');
+        const data = await response.json();
 
-            loadingDiv.style.display = 'flex';
-            contentDiv.innerHTML = '';
+        loadingDiv.style.display = 'none';
 
-            try {
-                console.log('🎯 Fetching Daily Mix recommendations...');
-                
-                const response = await fetch(`${API_BASE_URL}/recommendations?limit=15`, {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
-                });
+        if (data.success && data.recommendations && data.recommendations.length > 0) {
+            console.log(`✅ Loaded ${data.recommendations.length} recommendations`);
+            displayDailyMix(data.recommendations);
+        } else {
+            console.log('⚠️ No recommendations available');
+            showDailyMixEmpty();
+        }
+    } catch (error) {
+        console.error('❌ Error loading daily mix:', error);
+        loadingDiv.style.display = 'none';
+        showDailyMixEmpty();
+    }
+}
 
-                const data = await response.json();
+function displayDailyMix(recommendations) {
+    const contentDiv = document.getElementById('daily-mix-content');
+    
+    const carouselWrapper = document.createElement('div');
+    carouselWrapper.className = 'daily-mix-carousel-wrapper';
+    
+    const carouselContainer = document.createElement('div');
+    carouselContainer.className = 'daily-mix-carousel-container';
+    
+    const carousel = document.createElement('div');
+    carousel.className = 'daily-mix-carousel';
+    carousel.id = 'daily-mix-carousel';
+    
+    recommendations.forEach((article, index) => {
+        const card = createDailyMixCard(article, index);
+        carousel.appendChild(card);
+    });
+    
+    carouselContainer.appendChild(carousel);
+    carouselWrapper.appendChild(carouselContainer);
+    
+    const leftBtn = document.createElement('div');
+    leftBtn.className = 'daily-mix-scroll-btn daily-mix-scroll-left';
+    leftBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+    leftBtn.onclick = () => scrollDailyMix('left');
+    
+    const rightBtn = document.createElement('div');
+    rightBtn.className = 'daily-mix-scroll-btn daily-mix-scroll-right';
+    rightBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+    rightBtn.onclick = () => scrollDailyMix('right');
+    
+    carouselWrapper.appendChild(leftBtn);
+    carouselWrapper.appendChild(rightBtn);
+    
+    contentDiv.appendChild(carouselWrapper);
+    
+    setTimeout(() => {
+        updateDailyMixScrollButtons();
+    }, 100);
+    
+    carousel.addEventListener('scroll', updateDailyMixScrollButtons);
+}
 
-                loadingDiv.style.display = 'none';
+function createDailyMixCard(article, index) {
+    const card = document.createElement('div');
+    card.className = 'daily-mix-card';
+    
+    const sentiment = getSentimentLabel(article.sentiment);
+    const sentimentEmoji = sentiment === 'Positive' ? '😊' : sentiment === 'Negative' ? '😟' : '😐';
+    
+    const truncatedTitle = truncateText(article.title, 80);
+    const truncatedSummary = truncateText(article.summary, 120);
+    
+    card.innerHTML = `
+        <div class="daily-mix-card-image">
+            <img src="${article.image || 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800'}" 
+                 alt="${article.title}" 
+                 onerror="this.src='https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800'">
+            <div class="daily-mix-recommended-badge">
+                <i class="fas fa-star"></i> Recommended
+            </div>
+        </div>
+        <div class="daily-mix-card-content">
+            <h3 title="${article.title}">${truncatedTitle}</h3>
+            <p title="${article.summary}">${truncatedSummary}</p>
+            <div class="daily-mix-meta">
+                <span class="daily-mix-category">${article.category || 'General'}</span>
+                <span>${sentimentEmoji} ${sentiment}</span>
+            </div>
+        </div>
+    `;
+    
+    card.onclick = () => window.open(article.url, '_blank');
+    
+    return card;
+}
 
-                if (data.success && data.recommendations && data.recommendations.length > 0) {
-                    console.log(`✅ Loaded ${data.recommendations.length} recommendations`);
-                    displayDailyMix(data.recommendations);
-                } else {
-                    console.log('⚠️ No recommendations available');
-                    showDailyMixEmpty();
-                }
-            } catch (error) {
-                console.error('❌ Error loading daily mix:', error);
-                loadingDiv.style.display = 'none';
-                showDailyMixEmpty();
+function scrollDailyMix(direction) {
+    const carousel = document.getElementById('daily-mix-carousel');
+    if (!carousel) return;
+    
+    const scrollAmount = 320;
+    
+    if (direction === 'left') {
+        carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+        carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+    
+    setTimeout(updateDailyMixScrollButtons, 300);
+}
+
+function updateDailyMixScrollButtons() {
+    const carousel = document.getElementById('daily-mix-carousel');
+    const leftBtn = document.querySelector('.daily-mix-scroll-left');
+    const rightBtn = document.querySelector('.daily-mix-scroll-right');
+    
+    if (!carousel || !leftBtn || !rightBtn) return;
+    
+    const isAtStart = carousel.scrollLeft <= 10;
+    const isAtEnd = carousel.scrollLeft >= (carousel.scrollWidth - carousel.clientWidth - 10);
+    
+    leftBtn.classList.toggle('disabled', isAtStart);
+    rightBtn.classList.toggle('disabled', isAtEnd);
+}
+
+function showDailyMixLoginPrompt() {
+    const contentDiv = document.getElementById('daily-mix-content');
+    contentDiv.innerHTML = `
+        <div class="daily-mix-empty">
+            <i class="fas fa-lock"></i>
+            <h3>Unlock Your Daily Mix</h3>
+            <p>Login to get personalized news recommendations</p>
+            <button class="btn" onclick="document.getElementById('auth-overlay').classList.add('active')">
+                Login Now
+            </button>
+        </div>
+    `;
+}
+
+function showDailyMixEmpty() {
+    const contentDiv = document.getElementById('daily-mix-content');
+    contentDiv.innerHTML = `
+        <div class="daily-mix-empty">
+            <i class="fas fa-heart"></i>
+            <h3>Start Building Your Mix</h3>
+            <p>Like articles to get personalized recommendations</p>
+            <button class="btn" onclick="document.querySelector('.news-section').scrollIntoView({ behavior: 'smooth' })">
+                Explore News
+            </button>
+        </div>
+    `;
+}
+
+// ========== END DAILY MIX FUNCTIONS ==========
+// ========== BOOKMARKS AND REACTIONS ==========
+
+async function loadUserBookmarks() {
+    if (!authToken) {
+        userBookmarks = [];
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/bookmarks`, {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
             }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            userBookmarks = data.bookmarks;
+            console.log('Loaded bookmarks:', userBookmarks.length);
+            updateBookmarksUI();
         }
+    } catch (error) {
+        console.error('Error loading bookmarks:', error);
+        userBookmarks = [];
+    }
+}
 
-        function displayDailyMix(recommendations) {
-            const contentDiv = document.getElementById('daily-mix-content');
-            
-            const carouselWrapper = document.createElement('div');
-            carouselWrapper.className = 'daily-mix-carousel-wrapper';
-            
-            const carouselContainer = document.createElement('div');
-            carouselContainer.className = 'daily-mix-carousel-container';
-            
-            const carousel = document.createElement('div');
-            carousel.className = 'daily-mix-carousel';
-            carousel.id = 'daily-mix-carousel';
-            
-            recommendations.forEach((article, index) => {
-                const card = createDailyMixCard(article, index);
-                carousel.appendChild(card);
-            });
-            
-            carouselContainer.appendChild(carousel);
-            carouselWrapper.appendChild(carouselContainer);
-            
-            // Add scroll buttons OUTSIDE the carousel container
-            const leftBtn = document.createElement('div');
-            leftBtn.className = 'daily-mix-scroll-btn daily-mix-scroll-left';
-            leftBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
-            leftBtn.onclick = () => scrollDailyMix('left');
-            
-            const rightBtn = document.createElement('div');
-            rightBtn.className = 'daily-mix-scroll-btn daily-mix-scroll-right';
-            rightBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
-            rightBtn.onclick = () => scrollDailyMix('right');
-            
-            carouselWrapper.appendChild(leftBtn);
-            carouselWrapper.appendChild(rightBtn);
-            
-            contentDiv.appendChild(carouselWrapper);
-            
-            // Initial button state update
-            setTimeout(() => {
-                updateDailyMixScrollButtons();
-            }, 100);
-            
-            // Add scroll listener
-            carousel.addEventListener('scroll', updateDailyMixScrollButtons);
-        }
-
-        function createDailyMixCard(article, index) {
-            const card = document.createElement('div');
-            card.className = 'daily-mix-card';
-            
-            const sentiment = getSentimentLabel(article.sentiment);
-            const sentimentEmoji = sentiment === 'Positive' ? '😊' : sentiment === 'Negative' ? '😟' : '😐';
-            
-            // Truncate title and summary
-            const truncatedTitle = truncateText(article.title, 80);
-            const truncatedSummary = truncateText(article.summary, 120);
-            
-            card.innerHTML = `
-                <div class="daily-mix-card-image">
-                    <img src="${article.image || 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800'}" 
-                         alt="${article.title}" 
-                         onerror="this.src='https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800'">
-                    <div class="daily-mix-recommended-badge">
-                        <i class="fas fa-star"></i> Recommended
-                    </div>
-                </div>
-                <div class="daily-mix-card-content">
-                    <h3 title="${article.title}">${truncatedTitle}</h3>
-                    <p title="${article.summary}">${truncatedSummary}</p>
-                    <div class="daily-mix-meta">
-                        <span class="daily-mix-category">${article.category || 'General'}</span>
-                        <span>${sentimentEmoji} ${sentiment}</span>
-                    </div>
-                </div>
-            `;
-            
-            card.onclick = () => window.open(article.url, '_blank');
-            
-            return card;
-        }
-
-        function scrollDailyMix(direction) {
-            const carousel = document.getElementById('daily-mix-carousel');
-            if (!carousel) return;
-            
-            const scrollAmount = 320; // card width + gap
-            
-            if (direction === 'left') {
-                carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-            } else {
-                carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-            }
-            
-            // Update buttons after scroll
-            setTimeout(updateDailyMixScrollButtons, 300);
-        }
-
-        function updateDailyMixScrollButtons() {
-            const carousel = document.getElementById('daily-mix-carousel');
-            const leftBtn = document.querySelector('.daily-mix-scroll-left');
-            const rightBtn = document.querySelector('.daily-mix-scroll-right');
-            
-            if (!carousel || !leftBtn || !rightBtn) return;
-            
-            const isAtStart = carousel.scrollLeft <= 10;
-            const isAtEnd = carousel.scrollLeft >= (carousel.scrollWidth - carousel.clientWidth - 10);
-            
-            leftBtn.classList.toggle('disabled', isAtStart);
-            rightBtn.classList.toggle('disabled', isAtEnd);
-        }
-
-        function showDailyMixLoginPrompt() {
-            const contentDiv = document.getElementById('daily-mix-content');
-            contentDiv.innerHTML = `
-                <div class="daily-mix-empty">
-                    <i class="fas fa-lock"></i>
-                    <h3>Unlock Your Daily Mix</h3>
-                    <p>Login to get personalized news recommendations</p>
-                    <button class="btn" onclick="document.getElementById('auth-overlay').classList.add('active')">
-                        Login Now
-                    </button>
-                </div>
-            `;
-        }
-
-        function showDailyMixEmpty() {
-            const contentDiv = document.getElementById('daily-mix-content');
-            contentDiv.innerHTML = `
-                <div class="daily-mix-empty">
-                    <i class="fas fa-heart"></i>
-                    <h3>Start Building Your Mix</h3>
-                    <p>Like articles to get personalized recommendations</p>
-                    <button class="btn" onclick="document.querySelector('.news-section').scrollIntoView({ behavior: 'smooth' })">
-                        Explore News
-                    </button>
-                </div>
-            `;
-        }
-
-        // ========== END DAILY MIX FUNCTIONS ========== 
-        async function loadUserBookmarks() {
-            if (!authToken) {
-                userBookmarks = [];
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/bookmarks`, {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    userBookmarks = data.bookmarks;
-                    console.log('Loaded bookmarks:', userBookmarks.length);
-                    updateBookmarksUI();
-                }
-            } catch (error) {
-                console.error('Error loading bookmarks:', error);
-                userBookmarks = [];
-            }
-        }
-
-
-        async function loadNewsletterStatus() {
+async function loadNewsletterStatus() {
     const widget = document.getElementById('newsletter-content');
     
     if (!authToken) {
@@ -1511,10 +804,8 @@ async function loadCurrentPreferences() {
         if (data.success && data.preferences) {
             document.getElementById('newsletter-frequency').value = data.preferences.frequency;
             
-            // Uncheck all categories first
             document.querySelectorAll('[name="category"]').forEach(cb => cb.checked = false);
             
-            // Check saved categories
             data.preferences.categories.forEach(cat => {
                 const checkbox = document.querySelector(`[name="category"][value="${cat}"]`);
                 if (checkbox) checkbox.checked = true;
@@ -1525,9 +816,1031 @@ async function loadCurrentPreferences() {
     }
 }
 
-// Newsletter modal event listeners
-document.addEventListener('DOMContentLoaded', function() {
-    // Close modal
+function updateBookmarksUI() {
+    const container = document.getElementById('bookmarked-articles');
+    container.innerHTML = '';
+
+    if (userBookmarks.length === 0) {
+        container.innerHTML = '<p class="empty-state">No bookmarked articles yet</p>';
+        return;
+    }
+
+    userBookmarks.slice(0, 5).forEach(bookmark => {
+        const item = document.createElement('div');
+        item.className = 'bookmark-item';
+        item.innerHTML = `
+            <h4>${bookmark.title}</h4>
+            <span>${bookmark.source}</span>
+        `;
+        item.onclick = () => window.open(bookmark.url, '_blank');
+        container.appendChild(item);
+    });
+}
+
+async function toggleBookmark(article, btnElement) {
+    if (!authToken) {
+        document.getElementById('auth-overlay').classList.add('active');
+        return;
+    }
+
+    const isBookmarked = btnElement.classList.contains('bookmarked');
+
+    try {
+        if (isBookmarked) {
+            const bookmark = userBookmarks.find(b => b.articleId === article.id);
+            if (bookmark) {
+                const response = await fetch(`${API_BASE_URL}/bookmarks/${bookmark._id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    userBookmarks = userBookmarks.filter(b => b._id !== bookmark._id);
+                    btnElement.classList.remove('bookmarked');
+                    btnElement.querySelector('i').classList.remove('fas');
+                    btnElement.querySelector('i').classList.add('far');
+                    updateBookmarksUI();
+                    console.log('Bookmark removed');
+                }
+            }
+        } else {
+            const response = await fetch(`${API_BASE_URL}/bookmarks`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify({
+                    articleId: article.id,
+                    title: article.title,
+                    summary: article.summary,
+                    image: article.image,
+                    source: article.source,
+                    url: article.url,
+                    category: article.category,
+                    sentiment: article.sentiment
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                userBookmarks.unshift(data.bookmark);
+                btnElement.classList.add('bookmarked');
+                btnElement.querySelector('i').classList.remove('far');
+                btnElement.querySelector('i').classList.add('fas');
+                updateBookmarksUI();
+                console.log('Bookmark added');
+            } else {
+                throw new Error(data.message);
+            }
+        }
+    } catch (error) {
+        console.error('Error toggling bookmark:', error);
+        alert('Error: ' + error.message);
+    }
+}
+
+async function handleReaction(articleId, reactionType, btnElement) {
+    if (!authToken) {
+        document.getElementById('auth-overlay').classList.add('active');
+        return;
+    }
+
+    console.log('🎯 Handling reaction:', { articleId, reactionType, user: currentUser?.email });
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/reactions`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({
+                articleId,
+                reactionType
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            console.log('✅ Server response:', data);
+            
+            articleReactions[articleId] = data.counts;
+            
+            const articleIndex = allArticles.findIndex(a => a.id === articleId);
+            if (articleIndex !== -1) {
+                allArticles[articleIndex].reactions = data.counts;
+            }
+            
+            const allCards = document.querySelectorAll(`[data-article-id="${articleId}"]`);
+            console.log(`📌 Found ${allCards.length} cards to update`);
+            
+            allCards.forEach(card => {
+                const reactionsContainer = card.querySelector('.reactions');
+                if (reactionsContainer) {
+                    const allReactionBtns = reactionsContainer.querySelectorAll('.reaction-btn');
+                    allReactionBtns.forEach(btn => {
+                        const btnType = btn.getAttribute('data-type');
+                        if (btnType === reactionType) {
+                            btn.classList.add('active');
+                        } else {
+                            btn.classList.remove('active');
+                        }
+                    });
+                    
+                    const likeCountSpan = reactionsContainer.querySelector('[data-type="like"] .reaction-count');
+                    const dislikeCountSpan = reactionsContainer.querySelector('[data-type="dislike"] .reaction-count');
+                    const neutralCountSpan = reactionsContainer.querySelector('[data-type="neutral"] .reaction-count');
+                    
+                    if (likeCountSpan) {
+                        likeCountSpan.textContent = data.counts.like || 0;
+                    }
+                    if (dislikeCountSpan) {
+                        dislikeCountSpan.textContent = data.counts.dislike || 0;
+                    }
+                    if (neutralCountSpan) {
+                        neutralCountSpan.textContent = data.counts.neutral || 0;
+                    }
+                }
+            });
+            
+            console.log('✅ All counts updated successfully!');
+            
+            if (reactionType === 'like') {
+                console.log('🔄 Reloading Daily Mix after like...');
+                setTimeout(() => loadDailyMix(), 500);
+            }
+        } else {
+            console.error('❌ Server returned error:', data);
+        }
+    } catch (error) {
+        console.error('❌ Error in handleReaction:', error);
+    }
+}
+
+async function loadUserReaction(articleId) {
+    if (!authToken) return null;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/reactions/user/${articleId}`, {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.reaction) {
+            return data.reaction;
+        }
+    } catch (error) {
+        console.error('Error loading user reaction:', error);
+    }
+
+    return null;
+}
+
+// ========== NEWS API FUNCTIONS ==========
+
+async function fetchNews(category = 'all', country = '', lang = 'en') {
+    try {
+        const params = new URLSearchParams({
+            category,
+            country,
+            lang
+        });
+
+        const response = await fetch(`${API_BASE_URL}/news?${params}`);
+        
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.success && data.articles) {
+            isFromCache = data.fromCache;
+            
+            const cacheStatus = document.getElementById('cache-status');
+            const cacheStatusCarousel = document.getElementById('cache-status-carousel');
+            
+            if (cacheStatus) {
+                cacheStatus.innerHTML = data.fromCache ? 
+                    '<span class="cache-indicator cached">📦 Cached</span>' : 
+                    '<span class="cache-indicator fresh">🆕 Fresh</span>';
+            }
+            
+            if (cacheStatusCarousel) {
+                cacheStatusCarousel.innerHTML = data.fromCache ? 
+                    '<span class="cache-indicator cached">📦 Cached</span>' : 
+                    '<span class="cache-indicator fresh">🆕 Fresh</span>';
+            }
+            
+            allArticles = data.articles.map(article => ({
+                id: article.articleId,
+                title: article.title,
+                summary: article.summary,
+                image: article.image,
+                source: article.source,
+                time: formatTime(article.publishedAt),
+                category: article.category,
+                url: article.url,
+                sentiment: article.sentiment,
+                dateTime: article.publishedAt,
+                shares: article.shares,
+                uri: article.uri,
+                lang: article.lang,
+                reactions: article.reactions || { like: 0, dislike: 0, neutral: 0, total: 0 }
+            }));
+            
+            allArticles.forEach(article => {
+                articleReactions[article.id] = article.reactions;
+            });
+            
+            console.log(`Loaded ${allArticles.length} articles (from ${data.fromCache ? 'cache' : 'API'})`);
+            return allArticles;
+        } else {
+            throw new Error('No articles found');
+        }
+    } catch (error) {
+        console.error('Error fetching news:', error);
+        return [];
+    }
+}
+
+async function searchNews(query) {
+    try {
+        const langSelect = document.getElementById('lang-select');
+        const lang = langSelect ? langSelect.value : 'en';
+        
+        const params = new URLSearchParams({
+            query,
+            lang
+        });
+
+        const response = await fetch(`${API_BASE_URL}/news/search?${params}`);
+        
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.success && data.articles) {
+            return data.articles.map(article => ({
+                id: article.articleId,
+                title: article.title,
+                summary: article.summary,
+                image: article.image,
+                source: article.source,
+                time: formatTime(article.publishedAt),
+                category: article.category,
+                url: article.url,
+                sentiment: article.sentiment,
+                dateTime: article.publishedAt,
+                shares: article.shares,
+                uri: article.uri,
+                reactions: article.reactions || { like: 0, dislike: 0, neutral: 0, total: 0 }
+            }));
+        }
+        
+        return [];
+    } catch (error) {
+        console.error('Error searching news:', error);
+        return [];
+    }
+}
+
+async function findSimilarArticles(articleUri) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/news/similar/${articleUri}`);
+        
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.success && data.articles) {
+            return data.articles;
+        }
+        
+        return [];
+    } catch (error) {
+        console.error('Error finding similar articles:', error);
+        return [];
+    }
+}
+
+// ========== DISPLAY FUNCTIONS ==========
+
+async function loadNewsFromAPI(category = 'all', country = '', lang = 'en') {
+    const container = document.getElementById('news-container');
+    const loading = document.getElementById('news-loading');
+    
+    loading.style.display = 'flex';
+    container.style.display = 'none';
+    
+    const articles = await fetchNews(category, country, lang);
+    
+    loading.style.display = 'none';
+    container.style.display = 'grid';
+    
+    await displayNewsArticles(articles, 'news-container');
+    updateAnalytics(articles);
+    loadCarousel(articles.slice(0, 5));
+}
+
+async function loadTrendingArticles() {
+    const container = document.getElementById('trending-news-container');
+    const loading = document.getElementById('trending-loading');
+    const langSelect = document.getElementById('lang-select');
+    const lang = langSelect ? langSelect.value : 'en';
+    
+    loading.style.display = 'flex';
+    container.style.display = 'none';
+    
+    const articles = await fetchNews('all', '', lang);
+    const trending = articles.sort((a, b) => {
+        const aScore = (a.reactions.total || 0) + (a.shares || 0);
+        const bScore = (b.reactions.total || 0) + (b.shares || 0);
+        return bScore - aScore;
+    }).slice(0, 20);
+    
+    loading.style.display = 'none';
+    container.style.display = 'grid';
+    
+    await displayNewsArticles(trending, 'trending-news-container');
+}
+
+async function displayNewsArticles(articles, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    
+    if (articles.length === 0) {
+        container.innerHTML = '<p class="empty-state">No articles found</p>';
+        return;
+    }
+    
+    for (const article of articles) {
+        const newsCard = await createNewsCard(article);
+        container.appendChild(newsCard);
+    }
+}
+
+async function createNewsCard(article) {
+    const card = document.createElement('div');
+    card.className = 'news-card';
+    card.dataset.category = article.category;
+    card.dataset.articleId = article.id;
+    
+    const sentiment = getSentimentLabel(article.sentiment);
+    const sentimentClass = sentiment.toLowerCase();
+    
+    const isBookmarked = userBookmarks.some(b => b.articleId === article.id);
+    
+    const reactions = article.reactions || { like: 0, dislike: 0, neutral: 0, total: 0 };
+    const userReaction = await loadUserReaction(article.id);
+    
+    let dominantSentiment = 'neutral';
+    if (reactions.like > reactions.dislike && reactions.like > reactions.neutral) {
+        dominantSentiment = 'positive';
+    } else if (reactions.dislike > reactions.like && reactions.dislike > reactions.neutral) {
+        dominantSentiment = 'negative';
+    }
+    
+    card.innerHTML = `
+        <div class="news-image">
+            <img src="${article.image}" alt="News image" onerror="this.src='https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800'">
+            <span class="sentiment-badge sentiment-${dominantSentiment}">
+                ${dominantSentiment === 'positive' ? '😊' : dominantSentiment === 'negative' ? '😟' : '😐'} ${dominantSentiment.charAt(0).toUpperCase() + dominantSentiment.slice(1)}
+            </span>
+            ${authToken ? `
+            <button class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" data-article-id="${article.id}">
+                <i class="${isBookmarked ? 'fas' : 'far'} fa-bookmark"></i>
+            </button>
+            ` : ''}
+            <div class="credibility-badge-placeholder"></div>
+        </div>
+        <div class="news-content">
+            <h3>${article.title}</h3>
+            <p>${article.summary}</p>
+            <div class="news-meta">
+                <span class="source">${article.source}</span>
+                <span class="time">${article.time}</span>
+            </div>
+            <div class="news-actions">
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button class="btn btn-primary read-more" data-url="${article.url}">Read More</button>
+                    <button class="btn btn-similar find-similar" data-uri="${article.uri}">Similar</button>
+                </div>
+                ${authToken ? `
+                <div class="reactions">
+                    <button class="reaction-btn like ${userReaction === 'like' ? 'active' : ''}" data-article-id="${article.id}" data-type="like" title="Like">
+                        👍 <span class="reaction-count" data-type="like">${reactions.like}</span>
+                    </button>
+                    <button class="reaction-btn dislike ${userReaction === 'dislike' ? 'active' : ''}" data-article-id="${article.id}" data-type="dislike" title="Dislike">
+                        👎 <span class="reaction-count" data-type="dislike">${reactions.dislike}</span>
+                    </button>
+                    <button class="reaction-btn neutral ${userReaction === 'neutral' ? 'active' : ''}" data-article-id="${article.id}" data-type="neutral" title="Neutral">
+                        😐 <span class="reaction-count" data-type="neutral">${reactions.neutral}</span>
+                    </button>
+                </div>
+                ` : `
+                <div class="reactions">
+                    <span style="font-size: 12px;">👍 ${reactions.like} 👎 ${reactions.dislike} 😐 ${reactions.neutral}</span>
+                </div>
+                `}
+            </div>
+        </div>
+    `;
+    
+    // Add credibility badge AFTER card is created
+    // Use setTimeout to ensure DOM is ready
+    setTimeout(() => {
+        addCredibilityBadge(card, article.id);
+    }, 0);
+    
+    return card;
+}
+function loadCarousel(articles) {
+    const carousel = document.getElementById('carousel');
+    const indicators = document.getElementById('carousel-indicators');
+    const container = document.getElementById('carousel-container');
+    const loading = document.getElementById('carousel-loading');
+    
+    if (articles.length === 0) {
+        loading.style.display = 'none';
+        return;
+    }
+    
+    carousel.innerHTML = '';
+    indicators.innerHTML = '';
+    
+    articles.forEach((article, index) => {
+        const item = document.createElement('div');
+        item.className = 'carousel-item';
+        item.innerHTML = `
+            <img src="${article.image}" alt="${article.title}" onerror="this.src='https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=1200'">
+            <div class="carousel-content">
+                <h3>${article.title}</h3>
+                <p>${article.summary}</p>
+                <button class="btn btn-primary read-more" data-url="${article.url}">Read Full Story</button>
+            </div>
+        `;
+        carousel.appendChild(item);
+        
+        const indicator = document.createElement('div');
+        indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
+        indicator.dataset.index = index;
+        indicators.appendChild(indicator);
+    });
+    
+    loading.style.display = 'none';
+    container.style.display = 'block';
+    
+    initializeCarousel();
+}
+// ========== ANALYTICS FUNCTIONS ==========
+
+function updateAnalytics(articles) {
+    if (articles.length === 0) return;
+    
+    const sentimentCounts = {
+        positive: 0,
+        negative: 0,
+        neutral: 0
+    };
+    
+    articles.forEach(article => {
+        const label = getSentimentLabel(article.sentiment).toLowerCase();
+        sentimentCounts[label]++;
+    });
+    
+    document.getElementById('stat-total').textContent = articles.length;
+    document.getElementById('stat-positive').textContent = sentimentCounts.positive;
+    document.getElementById('stat-negative').textContent = sentimentCounts.negative;
+    document.getElementById('stat-neutral').textContent = sentimentCounts.neutral;
+    
+    updateSentimentChart(sentimentCounts);
+    
+    const sources = {};
+    articles.forEach(article => {
+        sources[article.source] = (sources[article.source] || 0) + 1;
+    });
+    updateSourceChart(sources);
+    
+    const categories = {};
+    articles.forEach(article => {
+        const cat = article.category || 'General';
+        categories[cat] = (categories[cat] || 0) + 1;
+    });
+    updateCategoryChart(categories);
+    
+    extractTrendingTopics(articles);
+    generateWordCloud(articles);
+}
+
+function extractTrendingTopics(articles) {
+    const words = {};
+    const stopWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'as', 'is', 'was', 'are', 'been', 'be', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'should', 'could', 'may', 'might', 'must', 'can', 'this', 'that', 'these', 'those'];
+    
+    articles.forEach(article => {
+        const text = (article.title + ' ' + article.summary).toLowerCase();
+        const tokens = text.match(/\b[a-z]{4,}\b/g) || [];
+        
+        tokens.forEach(word => {
+            if (!stopWords.includes(word)) {
+                words[word] = (words[word] || 0) + 1;
+            }
+        });
+    });
+    
+    const sortedWords = Object.entries(words)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10);
+    
+    const container = document.getElementById('trending-topics');
+    container.innerHTML = '';
+    
+    sortedWords.forEach(([word, count]) => {
+        const tag = document.createElement('a');
+        tag.href = '#';
+        tag.textContent = `#${word} (${count})`;
+        tag.onclick = (e) => {
+            e.preventDefault();
+            document.getElementById('search-input').value = word;
+            performSearch(word);
+        };
+        container.appendChild(tag);
+    });
+}
+
+function generateWordCloud(articles) {
+    const words = {};
+    const stopWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'as', 'is', 'was', 'are', 'been', 'be', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'should', 'could', 'may', 'might', 'must', 'can', 'this', 'that', 'these', 'those'];
+    
+    articles.forEach(article => {
+        const text = (article.title + ' ' + article.summary).toLowerCase();
+        const tokens = text.match(/\b[a-z]{4,}\b/g) || [];
+        
+        tokens.forEach(word => {
+            if (!stopWords.includes(word)) {
+                words[word] = (words[word] || 0) + 1;
+            }
+        });
+    });
+    
+    const sortedWords = Object.entries(words)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 20);
+    
+    const container = document.getElementById('analysis-word-cloud');
+    container.innerHTML = '';
+    
+    sortedWords.forEach(([word, count], index) => {
+        const wordElement = document.createElement('span');
+        const size = index < 5 ? 'large' : index < 12 ? 'medium' : 'small';
+        wordElement.className = `word word-${size}`;
+        wordElement.textContent = word;
+        wordElement.onclick = () => {
+            document.getElementById('search-input').value = word;
+            performSearch(word);
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.page === 'for-you') {
+                    link.classList.add('active');
+                }
+            });
+            document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
+            document.getElementById('for-you-page').classList.add('active');
+        };
+        container.appendChild(wordElement);
+    });
+}
+
+// ========== CHART FUNCTIONS ==========
+
+function initializeCharts() {
+    const sentimentCtx = document.getElementById('sentiment-chart');
+    if (sentimentCtx) {
+        sentimentChart = new Chart(sentimentCtx.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Positive', 'Negative', 'Neutral'],
+                datasets: [{
+                    data: [0, 0, 0],
+                    backgroundColor: ['#10b981', '#ef4444', '#64748b'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 12,
+                            font: { size: 10 }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    const sourceCtx = document.getElementById('source-chart');
+    if (sourceCtx) {
+        sourceChart = new Chart(sourceCtx.getContext('2d'), {
+            type: 'pie',
+            data: {
+                labels: [],
+                datasets: [{
+                    data: [],
+                    backgroundColor: ['#4f46e5', '#7c3aed', '#ec4899', '#f59e0b', '#10b981', '#6b7280'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 12,
+                            font: { size: 10 }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    const analysisSentimentCtx = document.getElementById('analysis-sentiment-chart');
+    if (analysisSentimentCtx) {
+        analysisSentimentChart = new Chart(analysisSentimentCtx.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Positive', 'Negative', 'Neutral'],
+                datasets: [{
+                    data: [0, 0, 0],
+                    backgroundColor: ['#10b981', '#ef4444', '#64748b'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    }
+    
+    const categoryCtx = document.getElementById('category-chart');
+    if (categoryCtx) {
+        categoryChart = new Chart(categoryCtx.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Articles',
+                    data: [],
+                    backgroundColor: '#4f46e5',
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    }
+    
+    const analysisSourceCtx = document.getElementById('analysis-source-chart');
+    if (analysisSourceCtx) {
+        analysisSourceChart = new Chart(analysisSourceCtx.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Articles',
+                    data: [],
+                    backgroundColor: '#7c3aed',
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { beginAtZero: true }
+                }
+            }
+        });
+    }
+}
+
+function updateSentimentChart(sentimentCounts) {
+    const data = [sentimentCounts.positive, sentimentCounts.negative, sentimentCounts.neutral];
+    
+    if (sentimentChart) {
+        sentimentChart.data.datasets[0].data = data;
+        sentimentChart.update();
+    }
+    
+    if (analysisSentimentChart) {
+        analysisSentimentChart.data.datasets[0].data = data;
+        analysisSentimentChart.update();
+    }
+}
+
+function updateSourceChart(sources) {
+    const sortedSources = Object.entries(sources)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 6);
+    
+    const labels = sortedSources.map(([source]) => source.substring(0, 20));
+    const data = sortedSources.map(([, count]) => count);
+    
+    if (sourceChart) {
+        sourceChart.data.labels = labels;
+        sourceChart.data.datasets[0].data = data;
+        sourceChart.update();
+    }
+    
+    if (analysisSourceChart) {
+        analysisSourceChart.data.labels = labels;
+        analysisSourceChart.data.datasets[0].data = data;
+        analysisSourceChart.update();
+    }
+}
+
+function updateCategoryChart(categories) {
+    const labels = Object.keys(categories);
+    const data = Object.values(categories);
+    
+    if (categoryChart) {
+        categoryChart.data.labels = labels;
+        categoryChart.data.datasets[0].data = data;
+        categoryChart.update();
+    }
+}
+
+// ========== UTILITY FUNCTIONS ==========
+
+function getSentimentLabel(sentiment) {
+    if (sentiment > 0.1) return t('positive');
+    if (sentiment < -0.1) return t('negative');
+    return t('neutral');
+}
+
+function formatTime(dateString) {
+    if (!dateString) return t('recently');
+    
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+    
+    if (diffMins < 60) return `${diffMins} ${t('minutesAgo')}`;
+    if (diffHours < 24) return `${diffHours} ${t('hoursAgo')}`;
+    if (diffDays < 7) return `${diffDays} ${t('daysAgo')}`;
+    return date.toLocaleDateString();
+}
+
+// ========== EVENT LISTENERS ==========
+
+function setupEventListeners() {
+    setupLanguageSelector();
+    
+    // Auth Modal
+    document.getElementById('show-auth-btn').addEventListener('click', () => {
+        document.getElementById('auth-overlay').classList.add('active');
+    });
+
+    document.getElementById('auth-close').addEventListener('click', () => {
+        document.getElementById('auth-overlay').classList.remove('active');
+    });
+
+    document.getElementById('show-signup').addEventListener('click', () => {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('signup-form').style.display = 'block';
+    });
+
+    document.getElementById('show-login').addEventListener('click', () => {
+        document.getElementById('signup-form').style.display = 'none';
+        document.getElementById('login-form').style.display = 'block';
+    });
+
+    document.getElementById('login-form-element').addEventListener('submit', handleLogin);
+    document.getElementById('signup-form-element').addEventListener('submit', handleSignup);
+
+    // User Menu
+    document.getElementById('user-avatar').addEventListener('click', () => {
+        document.getElementById('user-dropdown').classList.toggle('active');
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', handleLogout);
+
+    // Close user dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        const userMenu = document.getElementById('user-menu');
+        const userDropdown = document.getElementById('user-dropdown');
+        
+        if (userMenu && !userMenu.contains(e.target)) {
+            userDropdown.classList.remove('active');
+        }
+
+        const authOverlay = document.getElementById('auth-overlay');
+        if (e.target === authOverlay) {
+            authOverlay.classList.remove('active');
+        }
+    });
+
+    // Navigation
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            navLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            
+            const pageId = this.dataset.page + '-page';
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            
+            if (pageId === 'trending-page') {
+                loadTrendingArticles();
+            } else if (pageId === 'for-you-page') {
+                loadNewsFromAPI();
+            }
+        });
+    });
+    
+    // Dark mode toggle
+    const modeToggle = document.getElementById('mode-toggle');
+    const modeLabel = document.getElementById('mode-label');
+    
+    modeToggle.addEventListener('change', function() {
+        document.body.classList.toggle('dark-mode', this.checked);
+        modeLabel.textContent = this.checked ? 'Dark Mode' : 'Light Mode';
+        localStorage.setItem('darkMode', this.checked);
+    });
+    
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (savedDarkMode) {
+        modeToggle.checked = true;
+        document.body.classList.add('dark-mode');
+        modeLabel.textContent = 'Dark Mode';
+    }
+    
+    // Category filters
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    categoryBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            categoryBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const category = this.dataset.category;
+            const countrySelect = document.getElementById('country-select');
+            const langSelect = document.getElementById('lang-select');
+            const country = countrySelect ? countrySelect.value : '';
+            const lang = langSelect ? langSelect.value : 'en';
+            
+            loadNewsFromAPI(category, country, lang);
+        });
+    });
+    
+    // Country filter
+    const countrySelect = document.getElementById('country-select');
+    if (countrySelect) {
+        countrySelect.addEventListener('change', function() {
+            const categoryBtn = document.querySelector('.category-btn.active');
+            const category = categoryBtn ? categoryBtn.dataset.category : 'all';
+            const langSelect = document.getElementById('lang-select');
+            const lang = langSelect ? langSelect.value : 'en';
+            loadNewsFromAPI(category, this.value, lang);
+        });
+    }
+    
+    // Language filter
+    const langSelect = document.getElementById('lang-select');
+    if (langSelect) {
+        langSelect.addEventListener('change', function() {
+            const categoryBtn = document.querySelector('.category-btn.active');
+            const category = categoryBtn ? categoryBtn.dataset.category : 'all';
+            const countrySelect = document.getElementById('country-select');
+            const country = countrySelect ? countrySelect.value : '';
+            loadNewsFromAPI(category, country, this.value);
+        });
+    }
+    
+    // Search functionality
+    const searchInput = document.getElementById('search-input');
+    searchInput.addEventListener('input', debounce(async function() {
+        const query = this.value.trim();
+        
+        if (query.length > 2) {
+            await performSearch(query);
+        } else if (query.length === 0) {
+            const categoryBtn = document.querySelector('.category-btn.active');
+            const category = categoryBtn ? categoryBtn.dataset.category : 'all';
+            const countrySelect = document.getElementById('country-select');
+            const langSelect = document.getElementById('lang-select');
+            const country = countrySelect ? countrySelect.value : '';
+            const lang = langSelect ? langSelect.value : 'en';
+            
+            loadNewsFromAPI(category, country, lang);
+        }
+    }, 500));
+    
+    // Global click handlers
+    document.addEventListener('click', async function(e) {
+        // Bookmark button
+        if (e.target.closest('.bookmark-btn')) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const btn = e.target.closest('.bookmark-btn');
+            const articleId = btn.dataset.articleId;
+            const article = allArticles.find(a => a.id === articleId);
+            
+            if (article) {
+                await toggleBookmark(article, btn);
+            }
+            return;
+        }
+        
+        // Reaction buttons
+        if (e.target.closest('.reaction-btn')) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const btn = e.target.closest('.reaction-btn');
+            const articleId = btn.dataset.articleId;
+            const reactionType = btn.dataset.type;
+            
+            await handleReaction(articleId, reactionType, btn);
+            return;
+        }
+        
+        // Read more buttons
+        if (e.target.classList.contains('read-more')) {
+            const url = e.target.dataset.url;
+            if (url && url !== '#') {
+                window.open(url, '_blank');
+            }
+            return;
+        }
+        
+        // Find similar articles button
+        if (e.target.classList.contains('find-similar')) {
+            const uri = e.target.dataset.uri;
+            await showSimilarArticles(uri);
+            return;
+        }
+        
+        // Modal close
+        if (e.target.classList.contains('modal-close')) {
+            document.getElementById('similar-modal').classList.remove('active');
+            return;
+        }
+    });
+    
+    // Close modal when clicking outside
+    const modal = document.getElementById('similar-modal');
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+        }
+    });
+
+    // Newsletter modal event listeners
     const newsletterModalClose = document.querySelector('.newsletter-modal-close');
     if (newsletterModalClose) {
         newsletterModalClose.addEventListener('click', () => {
@@ -1535,7 +1848,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Close modal on outside click
     const newsletterModal = document.getElementById('newsletter-modal');
     if (newsletterModal) {
         newsletterModal.addEventListener('click', (e) => {
@@ -1545,7 +1857,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Newsletter preferences form
     const newsletterForm = document.getElementById('newsletter-preferences-form');
     if (newsletterForm) {
         newsletterForm.addEventListener('submit', async (e) => {
@@ -1586,1238 +1897,183 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Load newsletter status on page load
     setTimeout(loadNewsletterStatus, 500);
-});
-
-
-        function updateBookmarksUI() {
-            const container = document.getElementById('bookmarked-articles');
-            container.innerHTML = '';
-
-            if (userBookmarks.length === 0) {
-                container.innerHTML = '<p class="empty-state">No bookmarked articles yet</p>';
-                return;
-            }
-
-            userBookmarks.slice(0, 5).forEach(bookmark => {
-                const item = document.createElement('div');
-                item.className = 'bookmark-item';
-                item.innerHTML = `
-                    <h4>${bookmark.title}</h4>
-                    <span>${bookmark.source}</span>
-                `;
-                item.onclick = () => window.open(bookmark.url, '_blank');
-                container.appendChild(item);
-            });
-        }
-
-        async function toggleBookmark(article, btnElement) {
-            if (!authToken) {
-                document.getElementById('auth-overlay').classList.add('active');
-                return;
-            }
-
-            const isBookmarked = btnElement.classList.contains('bookmarked');
-
-            try {
-                if (isBookmarked) {
-                    const bookmark = userBookmarks.find(b => b.articleId === article.id);
-                    if (bookmark) {
-                        const response = await fetch(`${API_BASE_URL}/bookmarks/${bookmark._id}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'Authorization': `Bearer ${authToken}`
-                            }
-                        });
-
-                        const data = await response.json();
-
-                        if (data.success) {
-                            userBookmarks = userBookmarks.filter(b => b._id !== bookmark._id);
-                            btnElement.classList.remove('bookmarked');
-                            btnElement.querySelector('i').classList.remove('fas');
-                            btnElement.querySelector('i').classList.add('far');
-                            updateBookmarksUI();
-                            console.log('Bookmark removed');
-                        }
-                    }
-                } else {
-                    const response = await fetch(`${API_BASE_URL}/bookmarks`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${authToken}`
-                        },
-                        body: JSON.stringify({
-                            articleId: article.id,
-                            title: article.title,
-                            summary: article.summary,
-                            image: article.image,
-                            source: article.source,
-                            url: article.url,
-                            category: article.category,
-                            sentiment: article.sentiment
-                        })
-                    });
-
-                    const data = await response.json();
-
-                    if (data.success) {
-                        userBookmarks.unshift(data.bookmark);
-                        btnElement.classList.add('bookmarked');
-                        btnElement.querySelector('i').classList.remove('far');
-                        btnElement.querySelector('i').classList.add('fas');
-                        updateBookmarksUI();
-                        console.log('Bookmark added');
-                    } else {
-                        throw new Error(data.message);
-                    }
-                }
-            } catch (error) {
-                console.error('Error toggling bookmark:', error);
-                alert('Error: ' + error.message);
-            }
-        }
-
-        // Reaction Functions
-        async function handleReaction(articleId, reactionType, btnElement) {
-            if (!authToken) {
-                document.getElementById('auth-overlay').classList.add('active');
-                return;
-            }
-
-            console.log('🎯 Handling reaction:', { articleId, reactionType, user: currentUser?.email });
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/reactions`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${authToken}`
-                    },
-                    body: JSON.stringify({
-                        articleId,
-                        reactionType
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    console.log('✅ Server response:', data);
-                    
-                    // Update global article reactions
-                    articleReactions[articleId] = data.counts;
-                    
-                    // Update the article in allArticles array
-                    const articleIndex = allArticles.findIndex(a => a.id === articleId);
-                    if (articleIndex !== -1) {
-                        allArticles[articleIndex].reactions = data.counts;
-                    }
-                    
-                    // Find ALL cards with this article ID and update them
-                    const allCards = document.querySelectorAll(`[data-article-id="${articleId}"]`);
-                    console.log(`📌 Found ${allCards.length} cards to update`);
-                    
-                    allCards.forEach(card => {
-                        const reactionsContainer = card.querySelector('.reactions');
-                        if (reactionsContainer) {
-                            // Update button active states
-                            const allReactionBtns = reactionsContainer.querySelectorAll('.reaction-btn');
-                            allReactionBtns.forEach(btn => {
-                                const btnType = btn.getAttribute('data-type');
-                                if (btnType === reactionType) {
-                                    btn.classList.add('active');
-                                } else {
-                                    btn.classList.remove('active');
-                                }
-                            });
-                            
-                            // Update counts
-                            const likeCountSpan = reactionsContainer.querySelector('[data-type="like"] .reaction-count');
-                            const dislikeCountSpan = reactionsContainer.querySelector('[data-type="dislike"] .reaction-count');
-                            const neutralCountSpan = reactionsContainer.querySelector('[data-type="neutral"] .reaction-count');
-                            
-                            if (likeCountSpan) {
-                                likeCountSpan.textContent = data.counts.like || 0;
-                            }
-                            if (dislikeCountSpan) {
-                                dislikeCountSpan.textContent = data.counts.dislike || 0;
-                            }
-                            if (neutralCountSpan) {
-                                neutralCountSpan.textContent = data.counts.neutral || 0;
-                            }
-                        }
-                    });
-                    
-                    console.log('✅ All counts updated successfully!');
-                    
-                    // Reload daily mix after like reaction
-                    if (reactionType === 'like') {
-                        console.log('🔄 Reloading Daily Mix after like...');
-                        setTimeout(() => loadDailyMix(), 500);
-                    }
-                } else {
-                    console.error('❌ Server returned error:', data);
-                }
-            } catch (error) {
-                console.error('❌ Error in handleReaction:', error);
-            }
-        }
-
-        async function loadUserReaction(articleId) {
-            if (!authToken) return null;
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/reactions/user/${articleId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
-                });
-
-                const data = await response.json();
-
-                if (data.success && data.reaction) {
-                    return data.reaction;
-                }
-            } catch (error) {
-                console.error('Error loading user reaction:', error);
-            }
-
-            return null;
-        }
-
-        // News API Functions
-        async function fetchNews(category = 'all', country = '', lang = 'en') {
-            try {
-                const params = new URLSearchParams({
-                    category,
-                    country,
-                    lang
-                });
-
-                const response = await fetch(`${API_BASE_URL}/news?${params}`);
-                
-                if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
-                }
-
-                const data = await response.json();
-                
-                if (data.success && data.articles) {
-                    isFromCache = data.fromCache;
-                    
-                    // Update cache indicator
-                    const cacheStatus = document.getElementById('cache-status');
-                    const cacheStatusCarousel = document.getElementById('cache-status-carousel');
-                    
-                    if (cacheStatus) {
-                        cacheStatus.innerHTML = data.fromCache ? 
-                            '<span class="cache-indicator cached">📦 Cached</span>' : 
-                            '<span class="cache-indicator fresh">🆕 Fresh</span>';
-                    }
-                    
-                    if (cacheStatusCarousel) {
-                        cacheStatusCarousel.innerHTML = data.fromCache ? 
-                            '<span class="cache-indicator cached">📦 Cached</span>' : 
-                            '<span class="cache-indicator fresh">🆕 Fresh</span>';
-                    }
-                    
-                    allArticles = data.articles.map(article => ({
-                        id: article.articleId,
-                        title: article.title,
-                        summary: article.summary,
-                        image: article.image,
-                        source: article.source,
-                        time: formatTime(article.publishedAt),
-                        category: article.category,
-                        url: article.url,
-                        sentiment: article.sentiment,
-                        dateTime: article.publishedAt,
-                        shares: article.shares,
-                        uri: article.uri,
-                        lang: article.lang,
-                        reactions: article.reactions || { like: 0, dislike: 0, neutral: 0, total: 0 }
-                    }));
-                    
-                    // Store reactions in global object
-                    allArticles.forEach(article => {
-                        articleReactions[article.id] = article.reactions;
-                    });
-                    
-                    console.log(`Loaded ${allArticles.length} articles (from ${data.fromCache ? 'cache' : 'API'})`);
-                    return allArticles;
-                } else {
-                    throw new Error('No articles found');
-                }
-            } catch (error) {
-                console.error('Error fetching news:', error);
-                return [];
-            }
-        }
-
-        async function searchNews(query) {
-            try {
-                const langSelect = document.getElementById('lang-select');
-                const lang = langSelect ? langSelect.value : 'en';
-                
-                const params = new URLSearchParams({
-                    query,
-                    lang
-                });
-
-                const response = await fetch(`${API_BASE_URL}/news/search?${params}`);
-                
-                if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
-                }
-
-                const data = await response.json();
-                
-                if (data.success && data.articles) {
-                    return data.articles.map(article => ({
-                        id: article.articleId,
-                        title: article.title,
-                        summary: article.summary,
-                        image: article.image,
-                        source: article.source,
-                        time: formatTime(article.publishedAt),
-                        category: article.category,
-                        url: article.url,
-                        sentiment: article.sentiment,
-                        dateTime: article.publishedAt,
-                        shares: article.shares,
-                        uri: article.uri,
-                        reactions: article.reactions || { like: 0, dislike: 0, neutral: 0, total: 0 }
-                    }));
-                }
-                
-                return [];
-            } catch (error) {
-                console.error('Error searching news:', error);
-                return [];
-            }
-        }
-
-        async function findSimilarArticles(articleUri) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/news/similar/${articleUri}`);
-                
-                if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
-                }
-
-                const data = await response.json();
-                
-                if (data.success && data.articles) {
-                    return data.articles;
-                }
-                
-                return [];
-            } catch (error) {
-                console.error('Error finding similar articles:', error);
-                return [];
-            }
-        }
-
-        // Display Functions
-        async function loadNewsFromAPI(category = 'all', country = '', lang = 'en') {
-            const container = document.getElementById('news-container');
-            const loading = document.getElementById('news-loading');
-            
-            loading.style.display = 'flex';
-            container.style.display = 'none';
-            
-            const articles = await fetchNews(category, country, lang);
-            
-            loading.style.display = 'none';
-            container.style.display = 'grid';
-            
-            await displayNewsArticles(articles, 'news-container');
-            updateAnalytics(articles);
-            loadCarousel(articles.slice(0, 5));
-        }
-
-        async function loadTrendingArticles() {
-            const container = document.getElementById('trending-news-container');
-            const loading = document.getElementById('trending-loading');
-            const langSelect = document.getElementById('lang-select');
-            const lang = langSelect ? langSelect.value : 'en';
-            
-            loading.style.display = 'flex';
-            container.style.display = 'none';
-            
-            const articles = await fetchNews('all', '', lang);
-            const trending = articles.sort((a, b) => {
-                const aScore = (a.reactions.total || 0) + (a.shares || 0);
-                const bScore = (b.reactions.total || 0) + (b.shares || 0);
-                return bScore - aScore;
-            }).slice(0, 20);
-            
-            loading.style.display = 'none';
-            container.style.display = 'grid';
-            
-            await displayNewsArticles(trending, 'trending-news-container');
-        }
-
-        async function displayNewsArticles(articles, containerId) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
-            
-            if (articles.length === 0) {
-                container.innerHTML = '<p class="empty-state">No articles found</p>';
-                return;
-            }
-            
-            for (const article of articles) {
-                const newsCard = await createNewsCard(article);
-                container.appendChild(newsCard);
-            }
-        }
-
-        async function createNewsCard(article) {
-            const card = document.createElement('div');
-            card.className = 'news-card';
-            card.dataset.category = article.category;
-            card.dataset.articleId = article.id;
-            
-            const sentiment = getSentimentLabel(article.sentiment);
-            const sentimentClass = sentiment.toLowerCase();
-            
-            const isBookmarked = userBookmarks.some(b => b.articleId === article.id);
-            
-            const reactions = article.reactions || { like: 0, dislike: 0, neutral: 0, total: 0 };
-            const userReaction = await loadUserReaction(article.id);
-            
-            let dominantSentiment = 'neutral';
-            if (reactions.like > reactions.dislike && reactions.like > reactions.neutral) {
-                dominantSentiment = 'positive';
-            } else if (reactions.dislike > reactions.like && reactions.dislike > reactions.neutral) {
-                dominantSentiment = 'negative';
-            }
-            
-            card.innerHTML = `
-                <div class="news-image">
-                    <img src="${article.image}" alt="News image" onerror="this.src='https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800'">
-                    <span class="sentiment-badge sentiment-${dominantSentiment}">
-                        ${dominantSentiment === 'positive' ? '😊' : dominantSentiment === 'negative' ? '😟' : '😐'} ${dominantSentiment.charAt(0).toUpperCase() + dominantSentiment.slice(1)}
-                    </span>
-                    ${authToken ? `
-                    <button class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" data-article-id="${article.id}">
-                        <i class="${isBookmarked ? 'fas' : 'far'} fa-bookmark"></i>
-                    </button>
-                    ` : ''}
-                </div>
-                <div class="news-content">
-                    <h3>${article.title}</h3>
-                    <p>${article.summary}</p>
-                    <div class="news-meta">
-                        <span class="source">${article.source}</span>
-                        <span class="time">${article.time}</span>
-                    </div>
-                    <div class="news-actions">
-                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                            <button class="btn btn-primary read-more" data-url="${article.url}">Read More</button>
-                            <button class="btn btn-similar find-similar" data-uri="${article.uri}">Similar</button>
-                        </div>
-                        ${authToken ? `
-                        <div class="reactions">
-                            <button class="reaction-btn like ${userReaction === 'like' ? 'active' : ''}" data-article-id="${article.id}" data-type="like" title="Like">
-                                👍 <span class="reaction-count" data-type="like">${reactions.like}</span>
-                            </button>
-                            <button class="reaction-btn dislike ${userReaction === 'dislike' ? 'active' : ''}" data-article-id="${article.id}" data-type="dislike" title="Dislike">
-                                👎 <span class="reaction-count" data-type="dislike">${reactions.dislike}</span>
-                            </button>
-                            <button class="reaction-btn neutral ${userReaction === 'neutral' ? 'active' : ''}" data-article-id="${article.id}" data-type="neutral" title="Neutral">
-                                😐 <span class="reaction-count" data-type="neutral">${reactions.neutral}</span>
-                            </button>
-                        </div>
-                        ` : `
-                        <div class="reactions">
-                            <span style="font-size: 12px;">👍 ${reactions.like} 👎 ${reactions.dislike} 😐 ${reactions.neutral}</span>
-                        </div>
-                        `}
-                    </div>
-                </div>
-            `;
-            
-            return card;
-        }
-
-        function loadCarousel(articles) {
-            const carousel = document.getElementById('carousel');
-            const indicators = document.getElementById('carousel-indicators');
-            const container = document.getElementById('carousel-container');
-            const loading = document.getElementById('carousel-loading');
-            
-            if (articles.length === 0) {
-                loading.style.display = 'none';
-                return;
-            }
-            
-            carousel.innerHTML = '';
-            indicators.innerHTML = '';
-            
-            articles.forEach((article, index) => {
-                const item = document.createElement('div');
-                item.className = 'carousel-item';
-                item.innerHTML = `
-                    <img src="${article.image}" alt="${article.title}" onerror="this.src='https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=1200'">
-                    <div class="carousel-content">
-                        <h3>${article.title}</h3>
-                        <p>${article.summary}</p>
-                        <button class="btn btn-primary read-more" data-url="${article.url}">Read Full Story</button>
-                    </div>
-                `;
-                carousel.appendChild(item);
-                
-                const indicator = document.createElement('div');
-                indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
-                indicator.dataset.index = index;
-                indicators.appendChild(indicator);
-            });
-            
-            loading.style.display = 'none';
-            container.style.display = 'block';
-            
-            initializeCarousel();
-        }
-
-        // Analytics Functions
-        function updateAnalytics(articles) {
-            if (articles.length === 0) return;
-            
-            const sentimentCounts = {
-                positive: 0,
-                negative: 0,
-                neutral: 0
-            };
-            
-            articles.forEach(article => {
-                const label = getSentimentLabel(article.sentiment).toLowerCase();
-                sentimentCounts[label]++;
-            });
-            
-            document.getElementById('stat-total').textContent = articles.length;
-            document.getElementById('stat-positive').textContent = sentimentCounts.positive;
-            document.getElementById('stat-negative').textContent = sentimentCounts.negative;
-            document.getElementById('stat-neutral').textContent = sentimentCounts.neutral;
-            
-            updateSentimentChart(sentimentCounts);
-            
-            const sources = {};
-            articles.forEach(article => {
-                sources[article.source] = (sources[article.source] || 0) + 1;
-            });
-            updateSourceChart(sources);
-            
-            const categories = {};
-            articles.forEach(article => {
-                const cat = article.category || 'General';
-                categories[cat] = (categories[cat] || 0) + 1;
-            });
-            updateCategoryChart(categories);
-            
-            extractTrendingTopics(articles);
-            generateWordCloud(articles);
-        }
-
-        function extractTrendingTopics(articles) {
-            const words = {};
-            const stopWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'as', 'is', 'was', 'are', 'been', 'be', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'should', 'could', 'may', 'might', 'must', 'can', 'this', 'that', 'these', 'those'];
-            
-            articles.forEach(article => {
-                const text = (article.title + ' ' + article.summary).toLowerCase();
-                const tokens = text.match(/\b[a-z]{4,}\b/g) || [];
-                
-                tokens.forEach(word => {
-                    if (!stopWords.includes(word)) {
-                        words[word] = (words[word] || 0) + 1;
-                    }
-                });
-            });
-            
-            const sortedWords = Object.entries(words)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 10);
-            
-            const container = document.getElementById('trending-topics');
-            container.innerHTML = '';
-            
-            sortedWords.forEach(([word, count]) => {
-                const tag = document.createElement('a');
-                tag.href = '#';
-                tag.textContent = `#${word} (${count})`;
-                tag.onclick = (e) => {
-                    e.preventDefault();
-                    document.getElementById('search-input').value = word;
-                    performSearch(word);
-                };
-                container.appendChild(tag);
-            });
-        }
-
-        function generateWordCloud(articles) {
-            const words = {};
-            const stopWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'as', 'is', 'was', 'are', 'been', 'be', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'should', 'could', 'may', 'might', 'must', 'can', 'this', 'that', 'these', 'those'];
-            
-            articles.forEach(article => {
-                const text = (article.title + ' ' + article.summary).toLowerCase();
-                const tokens = text.match(/\b[a-z]{4,}\b/g) || [];
-                
-                tokens.forEach(word => {
-                    if (!stopWords.includes(word)) {
-                        words[word] = (words[word] || 0) + 1;
-                    }
-                });
-            });
-            
-            const sortedWords = Object.entries(words)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 20);
-            
-            const container = document.getElementById('analysis-word-cloud');
-            container.innerHTML = '';
-            
-            sortedWords.forEach(([word, count], index) => {
-                const wordElement = document.createElement('span');
-                const size = index < 5 ? 'large' : index < 12 ? 'medium' : 'small';
-                wordElement.className = `word word-${size}`;
-                wordElement.textContent = word;
-                wordElement.onclick = () => {
-                    document.getElementById('search-input').value = word;
-                    performSearch(word);
-                    document.querySelectorAll('.nav-link').forEach(link => {
-                        link.classList.remove('active');
-                        if (link.dataset.page === 'for-you') {
-                            link.classList.add('active');
-                        }
-                    });
-                    document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
-                    document.getElementById('for-you-page').classList.add('active');
-                };
-                container.appendChild(wordElement);
-            });
-        }
-
-        // Chart Functions
-        function initializeCharts() {
-            const sentimentCtx = document.getElementById('sentiment-chart');
-            if (sentimentCtx) {
-                sentimentChart = new Chart(sentimentCtx.getContext('2d'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Positive', 'Negative', 'Neutral'],
-                        datasets: [{
-                            data: [0, 0, 0],
-                            backgroundColor: ['#10b981', '#ef4444', '#64748b'],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    boxWidth: 12,
-                                    font: { size: 10 }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-            
-            const sourceCtx = document.getElementById('source-chart');
-            if (sourceCtx) {
-                sourceChart = new Chart(sourceCtx.getContext('2d'), {
-                    type: 'pie',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            data: [],
-                            backgroundColor: ['#4f46e5', '#7c3aed', '#ec4899', '#f59e0b', '#10b981', '#6b7280'],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    boxWidth: 12,
-                                    font: { size: 10 }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-            
-            const analysisSentimentCtx = document.getElementById('analysis-sentiment-chart');
-            if (analysisSentimentCtx) {
-                analysisSentimentChart = new Chart(analysisSentimentCtx.getContext('2d'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Positive', 'Negative', 'Neutral'],
-                        datasets: [{
-                            data: [0, 0, 0],
-                            backgroundColor: ['#10b981', '#ef4444', '#64748b'],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom' }
-                        }
-                    }
-                });
-            }
-            
-            const categoryCtx = document.getElementById('category-chart');
-            if (categoryCtx) {
-                categoryChart = new Chart(categoryCtx.getContext('2d'), {
-                    type: 'bar',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: 'Articles',
-                            data: [],
-                            backgroundColor: '#4f46e5',
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false }
-                        },
-                        scales: {
-                            y: { beginAtZero: true }
-                        }
-                    }
-                });
-            }
-            
-            const analysisSourceCtx = document.getElementById('analysis-source-chart');
-            if (analysisSourceCtx) {
-                analysisSourceChart = new Chart(analysisSourceCtx.getContext('2d'), {
-                    type: 'bar',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: 'Articles',
-                            data: [],
-                            backgroundColor: '#7c3aed',
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        indexAxis: 'y',
-                        plugins: {
-                            legend: { display: false }
-                        },
-                        scales: {
-                            x: { beginAtZero: true }
-                        }
-                    }
-                });
-            }
-        }
-
-        function updateSentimentChart(sentimentCounts) {
-            const data = [sentimentCounts.positive, sentimentCounts.negative, sentimentCounts.neutral];
-            
-            if (sentimentChart) {
-                sentimentChart.data.datasets[0].data = data;
-                sentimentChart.update();
-            }
-            
-            if (analysisSentimentChart) {
-                analysisSentimentChart.data.datasets[0].data = data;
-                analysisSentimentChart.update();
-            }
-        }
-
-        function updateSourceChart(sources) {
-            const sortedSources = Object.entries(sources)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 6);
-            
-            const labels = sortedSources.map(([source]) => source.substring(0, 20));
-            const data = sortedSources.map(([, count]) => count);
-            
-            if (sourceChart) {
-                sourceChart.data.labels = labels;
-                sourceChart.data.datasets[0].data = data;
-                sourceChart.update();
-            }
-            
-            if (analysisSourceChart) {
-                analysisSourceChart.data.labels = labels;
-                analysisSourceChart.data.datasets[0].data = data;
-                analysisSourceChart.update();
-            }
-        }
-
-        function updateCategoryChart(categories) {
-            const labels = Object.keys(categories);
-            const data = Object.values(categories);
-            
-            if (categoryChart) {
-                categoryChart.data.labels = labels;
-                categoryChart.data.datasets[0].data = data;
-                categoryChart.update();
-            }
-        }
-
-        // Utility Functions
-        function getSentimentLabel(sentiment) {
-    if (sentiment > 0.1) return t('positive');
-    if (sentiment < -0.1) return t('negative');
-    return t('neutral');
 }
 
-        function formatTime(dateString) {
-    if (!dateString) return t('recently');
+async function performSearch(query) {
+    const container = document.getElementById('news-container');
+    const loading = document.getElementById('news-loading');
     
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now - date;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
+    loading.style.display = 'flex';
+    container.style.display = 'none';
     
-    if (diffMins < 60) return `${diffMins} ${t('minutesAgo')}`;
-    if (diffHours < 24) return `${diffHours} ${t('hoursAgo')}`;
-    if (diffDays < 7) return `${diffDays} ${t('daysAgo')}`;
-    return date.toLocaleDateString();
+    const articles = await searchNews(query);
+    
+    loading.style.display = 'none';
+    container.style.display = 'grid';
+    
+    await displayNewsArticles(articles, 'news-container');
+    if (articles.length > 0) {
+        updateAnalytics(articles);
+    }
 }
 
-        // Event Listeners
-        function setupEventListeners() {
-            setupLanguageSelector();
-            // Auth Modal
-            document.getElementById('show-auth-btn').addEventListener('click', () => {
-                document.getElementById('auth-overlay').classList.add('active');
-            });
+async function showSimilarArticles(articleUri) {
+    const modal = document.getElementById('similar-modal');
+    const loading = document.getElementById('similar-loading');
+    const list = document.getElementById('similar-articles-list');
+    
+    modal.classList.add('active');
+    loading.style.display = 'flex';
+    list.innerHTML = '';
+    
+    const similarArticles = await findSimilarArticles(articleUri);
+    
+    loading.style.display = 'none';
+    
+    if (similarArticles.length === 0) {
+        list.innerHTML = '<p class="empty-state">No similar articles found</p>';
+        return;
+    }
+    
+    similarArticles.forEach(article => {
+        const sentiment = getSentimentLabel(article.sentiment);
+        const sentimentEmoji = sentiment === 'Positive' ? '😊' : sentiment === 'Negative' ? '😟' : '😐';
+        const similarityPercent = Math.round(article.similarity * 100);
+        
+        const item = document.createElement('div');
+        item.className = 'similar-article';
+        item.innerHTML = `
+            <h4 style="font-size: 16px; margin-bottom: 8px;">${article.title}</h4>
+            <p style="font-size: 14px; color: var(--gray); margin-bottom: 8px;">
+                ${article.source} • ${sentimentEmoji} ${sentiment}
+                <span class="similarity-score">${similarityPercent}% similar</span>
+            </p>
+        `;
+        item.onclick = () => window.open(article.url, '_blank');
+        list.appendChild(item);
+    });
+}
 
-            document.getElementById('auth-close').addEventListener('click', () => {
-                document.getElementById('auth-overlay').classList.remove('active');
-            });
+// ========== CAROUSEL FUNCTIONS ==========
 
-            document.getElementById('show-signup').addEventListener('click', () => {
-                document.getElementById('login-form').style.display = 'none';
-                document.getElementById('signup-form').style.display = 'block';
-            });
-
-            document.getElementById('show-login').addEventListener('click', () => {
-                document.getElementById('signup-form').style.display = 'none';
-                document.getElementById('login-form').style.display = 'block';
-            });
-
-            document.getElementById('login-form-element').addEventListener('submit', handleLogin);
-            document.getElementById('signup-form-element').addEventListener('submit', handleSignup);
-
-            // User Menu
-            document.getElementById('user-avatar').addEventListener('click', () => {
-                document.getElementById('user-dropdown').classList.toggle('active');
-            });
-
-            document.getElementById('logout-btn').addEventListener('click', handleLogout);
-
-            // Close user dropdown when clicking outside
-            document.addEventListener('click', (e) => {
-                const userMenu = document.getElementById('user-menu');
-                const userDropdown = document.getElementById('user-dropdown');
-                
-                if (userMenu && !userMenu.contains(e.target)) {
-                    userDropdown.classList.remove('active');
-                }
-
-                const authOverlay = document.getElementById('auth-overlay');
-                if (e.target === authOverlay) {
-                    authOverlay.classList.remove('active');
-                }
-            });
-
-            // Navigation
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    const pageId = this.dataset.page + '-page';
-                    document.querySelectorAll('.page-content').forEach(page => {
-                        page.classList.remove('active');
-                    });
-                    document.getElementById(pageId).classList.add('active');
-                    
-                    if (pageId === 'trending-page') {
-                        loadTrendingArticles();
-                    } else if (pageId === 'for-you-page') {
-                        loadNewsFromAPI();
-                    }
-                });
-            });
-            
-            // Dark mode toggle
-            const modeToggle = document.getElementById('mode-toggle');
-            const modeLabel = document.getElementById('mode-label');
-            
-            modeToggle.addEventListener('change', function() {
-                document.body.classList.toggle('dark-mode', this.checked);
-                modeLabel.textContent = this.checked ? 'Dark Mode' : 'Light Mode';
-                localStorage.setItem('darkMode', this.checked);
-            });
-            
-            const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-            if (savedDarkMode) {
-                modeToggle.checked = true;
-                document.body.classList.add('dark-mode');
-                modeLabel.textContent = 'Dark Mode';
-            }
-            
-            // Category filters
-            const categoryBtns = document.querySelectorAll('.category-btn');
-            categoryBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    categoryBtns.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    const category = this.dataset.category;
-                    const countrySelect = document.getElementById('country-select');
-                    const langSelect = document.getElementById('lang-select');
-                    const country = countrySelect ? countrySelect.value : '';
-                    const lang = langSelect ? langSelect.value : 'en';
-                    
-                    loadNewsFromAPI(category, country, lang);
-                });
-            });
-            
-            // Country filter
-            const countrySelect = document.getElementById('country-select');
-            if (countrySelect) {
-                countrySelect.addEventListener('change', function() {
-                    const categoryBtn = document.querySelector('.category-btn.active');
-                    const category = categoryBtn ? categoryBtn.dataset.category : 'all';
-                    const langSelect = document.getElementById('lang-select');
-                    const lang = langSelect ? langSelect.value : 'en';
-                    loadNewsFromAPI(category, this.value, lang);
-                });
-            }
-            
-            // Language filter
-            const langSelect = document.getElementById('lang-select');
-            if (langSelect) {
-                langSelect.addEventListener('change', function() {
-                    const categoryBtn = document.querySelector('.category-btn.active');
-                    const category = categoryBtn ? categoryBtn.dataset.category : 'all';
-                    const countrySelect = document.getElementById('country-select');
-                    const country = countrySelect ? countrySelect.value : '';
-                    loadNewsFromAPI(category, country, this.value);
-                });
-            }
-            
-            // Search functionality
-            const searchInput = document.getElementById('search-input');
-            searchInput.addEventListener('input', debounce(async function() {
-                const query = this.value.trim();
-                
-                if (query.length > 2) {
-                    await performSearch(query);
-                } else if (query.length === 0) {
-                    const categoryBtn = document.querySelector('.category-btn.active');
-                    const category = categoryBtn ? categoryBtn.dataset.category : 'all';
-                    const countrySelect = document.getElementById('country-select');
-                    const langSelect = document.getElementById('lang-select');
-                    const country = countrySelect ? countrySelect.value : '';
-                    const lang = langSelect ? langSelect.value : 'en';
-                    
-                    loadNewsFromAPI(category, country, lang);
-                }
-            }, 500));
-            
-            // Global click handlers
-            document.addEventListener('click', async function(e) {
-                // Bookmark button
-                if (e.target.closest('.bookmark-btn')) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    const btn = e.target.closest('.bookmark-btn');
-                    const articleId = btn.dataset.articleId;
-                    const article = allArticles.find(a => a.id === articleId);
-                    
-                    if (article) {
-                        await toggleBookmark(article, btn);
-                    }
-                    return;
-                }
-                
-                // Reaction buttons
-                if (e.target.closest('.reaction-btn')) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    const btn = e.target.closest('.reaction-btn');
-                    const articleId = btn.dataset.articleId;
-                    const reactionType = btn.dataset.type;
-                    
-                    await handleReaction(articleId, reactionType, btn);
-                    return;
-                }
-                
-                // Read more buttons
-                if (e.target.classList.contains('read-more')) {
-                    const url = e.target.dataset.url;
-                    if (url && url !== '#') {
-                        window.open(url, '_blank');
-                    }
-                    return;
-                }
-                
-                // Find similar articles button
-                if (e.target.classList.contains('find-similar')) {
-                    const uri = e.target.dataset.uri;
-                    await showSimilarArticles(uri);
-                    return;
-                }
-                
-                // Modal close
-                if (e.target.classList.contains('modal-close')) {
-                    document.getElementById('similar-modal').classList.remove('active');
-                    return;
-                }
-            });
-            
-            // Close modal when clicking outside
-            const modal = document.getElementById('similar-modal');
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    modal.classList.remove('active');
-                }
-            });
+function initializeCarousel() {
+    const carousel = document.querySelector('.carousel');
+    if (!carousel) return;
+    
+    const carouselItems = carousel.querySelectorAll('.carousel-item');
+    if (carouselItems.length === 0) return;
+    
+    const prevBtn = document.querySelector('.carousel-prev');
+    const nextBtn = document.querySelector('.carousel-next');
+    const indicators = document.querySelectorAll('.indicator');
+    
+    let currentIndex = 0;
+    const totalItems = carouselItems.length;
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+    let autoAdvanceInterval;
+    
+    function updateCarousel() {
+        carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+        
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentIndex);
+        });
+    }
+    
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % totalItems;
+        updateCarousel();
+    }
+    
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+        updateCarousel();
+    }
+    
+    function startAutoAdvance() {
+        autoAdvanceInterval = setInterval(nextSlide, 5000);
+    }
+    
+    function stopAutoAdvance() {
+        clearInterval(autoAdvanceInterval);
+    }
+    
+    if (prevBtn) prevBtn.addEventListener('click', () => {
+        prevSlide();
+        stopAutoAdvance();
+        startAutoAdvance();
+    });
+    
+    if (nextBtn) nextBtn.addEventListener('click', () => {
+        nextSlide();
+        stopAutoAdvance();
+        startAutoAdvance();
+    });
+    
+    carousel.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+        stopAutoAdvance();
+    });
+    
+    carousel.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        currentX = e.touches[0].clientX;
+        const diff = startX - currentX;
+        
+        if (Math.abs(diff) > 10) {
+            e.preventDefault();
         }
-
-        async function performSearch(query) {
-            const container = document.getElementById('news-container');
-            const loading = document.getElementById('news-loading');
-            
-            loading.style.display = 'flex';
-            container.style.display = 'none';
-            
-            const articles = await searchNews(query);
-            
-            loading.style.display = 'none';
-            container.style.display = 'grid';
-            
-            await displayNewsArticles(articles, 'news-container');
-            if (articles.length > 0) {
-                updateAnalytics(articles);
-            }
+    });
+    
+    carousel.addEventListener('touchend', () => {
+        if (!isDragging) return;
+        
+        const diff = startX - currentX;
+        const swipeThreshold = 50;
+        
+        if (diff > swipeThreshold) {
+            nextSlide();
+        } else if (diff < -swipeThreshold) {
+            prevSlide();
         }
-
-        async function showSimilarArticles(articleUri) {
-            const modal = document.getElementById('similar-modal');
-            const loading = document.getElementById('similar-loading');
-            const list = document.getElementById('similar-articles-list');
-            
-            modal.classList.add('active');
-            loading.style.display = 'flex';
-            list.innerHTML = '';
-            
-            const similarArticles = await findSimilarArticles(articleUri);
-            
-            loading.style.display = 'none';
-            
-            if (similarArticles.length === 0) {
-                list.innerHTML = '<p class="empty-state">No similar articles found</p>';
-                return;
-            }
-            
-            similarArticles.forEach(article => {
-                const sentiment = getSentimentLabel(article.sentiment);
-                const sentimentEmoji = sentiment === 'Positive' ? '😊' : sentiment === 'Negative' ? '😟' : '😐';
-                const similarityPercent = Math.round(article.similarity * 100);
-                
-                const item = document.createElement('div');
-                item.className = 'similar-article';
-                item.innerHTML = `
-                    <h4 style="font-size: 16px; margin-bottom: 8px;">${article.title}</h4>
-                    <p style="font-size: 14px; color: var(--gray); margin-bottom: 8px;">
-                        ${article.source} • ${sentimentEmoji} ${sentiment}
-                        <span class="similarity-score">${similarityPercent}% similar</span>
-                    </p>
-                `;
-                item.onclick = () => window.open(article.url, '_blank');
-                list.appendChild(item);
-            });
-        }
-
-        // Carousel Functions
-        function initializeCarousel() {
-            const carousel = document.querySelector('.carousel');
-            if (!carousel) return;
-            
-            const carouselItems = carousel.querySelectorAll('.carousel-item');
-            if (carouselItems.length === 0) return;
-            
-            const prevBtn = document.querySelector('.carousel-prev');
-            const nextBtn = document.querySelector('.carousel-next');
-            const indicators = document.querySelectorAll('.indicator');
-            
-            let currentIndex = 0;
-            const totalItems = carouselItems.length;
-            let startX = 0;
-            let currentX = 0;
-            let isDragging = false;
-            let autoAdvanceInterval;
-            
-            function updateCarousel() {
-                carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-                
-                indicators.forEach((indicator, index) => {
-                    indicator.classList.toggle('active', index === currentIndex);
-                });
-            }
-            
-            function nextSlide() {
-                currentIndex = (currentIndex + 1) % totalItems;
-                updateCarousel();
-            }
-            
-            function prevSlide() {
-                currentIndex = (currentIndex - 1 + totalItems) % totalItems;
-                updateCarousel();
-            }
-            
-            function startAutoAdvance() {
-                autoAdvanceInterval = setInterval(nextSlide, 5000);
-            }
-            
-            function stopAutoAdvance() {
-                clearInterval(autoAdvanceInterval);
-            }
-            
-            if (prevBtn) prevBtn.addEventListener('click', () => {
-                prevSlide();
-                stopAutoAdvance();
-                startAutoAdvance();
-            });
-            
-            if (nextBtn) nextBtn.addEventListener('click', () => {
-                nextSlide();
-                stopAutoAdvance();
-                startAutoAdvance();
-            });
-            
-            carousel.addEventListener('touchstart', (e) => {
-                startX = e.touches[0].clientX;
-                isDragging = true;
-                stopAutoAdvance();
-            });
-            
-            carousel.addEventListener('touchmove', (e) => {
-                if (!isDragging) return;
-                currentX = e.touches[0].clientX;
-                const diff = startX - currentX;
-                
-                if (Math.abs(diff) > 10) {
-                    e.preventDefault();
-                }
-            });
-            
-            carousel.addEventListener('touchend', () => {
-                if (!isDragging) return;
-                
-                const diff = startX - currentX;
-                const swipeThreshold = 50;
-                
-                if (diff > swipeThreshold) {
-                    nextSlide();
-                } else if (diff < -swipeThreshold) {
-                    prevSlide();
-                }
-                
-                isDragging = false;
-                startAutoAdvance();
-            });
-            
-            carousel.addEventListener('mousedown', (e) => {
-                startX = e.clientX;
-                isDragging = true;
-                stopAutoAdvance();
-            });
-            
-            carousel.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                currentX = e.clientX;
-            });
-            
-            carousel.addEventListener('mouseup', () => {
-                if (!isDragging) return;
-                
-                const diff = startX - currentX;
-                const swipeThreshold = 50;
-                
-                if (diff > swipeThreshold) {
-                    nextSlide();
-                } else if (diff < -swipeThreshold) {
-                    prevSlide();
-                }
-                
-                isDragging = false;
-                startAutoAdvance();
-            });
-            
-            carousel.addEventListener('mouseleave', () => {
-                isDragging = false;
-            });
-            
-            indicators.forEach((indicator, index) => {
-                indicator.addEventListener('click', () => {
-                    currentIndex = index;
-                    updateCarousel();
-                    stopAutoAdvance();
-                    startAutoAdvance();
-                });
-            });
-            
-            carousel.addEventListener('mouseenter', stopAutoAdvance);
-            carousel.addEventListener('mouseleave', startAutoAdvance);
-            
+        
+        isDragging = false;
+        startAutoAdvance();
+    });
+    
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            currentIndex = index;
+            updateCarousel();
+            stopAutoAdvance();
             startAutoAdvance();
-        }
+        });
+    });
+    
+    carousel.addEventListener('mouseenter', stopAutoAdvance);
+    carousel.addEventListener('mouseleave', startAutoAdvance);
+    
+    startAutoAdvance();
+}
 
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func.apply(this, args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func.apply(this, args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
 
-        // ========== AI FEATURES LOGIC ========== 
+// ========== AI FEATURES ==========
 
-// AI Summary
 let summaryCache = {};
 let summaryTimeout;
 let hideTimeout;
@@ -2990,30 +2246,320 @@ async function sendMessage() {
     }
     isTyping = false;
 }
-// ========== END AI FEATURES LOGIC ==========
-    
 
+// ========== CREDIBILITY SYSTEM (HOVER-TO-LOAD) ==========
 
-        // Continue with rest of JavaScript (Bookmarks, Reactions, News API, etc.)
-        // Due to length limit, I'm providing the structure - the rest remains EXACTLY the same as before
+let credibilityCache = {};
+let credibilityLoading = {};
+
+/**
+ * Fetch credibility score for an article (called on hover)
+ */
+async function fetchCredibilityScore(articleId) {
+    if (credibilityCache[articleId]) {
+        return credibilityCache[articleId];
+    }
+
+    if (credibilityLoading[articleId]) {
+        console.log(`⏳ Already loading credibility for ${articleId}`);
+        return null;
+    }
+
+    try {
+        credibilityLoading[articleId] = true;
+        console.log(`🔍 Fetching credibility for: ${articleId}`);
         
-        // [REST OF THE JAVASCRIPT CODE REMAINS EXACTLY THE SAME - Include all previous functions for:]
-        // - loadUserBookmarks()
-        // - toggleBookmark()
-        // - handleReaction()
-        // - loadUserReaction()
-        // - fetchNews()
-        // - searchNews()
-        // - findSimilarArticles()
-        // - loadNewsFromAPI()
-        // - displayNewsArticles()
-        // - createNewsCard()
-        // - loadCarousel()
-        // - initializeCarousel()
-        // - updateAnalytics()
-        // - initializeCharts()
-        // - setupEventListeners()
-        // - etc.
+        const response = await fetch(`${API_BASE_URL}/credibility/analyze/${articleId}`);
+        const data = await response.json();
 
-// [COPY ALL THE REMAINING JAVASCRIPT FROM YOUR WORKING VERSION HERE - Starting from loadUserBookmarks() onwards]
-// I cannot include it here due to character limit, but keep ALL existing JavaScript functions as they were
+        if (data.success) {
+            console.log(`✅ Credibility score received: ${data.credibility.finalScore}/100`);
+            credibilityCache[articleId] = data.credibility;
+            return data.credibility;
+        } else {
+            console.error(`❌ Credibility API error: ${data.message}`);
+        }
+    } catch (error) {
+        console.error(`❌ Error fetching credibility:`, error);
+    } finally {
+        credibilityLoading[articleId] = false;
+    }
+
+    return null;
+}
+
+/**
+ * Add credibility badge that loads on hover
+ */
+function addCredibilityBadge(card, articleId) {
+    const placeholder = card.querySelector('.credibility-badge-placeholder');
+    
+    if (!placeholder) {
+        return;
+    }
+
+    // Set initial "hover to analyze" state
+    placeholder.className = 'credibility-badge hover-to-analyze';
+    placeholder.innerHTML = `
+        <div class="credibility-icon">
+            <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="credibility-hint">Hover</div>
+    `;
+
+    let hoverTimeout;
+    let isAnalyzed = false;
+
+    // Start analysis on hover
+    card.addEventListener('mouseenter', async () => {
+        if (isAnalyzed || credibilityLoading[articleId]) return;
+
+        hoverTimeout = setTimeout(async () => {
+            console.log(`🖱️ Hover detected - analyzing ${articleId}`);
+            
+            // Show loading state
+            placeholder.className = 'credibility-badge loading';
+            placeholder.innerHTML = `
+                <div class="credibility-score">
+                    <div class="spinner-mini"></div>
+                </div>
+                <div class="credibility-label">Loading</div>
+            `;
+
+            // Fetch credibility
+            const credibility = await fetchCredibilityScore(articleId);
+            
+            if (credibility) {
+                isAnalyzed = true;
+                updateCredibilityBadge(placeholder, credibility, articleId);
+            } else {
+                placeholder.className = 'credibility-badge hover-to-analyze error';
+                placeholder.innerHTML = `
+                    <div class="credibility-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="credibility-hint">Error</div>
+                `;
+            }
+        }, 300);
+    });
+
+    card.addEventListener('mouseleave', () => {
+        clearTimeout(hoverTimeout);
+    });
+}
+
+/**
+ * Update credibility badge with score
+ */
+function updateCredibilityBadge(badge, credibility, articleId) {
+    const { finalScore, riskLevel } = credibility;
+    
+    badge.className = `credibility-badge ${riskLevel}-risk`;
+    badge.innerHTML = `
+        <div class="credibility-score">${finalScore}</div>
+        <div class="credibility-label">${getRiskLabel(riskLevel)}</div>
+    `;
+    
+    badge.onclick = (e) => {
+        e.stopPropagation();
+        showCredibilityBreakdown(credibility);
+    };
+}
+
+/**
+ * Get risk label
+ */
+function getRiskLabel(riskLevel) {
+    const labels = {
+        'low': 'Credible',
+        'medium': 'Mixed',
+        'high': 'Risky'
+    };
+    return labels[riskLevel] || 'Unknown';
+}
+
+/**
+ * Show credibility breakdown modal
+ */
+function showCredibilityBreakdown(credibility) {
+    const modal = document.getElementById('credibility-modal');
+    const content = document.getElementById('credibility-breakdown-content');
+    
+    if (!modal || !content) {
+        console.error('Credibility modal not found');
+        return;
+    }
+    
+    const {
+        finalScore,
+        riskLevel,
+        scores,
+        explanationTags,
+        sourceMetadata
+    } = credibility;
+
+    content.innerHTML = `
+        <div class="credibility-header">
+            <div class="credibility-main-score ${riskLevel}-risk">
+                <div class="score-circle">
+                    <svg viewBox="0 0 36 36" class="circular-chart">
+                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <path class="circle" stroke-dasharray="${finalScore}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    </svg>
+                    <div class="score-text">
+                        <span class="score-number">${finalScore}</span>
+                        <span class="score-label">/100</span>
+                    </div>
+                </div>
+                <h3>${getRiskLabel(riskLevel)}</h3>
+            </div>
+        </div>
+
+        <div class="explanation-tags">
+            ${explanationTags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+        </div>
+
+        <div class="credibility-breakdown">
+            <h4>Credibility Analysis</h4>
+            
+            <div class="breakdown-section">
+                <div class="section-header">
+                    <span class="section-title">📰 Source Credibility</span>
+                    <span class="section-score">${scores.sourceCredibility.score}/100</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${scores.sourceCredibility.score}%"></div>
+                </div>
+                <div class="section-details">
+                    <p><strong>Source:</strong> ${sourceMetadata.name}</p>
+                    <p><strong>Trust Rating:</strong> ${sourceMetadata.trust}/100</p>
+                    <p><strong>Bias:</strong> ${sourceMetadata.bias}</p>
+                    <p><strong>Transparency:</strong> ${sourceMetadata.transparency}/100</p>
+                </div>
+            </div>
+
+            <div class="breakdown-section">
+                <div class="section-header">
+                    <span class="section-title">🔗 Cross-Source Verification</span>
+                    <span class="section-score">${scores.crossSourceVerification.score}/100</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${scores.crossSourceVerification.score}%"></div>
+                </div>
+                <div class="section-details">
+                    <p><strong>Sources Found:</strong> ${scores.crossSourceVerification.sourcesFound.length}</p>
+                    ${scores.crossSourceVerification.sourcesFound.length > 0 ? `
+                        <div class="sources-list">
+                            ${scores.crossSourceVerification.sourcesFound.slice(0, 5).map(source => 
+                                `<span class="source-chip">${source}</span>`
+                            ).join('')}
+                            ${scores.crossSourceVerification.sourcesFound.length > 5 ? 
+                                `<span class="source-chip">+${scores.crossSourceVerification.sourcesFound.length - 5} more</span>` 
+                                : ''}
+                        </div>
+                    ` : '<p class="warning-text">⚠️ No cross-source verification found</p>'}
+                </div>
+            </div>
+
+            <div class="breakdown-section">
+                <div class="section-header">
+                    <span class="section-title">🤖 AI Content Analysis</span>
+                    <span class="section-score">${scores.aiContentAnalysis.score}/100</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${scores.aiContentAnalysis.score}%"></div>
+                </div>
+                <div class="section-details">
+                    <div class="ai-signals">
+                        <div class="signal">
+                            <span>Sensationalism</span>
+                            <div class="signal-bar">
+                                <div class="signal-fill" style="width: ${scores.aiContentAnalysis.signals.sensationalism}%"></div>
+                            </div>
+                            <span>${scores.aiContentAnalysis.signals.sensationalism}%</span>
+                        </div>
+                        <div class="signal">
+                            <span>Emotional Manipulation</span>
+                            <div class="signal-bar">
+                                <div class="signal-fill" style="width: ${scores.aiContentAnalysis.signals.emotionalManipulation}%"></div>
+                            </div>
+                            <span>${scores.aiContentAnalysis.signals.emotionalManipulation}%</span>
+                        </div>
+                        <div class="signal">
+                            <span>Clickbait Probability</span>
+                            <div class="signal-bar">
+                                <div class="signal-fill" style="width: ${scores.aiContentAnalysis.signals.clickbaitProbability}%"></div>
+                            </div>
+                            <span>${scores.aiContentAnalysis.signals.clickbaitProbability}%</span>
+                        </div>
+                        <div class="signal">
+                            <span>Bias Indicators</span>
+                            <div class="signal-bar">
+                                <div class="signal-fill" style="width: ${scores.aiContentAnalysis.signals.biasIndicators}%"></div>
+                            </div>
+                            <span>${scores.aiContentAnalysis.signals.biasIndicators}%</span>
+                        </div>
+                        <div class="signal">
+                            <span>Lacks Evidence</span>
+                            <div class="signal-bar">
+                                <div class="signal-fill" style="width: ${scores.aiContentAnalysis.signals.evidenceQuality}%"></div>
+                            </div>
+                            <span>${scores.aiContentAnalysis.signals.evidenceQuality}%</span>
+                        </div>
+                    </div>
+                    <p class="signal-note">Lower percentages indicate better quality</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="credibility-formula">
+            <h4>How We Calculate This Score</h4>
+            <div class="formula-breakdown">
+                <div class="formula-item">
+                    <span>Source Credibility</span>
+                    <span>${scores.sourceCredibility.score} × 35% = ${Math.round(scores.sourceCredibility.score * 0.35)}</span>
+                </div>
+                <div class="formula-item">
+                    <span>Cross-Source Verification</span>
+                    <span>${scores.crossSourceVerification.score} × 35% = ${Math.round(scores.crossSourceVerification.score * 0.35)}</span>
+                </div>
+                <div class="formula-item">
+                    <span>AI Content Analysis</span>
+                    <span>${scores.aiContentAnalysis.score} × 25% = ${Math.round(scores.aiContentAnalysis.score * 0.25)}</span>
+                </div>
+                <div class="formula-item">
+                    <span>Community Signals</span>
+                    <span>${scores.communitySignals.score} × 5% = ${Math.round(scores.communitySignals.score * 0.05)}</span>
+                </div>
+                <div class="formula-total">
+                    <span><strong>Final Score</strong></span>
+                    <span><strong>${finalScore}/100</strong></span>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    modal.classList.add('active');
+}
+
+// Close credibility modal
+document.addEventListener('DOMContentLoaded', function() {
+    const credibilityModal = document.getElementById('credibility-modal');
+    if (credibilityModal) {
+        const closeBtn = credibilityModal.querySelector('.credibility-modal-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                credibilityModal.classList.remove('active');
+            });
+        }
+        
+        credibilityModal.addEventListener('click', (e) => {
+            if (e.target === credibilityModal) {
+                credibilityModal.classList.remove('active');
+            }
+        });
+    }
+});
+
+// ========== END CREDIBILITY SYSTEM ==========

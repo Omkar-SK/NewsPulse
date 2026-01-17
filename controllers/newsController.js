@@ -4,7 +4,7 @@ const axios = require('axios');
 
 const NEWS_API_KEY = process.env.NEWS_API_KEY || 'f62067a1-8ecb-49eb-86d5-93503c1b95d5';
 const NEWS_API_BASE_URL = 'https://eventregistry.org/api/v1';
-const CACHE_DURATION = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+const CACHE_DURATION = 60*60*1000; // 2 hours in milliseconds
 
 // Language mapping for News API
 const languageMapping = {

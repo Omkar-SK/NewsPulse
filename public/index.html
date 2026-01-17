@@ -8,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="i18n-translations.js"></script>
     <link rel="stylesheet" href="style.css">
-    
 </head>
 <body>
     
@@ -248,7 +247,6 @@
                                 <option value="hi">हिंदी (Hindi)</option>
                                 <option value="mr">मराठी (Marathi)</option>
                                 <option value="ta">தமிழ் (Tamil)</option>
-                                
                                 <option value="fr">Français (French)</option>
                                 <option value="es">Español (Spanish)</option>
                             </select>
@@ -384,14 +382,26 @@
             </div>
         </div>
 
-         <!-- ========== GLOBAL AI SUMMARY TOOLTIP ========== -->
-    <div id="ai-summary-tooltip" class="ai-summary-tooltip"></div>
+        <!-- ========== CREDIBILITY MODAL ========== -->
+        <div id="credibility-modal" class="modal credibility-modal">
+            <div class="modal-content credibility-modal-content">
+                <span class="modal-close credibility-modal-close">&times;</span>
+                <h2>📊 Credibility Breakdown</h2>
+                <div id="credibility-breakdown-content">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+        <!-- ========== END CREDIBILITY MODAL ========== -->
+
+        <!-- ========== GLOBAL AI SUMMARY TOOLTIP ========== -->
+        <div id="ai-summary-tooltip" class="ai-summary-tooltip"></div>
 
         <footer class="footer">
             <div class="footer-content">
                 <div class="footer-col">
                     <h4>About NewsPulse</h4>
-                    <p>Bringing you trending headlines with AI-powered sentiment analysis and insights.</p>
+                    <p>Bringing you trending headlines with AI-powered sentiment analysis and credibility verification.</p>
                 </div>
                 <div class="footer-col">
                     <h4>Contact</h4>
@@ -407,71 +417,73 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 NewsPulse. All rights reserved. Powered by NewsAPI.ai</p>
+                <p>&copy; 2025 NewsPulse. All rights reserved. Powered by NewsAPI.ai | Credibility System Active</p>
             </div>
         </footer>
     </div>
 
+    <!-- Newsletter Modal -->
     <div id="newsletter-modal" class="newsletter-modal">
-    <div class="newsletter-modal-content">
-        <span class="newsletter-modal-close">&times;</span>
-        <h2>📬 Newsletter Preferences</h2>
-        
-        <form id="newsletter-preferences-form">
-            <div class="newsletter-form-group">
-                <label for="newsletter-frequency">Frequency:</label>
-                <select id="newsletter-frequency" name="frequency">
-                    <option value="daily">Daily (Every morning at 8 AM)</option>
-                    <option value="weekly">Weekly (Every Monday at 8 AM)</option>
-                </select>
-            </div>
-
-            <div class="newsletter-form-group">
-                <label>Select Categories:</label>
-                <div class="newsletter-categories">
-                    <label class="category-checkbox">
-                        <input type="checkbox" name="category" value="all" checked>
-                        All
-                    </label>
-                    <label class="category-checkbox">
-                        <input type="checkbox" name="category" value="business">
-                        Business
-                    </label>
-                    <label class="category-checkbox">
-                        <input type="checkbox" name="category" value="technology">
-                        Technology
-                    </label>
-                    <label class="category-checkbox">
-                        <input type="checkbox" name="category" value="sports">
-                        Sports
-                    </label>
-                    <label class="category-checkbox">
-                        <input type="checkbox" name="category" value="politics">
-                        Politics
-                    </label>
-                    <label class="category-checkbox">
-                        <input type="checkbox" name="category" value="entertainment">
-                        Entertainment
-                    </label>
-                    <label class="category-checkbox">
-                        <input type="checkbox" name="category" value="health">
-                        Health
-                    </label>
-                    <label class="category-checkbox">
-                        <input type="checkbox" name="category" value="science">
-                        Science
-                    </label>
+        <div class="newsletter-modal-content">
+            <span class="newsletter-modal-close">&times;</span>
+            <h2>📬 Newsletter Preferences</h2>
+            
+            <form id="newsletter-preferences-form">
+                <div class="newsletter-form-group">
+                    <label for="newsletter-frequency">Frequency:</label>
+                    <select id="newsletter-frequency" name="frequency">
+                        <option value="daily">Daily (Every morning at 8 AM)</option>
+                        <option value="weekly">Weekly (Every Monday at 8 AM)</option>
+                    </select>
                 </div>
-            </div>
 
-            <div class="newsletter-modal-actions">
-                <button type="submit" class="btn-newsletter btn-subscribe">
-                    Save Preferences
-                </button>
-            </div>
-        </form>
+                <div class="newsletter-form-group">
+                    <label>Select Categories:</label>
+                    <div class="newsletter-categories">
+                        <label class="category-checkbox">
+                            <input type="checkbox" name="category" value="all" checked>
+                            All
+                        </label>
+                        <label class="category-checkbox">
+                            <input type="checkbox" name="category" value="business">
+                            Business
+                        </label>
+                        <label class="category-checkbox">
+                            <input type="checkbox" name="category" value="technology">
+                            Technology
+                        </label>
+                        <label class="category-checkbox">
+                            <input type="checkbox" name="category" value="sports">
+                            Sports
+                        </label>
+                        <label class="category-checkbox">
+                            <input type="checkbox" name="category" value="politics">
+                            Politics
+                        </label>
+                        <label class="category-checkbox">
+                            <input type="checkbox" name="category" value="entertainment">
+                            Entertainment
+                        </label>
+                        <label class="category-checkbox">
+                            <input type="checkbox" name="category" value="health">
+                            Health
+                        </label>
+                        <label class="category-checkbox">
+                            <input type="checkbox" name="category" value="science">
+                            Science
+                        </label>
+                    </div>
+                </div>
+
+                <div class="newsletter-modal-actions">
+                    <button type="submit" class="btn-newsletter btn-subscribe">
+                        Save Preferences
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
