@@ -210,10 +210,15 @@ node seeder.js -i
 
 # Delete sample data
 node seeder.js -d
+
+# For production, set secure passwords via environment:
+# ADMIN_PASSWORD=your_secure_password node seeder.js -i
 ```
 
 ### What it seeds:
 - 2 test users (admin@newspulse.com, moderator@newspulse.com)
+  - ⚠️ **SECURITY WARNING**: Default passwords are weak and for development only
+  - In production, set ADMIN_PASSWORD and MODERATOR_PASSWORD environment variables
 - 10 news sources (BBC, Reuters, AP, NYT, WSJ, Guardian, CNN, Fox, Al Jazeera, NPR)
 - 5 media literacy articles (credibility basics, fact-checking, bias, methodology, misinformation)
 

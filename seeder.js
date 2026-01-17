@@ -17,18 +17,20 @@ mongoose.connect(process.env.MONGODB_URI, {
 });
 
 // Sample data
+// NOTE: These passwords are for development/testing only
+// In production, use strong passwords via environment variables
 const users = [
   {
     name: 'Admin User',
     email: 'admin@newspulse.com',
-    password: 'admin123456',
+    password: process.env.ADMIN_PASSWORD || 'admin123456', // Change in production!
     role: 'admin',
     reputationScore: 100
   },
   {
     name: 'Moderator User',
     email: 'moderator@newspulse.com',
-    password: 'moderator123456',
+    password: process.env.MODERATOR_PASSWORD || 'moderator123456', // Change in production!
     role: 'moderator',
     reputationScore: 85
   }
