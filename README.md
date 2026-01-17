@@ -2,7 +2,11 @@
 
 NewsPulse is a modern, full-stack web application designed to combat misinformation and improve media literacy. It leverages cutting-edge AI to analyze news articles for credibility, bias, and sentiment, while providing a community-driven space for transparent news verification.
 
-![NewsPulse Preview](https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=1200)
+![Demo Image](images/1.png)
+![Demo Image](images/2.png)
+![Demo Image](images/3.png)
+![Demo Image](images/4.png)
+![Demo Image](images/5.png)
 
 ## 🌟 Key Features
 
