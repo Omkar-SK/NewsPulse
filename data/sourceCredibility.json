@@ -1,20 +1,4 @@
 {
-  "bbc.com": {
-    "name": "BBC News",
-    "trust": 88,
-    "bias": "center",
-    "transparency": 90,
-    "factCheckHistory": "excellent",
-    "category": "tier1"
-  },
-  "bbc.co.uk": {
-    "name": "BBC News",
-    "trust": 88,
-    "bias": "center",
-    "transparency": 90,
-    "factCheckHistory": "excellent",
-    "category": "tier1"
-  },
   "reuters.com": {
     "name": "Reuters",
     "trust": 92,
@@ -31,6 +15,22 @@
     "factCheckHistory": "excellent",
     "category": "tier1"
   },
+  "bbc.com": {
+    "name": "BBC News",
+    "trust": 88,
+    "bias": "center",
+    "transparency": 90,
+    "factCheckHistory": "excellent",
+    "category": "tier1"
+  },
+  "bbc.co.uk": {
+    "name": "BBC News",
+    "trust": 88,
+    "bias": "center",
+    "transparency": 90,
+    "factCheckHistory": "excellent",
+    "category": "tier1"
+  },
   "theguardian.com": {
     "name": "The Guardian",
     "trust": 82,
@@ -40,7 +40,7 @@
     "category": "tier1"
   },
   "nytimes.com": {
-    "name": "New York Times",
+    "name": "The New York Times",
     "trust": 85,
     "bias": "center-left",
     "transparency": 88,
@@ -48,12 +48,68 @@
     "category": "tier1"
   },
   "wsj.com": {
-    "name": "Wall Street Journal",
+    "name": "The Wall Street Journal",
     "trust": 84,
     "bias": "center-right",
     "transparency": 86,
     "factCheckHistory": "good",
     "category": "tier1"
+  },
+  "washingtonpost.com": {
+    "name": "The Washington Post",
+    "trust": 84,
+    "bias": "center-left",
+    "transparency": 87,
+    "factCheckHistory": "good",
+    "category": "tier1"
+  },
+  "ft.com": {
+    "name": "Financial Times",
+    "trust": 88,
+    "bias": "center",
+    "transparency": 90,
+    "factCheckHistory": "excellent",
+    "category": "tier1"
+  },
+  "economist.com": {
+    "name": "The Economist",
+    "trust": 87,
+    "bias": "center",
+    "transparency": 90,
+    "factCheckHistory": "excellent",
+    "category": "tier1"
+  },
+  "bloomberg.com": {
+    "name": "Bloomberg",
+    "trust": 86,
+    "bias": "center",
+    "transparency": 88,
+    "factCheckHistory": "good",
+    "category": "tier1"
+  },
+  "cnbc.com": {
+    "name": "CNBC",
+    "trust": 80,
+    "bias": "center-right",
+    "transparency": 82,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "forbes.com": {
+    "name": "Forbes",
+    "trust": 78,
+    "bias": "center-right",
+    "transparency": 80,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "time.com": {
+    "name": "TIME",
+    "trust": 80,
+    "bias": "center-left",
+    "transparency": 82,
+    "factCheckHistory": "good",
+    "category": "tier2"
   },
   "thehindu.com": {
     "name": "The Hindu",
@@ -63,6 +119,22 @@
     "factCheckHistory": "good",
     "category": "tier1"
   },
+  "indianexpress.com": {
+    "name": "The Indian Express",
+    "trust": 81,
+    "bias": "center",
+    "transparency": 83,
+    "factCheckHistory": "good",
+    "category": "tier1"
+  },
+  "timesofindia.indiatimes.com": {
+    "name": "The Times of India",
+    "trust": 72,
+    "bias": "center",
+    "transparency": 70,
+    "factCheckHistory": "mixed",
+    "category": "tier2"
+  },
   "hindustantimes.com": {
     "name": "Hindustan Times",
     "trust": 75,
@@ -71,12 +143,36 @@
     "factCheckHistory": "good",
     "category": "tier2"
   },
-  "timesofindia.indiatimes.com": {
-    "name": "Times of India",
-    "trust": 72,
+  "ndtv.com": {
+    "name": "NDTV",
+    "trust": 77,
+    "bias": "center-left",
+    "transparency": 79,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "livemint.com": {
+    "name": "Mint",
+    "trust": 80,
     "bias": "center",
-    "transparency": 70,
-    "factCheckHistory": "mixed",
+    "transparency": 82,
+    "factCheckHistory": "good",
+    "category": "tier1"
+  },
+  "moneycontrol.com": {
+    "name": "Moneycontrol",
+    "trust": 76,
+    "bias": "center",
+    "transparency": 78,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "aljazeera.com": {
+    "name": "Al Jazeera",
+    "trust": 78,
+    "bias": "center",
+    "transparency": 80,
+    "factCheckHistory": "good",
     "category": "tier2"
   },
   "cnn.com": {
@@ -93,31 +189,191 @@
     "bias": "right",
     "transparency": 68,
     "factCheckHistory": "mixed",
-    "category": "tier2"
+    "category": "tier3"
   },
-  "aljazeera.com": {
-    "name": "Al Jazeera",
-    "trust": 78,
-    "bias": "center",
+  "abcnews.go.com": {
+    "name": "ABC News",
+    "trust": 77,
+    "bias": "center-left",
     "transparency": 80,
     "factCheckHistory": "good",
     "category": "tier2"
   },
-  "ndtv.com": {
-    "name": "NDTV",
+  "nbcnews.com": {
+    "name": "NBC News",
+    "trust": 78,
+    "bias": "center-left",
+    "transparency": 80,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "cbsnews.com": {
+    "name": "CBS News",
     "trust": 77,
     "bias": "center-left",
     "transparency": 79,
     "factCheckHistory": "good",
     "category": "tier2"
   },
-  "indianexpress.com": {
-    "name": "Indian Express",
-    "trust": 81,
+  "usatoday.com": {
+    "name": "USA Today",
+    "trust": 76,
     "bias": "center",
-    "transparency": 83,
+    "transparency": 78,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "thehill.com": {
+    "name": "The Hill",
+    "trust": 74,
+    "bias": "center-right",
+    "transparency": 76,
+    "factCheckHistory": "mixed",
+    "category": "tier2"
+  },
+  "politico.com": {
+    "name": "Politico",
+    "trust": 78,
+    "bias": "center-left",
+    "transparency": 80,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "sky.com": {
+    "name": "Sky News",
+    "trust": 80,
+    "bias": "center-right",
+    "transparency": 82,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "skynews.com.au": {
+    "name": "Sky News Australia",
+    "trust": 65,
+    "bias": "right",
+    "transparency": 68,
+    "factCheckHistory": "mixed",
+    "category": "tier3"
+  },
+  "thetimes.co.uk": {
+    "name": "The Times (UK)",
+    "trust": 82,
+    "bias": "center-right",
+    "transparency": 84,
     "factCheckHistory": "good",
     "category": "tier1"
+  },
+  "telegraph.co.uk": {
+    "name": "The Telegraph",
+    "trust": 78,
+    "bias": "right",
+    "transparency": 80,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "latimes.com": {
+    "name": "Los Angeles Times",
+    "trust": 80,
+    "bias": "center-left",
+    "transparency": 82,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "theatlantic.com": {
+    "name": "The Atlantic",
+    "trust": 82,
+    "bias": "center-left",
+    "transparency": 85,
+    "factCheckHistory": "excellent",
+    "category": "tier1"
+  },
+  "newyorker.com": {
+    "name": "The New Yorker",
+    "trust": 82,
+    "bias": "center-left",
+    "transparency": 85,
+    "factCheckHistory": "excellent",
+    "category": "tier1"
+  },
+  "theprint.in": {
+    "name": "The Print",
+    "trust": 75,
+    "bias": "center",
+    "transparency": 78,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "scroll.in": {
+    "name": "Scroll.in",
+    "trust": 74,
+    "bias": "center-left",
+    "transparency": 78,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "indiatoday.in": {
+    "name": "India Today",
+    "trust": 73,
+    "bias": "center",
+    "transparency": 75,
+    "factCheckHistory": "mixed",
+    "category": "tier2"
+  },
+  "deccanherald.com": {
+    "name": "Deccan Herald",
+    "trust": 76,
+    "bias": "center",
+    "transparency": 78,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "business-standard.com": {
+    "name": "Business Standard",
+    "trust": 80,
+    "bias": "center",
+    "transparency": 82,
+    "factCheckHistory": "good",
+    "category": "tier1"
+  },
+  "financialexpress.com": {
+    "name": "Financial Express",
+    "trust": 76,
+    "bias": "center",
+    "transparency": 78,
+    "factCheckHistory": "good",
+    "category": "tier2"
+  },
+  "freepressjournal.in": {
+    "name": "Free Press Journal",
+    "trust": 70,
+    "bias": "center",
+    "transparency": 72,
+    "factCheckHistory": "mixed",
+    "category": "tier3"
+  },
+  "firstpost.com": {
+    "name": "Firstpost",
+    "trust": 70,
+    "bias": "center-right",
+    "transparency": 72,
+    "factCheckHistory": "mixed",
+    "category": "tier3"
+  },
+  "timesnownews.com": {
+    "name": "Times Now",
+    "trust": 65,
+    "bias": "right",
+    "transparency": 68,
+    "factCheckHistory": "mixed",
+    "category": "tier3"
+  },
+  "foxbusiness.com": {
+    "name": "Fox Business",
+    "trust": 68,
+    "bias": "right",
+    "transparency": 70,
+    "factCheckHistory": "mixed",
+    "category": "tier3"
   },
   "default": {
     "name": "Unknown Source",
