@@ -4,7 +4,9 @@
 const CREDIBILITY_CONFIG = {
     VOTE_IMPACT: 2,  // How much each vote affects credibility
     MIN_SCORE: 0,
-    MAX_SCORE: 100
+    MAX_SCORE: 100,
+    INITIAL_MIN: 60,  // Minimum initial credibility score
+    INITIAL_MAX: 95   // Maximum initial credibility score
 };
 
 class CommunityApp {
@@ -44,6 +46,27 @@ class CommunityApp {
         // Enter key on comment input (Ctrl+Enter)
         document.getElementById('comment-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && e.ctrlKey) this.addComment();
+        });
+
+        // Event delegation for vote buttons and comment buttons
+        document.getElementById('posts-container').addEventListener('click', (e) => {
+            const target = e.target.closest('button');
+            if (!target) return;
+
+            // Handle vote buttons
+            if (target.classList.contains('vote-btn')) {
+                const postCard = target.closest('.post-card');
+                const postId = parseInt(postCard.dataset.postId);
+                const isUpvote = target.classList.contains('upvote');
+                this.vote(postId, isUpvote ? 1 : -1);
+            }
+
+            // Handle comment buttons
+            if (target.classList.contains('comment-btn')) {
+                const postCard = target.closest('.post-card');
+                const postId = parseInt(postCard.dataset.postId);
+                this.openComments(postId);
+            }
         });
     }
 
@@ -155,8 +178,9 @@ class CommunityApp {
     }
 
     generateCredibilityScore() {
-        // Generate a random credibility score between 60 and 95
-        return Math.floor(Math.random() * 36) + 60;
+        // Generate a random credibility score between INITIAL_MIN and INITIAL_MAX
+        const range = CREDIBILITY_CONFIG.INITIAL_MAX - CREDIBILITY_CONFIG.INITIAL_MIN;
+        return Math.floor(Math.random() * range) + CREDIBILITY_CONFIG.INITIAL_MIN;
     }
 
     updateCredibilityScore(postId, voteChange) {
@@ -279,27 +303,25 @@ class CommunityApp {
         container.innerHTML = this.posts.map(post => `
             <div class="post-card" data-post-id="${post.id}">
                 <div class="post-votes">
-                    <button class="vote-btn upvote ${post.userVote === 1 ? 'active' : ''}" 
-                            onclick="app.vote(${post.id}, 1)">
+                    <button class="vote-btn upvote ${post.userVote === 1 ? 'active' : ''}">
                         <i class="fas fa-arrow-up"></i>
                     </button>
                     <div class="vote-count">${post.votes}</div>
-                    <button class="vote-btn downvote ${post.userVote === -1 ? 'active' : ''}" 
-                            onclick="app.vote(${post.id}, -1)">
+                    <button class="vote-btn downvote ${post.userVote === -1 ? 'active' : ''}">
                         <i class="fas fa-arrow-down"></i>
                     </button>
                 </div>
                 
                 <div class="post-content">
                     <h3 class="post-title">${this.escapeHtml(post.title)}</h3>
-                    <a href="${post.url}" target="_blank" rel="noopener noreferrer" class="post-url">
-                        <i class="fas fa-external-link-alt"></i> ${this.truncateUrl(post.url)}
+                    <a href="${this.escapeHtml(post.url)}" target="_blank" rel="noopener noreferrer" class="post-url">
+                        <i class="fas fa-external-link-alt"></i> ${this.escapeHtml(this.truncateUrl(post.url))}
                     </a>
                     <div class="post-meta">
                         <span class="post-time">
                             <i class="far fa-clock"></i> ${this.formatTime(post.timestamp)}
                         </span>
-                        <button class="comment-btn" onclick="app.openComments(${post.id})">
+                        <button class="comment-btn">
                             <i class="far fa-comment"></i>
                             ${post.comments.length} ${post.comments.length === 1 ? 'comment' : 'comments'}
                         </button>
